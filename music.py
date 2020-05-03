@@ -3,6 +3,9 @@ from spotipy.oauth2 import SpotifyClientCredentials
 import pandas as pd
 import json
 import matplotlib.pyplot as plt
+import numpy as np
+import math
+import random
 
 
 sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
@@ -71,17 +74,18 @@ class artist_lookup:
 
         features = sp.audio_features(tracks)
         for feature in features:
-            danceability.append(feature["danceability"])
-            energy.append(feature["energy"])
-            key.append(feature["key"])
-            loudness.append(feature["loudness"])
-            mode.append(feature["mode"])
-            speechiness.append(feature["speechiness"])
-            acousticness.append(feature["acousticness"])
-            instrumentalness.append(feature["instrumentalness"])
-            liveness.append(feature["liveness"])
-            valence.append(feature["valence"])
-            tempo.append(feature["tempo"])
+            if(feature):
+                danceability.append(feature["danceability"])
+                energy.append(feature["energy"])
+                key.append(feature["key"])
+                loudness.append(feature["loudness"])
+                mode.append(feature["mode"])
+                speechiness.append(feature["speechiness"])
+                acousticness.append(feature["acousticness"])
+                instrumentalness.append(feature["instrumentalness"])
+                liveness.append(feature["liveness"])
+                valence.append(feature["valence"])
+                tempo.append(feature["tempo"])
 
         together = {
             "danceability": danceability,
@@ -99,6 +103,16 @@ class artist_lookup:
 
         self.artist_info[artist] = together
         return together
+
+    def get_95_interval(self, data):
+        mean = np.mean(np.array(data))
+        sum = 0.0
+        for x in data:
+            sum += (x-mean)**2
+
+        st_dev = sqrt(sum/(len(data)-1))
+        return [data-(2*st_dev),data+(2*st_dev)]
+
 
 
 
@@ -128,19 +142,24 @@ for i in range(0, len(artists)):
 
 
 
-fig, axs = plt.subplots(5, 6)
+# fig, axs = plt.subplots(5, 6)
+
+x = []
+y = []
+colors = []
+
+fig, ax = plt.subplots()
+ax = fig.add_subplot(111)
+
+for i in range(0, len(loudness)):
+    x.append(i)
+    y.append(np.mean(loudness[i]))
+    colors.append(random.randint(0,255))
 
 
-for r in range(0, 5):
-    for c in range(0, 6):
-        axs[r, c].boxplot(loudness[(5*r)+c])
-        axs[r, c].set_title(artists[(r*5)+c])
-        # axs[r,c].set_ylim([100,150])
-
-
-plt.ylim(0, 10)
-
-
+ax.scatter(x,y,s=[2*math.pi*(i)**2 for i in y], c=colors)
+for i in range(0, len(y)):
+    ax.annotate(artists[i],(x[i],y[i]))
 plt.show()
 
 #use n = 10 samples/tracks to estimate population/true artist characteristic (i.e. danceability)
