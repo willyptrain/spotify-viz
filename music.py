@@ -133,11 +133,6 @@ artists = ["childish gambino","alt-J","darwin deez","phoenix", "two door cinema 
 
 
 
-loudness = []
-
-for i in range(0, len(artists)):
-    arts.get_top_k_track_info(artists[i])
-    loudness.append(arts.artist_info[artists[i]]["loudness"])
 
 
 
@@ -151,9 +146,10 @@ colors = []
 fig, ax = plt.subplots()
 ax = fig.add_subplot(111)
 
-for i in range(0, len(loudness)):
+for i in range(0, len(artists)):
+    arts.get_top_k_track_info(artists[i])
     x.append(i)
-    y.append(np.mean(loudness[i]))
+    y.append(np.mean(arts.artist_info[artists[i]]["loudness"]))
     colors.append(random.randint(0,255))
 
 
@@ -170,7 +166,9 @@ plt.show()
 
 
 
-
+#nodes = artist's tracks, neighborhood=artist or genre (genre could also be class label to be predicted), edges=features of the songs, maybe artist -> neighborhood compression
+#center node = artist (surrounding nodes are directed toward the artist)
+#or maybe neighborhood is given a label, which corresponds to genre of the neighborhood's artist
 
 
 
