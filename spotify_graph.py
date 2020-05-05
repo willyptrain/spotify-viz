@@ -7,6 +7,45 @@ import random
 import plotly.graph_objs as go
 
 
+color_list = """
+        aliceblue, antiquewhite, aqua, aquamarine, azure,
+            beige, bisque, black, blanchedalmond, blue,
+            blueviolet, brown, burlywood, cadetblue,
+            chartreuse, chocolate, coral, cornflowerblue,
+            cornsilk, crimson, cyan, darkblue, darkcyan,
+            darkgoldenrod, darkgray, darkgrey, darkgreen,
+            darkkhaki, darkmagenta, darkolivegreen, darkorange,
+            darkorchid, darkred, darksalmon, darkseagreen,
+            darkslateblue, darkslategray, darkslategrey,
+            darkturquoise, darkviolet, deeppink, deepskyblue,
+            dimgray, dimgrey, dodgerblue, firebrick,
+            floralwhite, forestgreen, fuchsia, gainsboro,
+            ghostwhite, gold, goldenrod, gray, grey, green,
+            greenyellow, honeydew, hotpink, indianred, indigo,
+            ivory, khaki, lavender, lavenderblush, lawngreen,
+            lemonchiffon, lightblue, lightcoral, lightcyan,
+            lightgoldenrodyellow, lightgray, lightgrey,
+            lightgreen, lightpink, lightsalmon, lightseagreen,
+            lightskyblue, lightslategray, lightslategrey,
+            lightsteelblue, lightyellow, lime, limegreen,
+            linen, magenta, maroon, mediumaquamarine,
+            mediumblue, mediumorchid, mediumpurple,
+            mediumseagreen, mediumslateblue, mediumspringgreen,
+            mediumturquoise, mediumvioletred, midnightblue,
+            mintcream, mistyrose, moccasin, navajowhite, navy,
+            oldlace, olive, olivedrab, orange, orangered,
+            orchid, palegoldenrod, palegreen, paleturquoise,
+            palevioletred, papayawhip, peachpuff, peru, pink,
+            plum, powderblue, purple, red, rosybrown,
+            royalblue, rebeccapurple, saddlebrown, salmon,
+            sandybrown, seagreen, seashell, sienna, silver,
+            skyblue, slateblue, slategray, slategrey, snow,
+            springgreen, steelblue, tan, teal, thistle, tomato,
+            turquoise, violet, wheat, white, whitesmoke,
+            yellow, yellowgreen
+""".split()
+# color_list[random.randint(0, len(color_list))][:-1]
+
 
 class music_graph:
 
@@ -116,6 +155,7 @@ class music_graph:
     def draw_neighborhoods(self, artists):
         colors = []
         song_library = []
+        graphs = []
         for artist in artists:
             color = random.randint(0, 255)
             for k in range(0, self.neighborhood_size):
@@ -154,7 +194,8 @@ class music_graph:
                 node_z.append(self.positions[node][2])
 
 
-        node_trace = go.Scatter3d(
+
+            graphs.append(go.Scatter3d(
             x=node_x, y=node_y, z=node_z,
             mode='markers',
             hovertext=song_library,
@@ -175,9 +216,16 @@ class music_graph:
                     xanchor='left',
                     titleside='right'
                 ),
-            line_width=2))
+            line_width=2),
+            surfaceaxis= 1,
+            surfacecolor='rgba(%s,%s,%s,%s)' %
+                         (random.randint(0, 255), random.randint(0,255),
+                          random.randint(0,255), random.uniform(0,1))))
 
-        fig = go.Figure(data=[edge_trace, node_trace], layout=go.Layout(
+        graphs.append(edge_trace)
+
+
+        fig = go.Figure(data=graphs, layout=go.Layout(
             title='<br>Artist and Features in 3d Space',
             titlefont_size=16,
             showlegend=False,
