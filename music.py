@@ -113,63 +113,45 @@ class artist_lookup:
         st_dev = sqrt(sum/(len(data)-1))
         return [data-(2*st_dev),data+(2*st_dev)]
 
+    def get_genres(self, artist):
+        artist = sp.search(q=artist, type='artist')["artists"]["items"][0]
+        return artist['genres']
+
+    def get_recommendations(self, artist, k=10):
+        artist_search = sp.search(q=artist,type='artist')["artists"]["items"][0]
+        results = sp.recommendations(seed_artists=[artist_search['id']], limit=k)
+        for track in results['tracks']:
+            if(track['artists'][0]['name'].lower() != artist.lower()):
+                print(track['name'], track['artists'][0]['name'], self.get_genres(track['artists'][0]['name']), track['uri'])
 
 
 
 
+class Track:
+
+    def __init__(self, name, url, by_artist):
+        self.url = url
+        self.name = name
+        self.artist = by_artist
 
 
 
 
 arts = artist_lookup()
-
-
-artists = ["childish gambino","alt-J","darwin deez","phoenix", "two door cinema club", "vampire weekend", "cage the elephant", "drake", "still woozy",
-           "Cosmo Pyke", "Linkin Park", "Jay-Z", "Peach Pit", "Animal Collective", "Jimmy Hendrix", "John Mayer",
-           "tobi lou", "mac miller", "flume", "rex orange county", "louis the child",
-           "frank ocean", "clairo", "broken bells", "giraffage", "odesza", "chet faker",
-           "steve lacy", "sampha","healy","felly","j.cole","modest mouse","xxxtentacion",
-           "mounika","childish gambino","alt-J"]
+arts.get_recommendations("darwin deez")
 
 
 
 
-
-
-
-# fig, axs = plt.subplots(5, 6)
-
-x = []
-y = []
-colors = []
-
-fig, ax = plt.subplots()
-ax = fig.add_subplot(111)
-
-for i in range(0, len(artists)):
-    arts.get_top_k_track_info(artists[i])
-    x.append(i)
-    y.append(np.mean(arts.artist_info[artists[i]]["loudness"]))
-    colors.append(random.randint(0,255))
-
-
-ax.scatter(x,y,s=[2*math.pi*(i)**2 for i in y], c=colors)
-for i in range(0, len(y)):
-    ax.annotate(artists[i],(x[i],y[i]))
-plt.show()
-
-#use n = 10 samples/tracks to estimate population/true artist characteristic (i.e. danceability)
-#use confidence interval
-
-
-
-
-
-
-#nodes = artist's tracks, neighborhood=artist or genre (genre could also be class label to be predicted), edges=features of the songs, maybe artist -> neighborhood compression
-#center node = artist (surrounding nodes are directed toward the artist)
-#or maybe neighborhood is given a label, which corresponds to genre of the neighborhood's artist
-
+#
+# artists = ["childish gambino","alt-J","darwin deez","phoenix", "two door cinema club", "vampire weekend", "cage the elephant", "drake", "still woozy",
+#            "Cosmo Pyke", "Linkin Park", "Jay-Z", "Peach Pit", "Animal Collective", "Jimmy Hendrix", "John Mayer",
+#            "tobi lou", "mac miller", "flume", "rex orange county", "louis the child",
+#            "frank ocean", "clairo", "broken bells", "giraffage", "odesza", "chet faker",
+#            "steve lacy", "sampha","healy","felly","j.cole","modest mouse","xxxtentacion",
+#            "mounika","childish gambino","alt-J"]
+#
+#
 
 
 
