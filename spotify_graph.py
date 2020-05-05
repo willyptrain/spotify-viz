@@ -66,8 +66,9 @@ class music_graph:
         get = self.sp.search(q=artist, limit=self.neighborhood_size)
         self.G.add_node(artist)
         sum_of_features = {"danceability":0.0, "energy":0.0, "instrumentalness":0.0}
+        self.neighborhood_nodes[artist] = []
         for track in get["tracks"]["items"]:
-            self.neighborhood_nodes[artist] = track["name"]
+            self.neighborhood_nodes[artist].append(track["name"])
             features = self.sp.audio_features(track["uri"])[0]
             sum_of_features["danceability"] += features["danceability"]
             sum_of_features["energy"] += features["energy"]
@@ -157,7 +158,9 @@ class music_graph:
         song_library = []
         graphs = []
         for artist in artists:
+            song_library = []
             color = random.randint(0, 255)
+            colors = []
             for k in range(0, self.neighborhood_size):
                 colors.append(color)
             if (artist not in self.positions):
@@ -180,49 +183,53 @@ class music_graph:
                     self.edges["z"].append(z1)
             edge_trace = go.Scatter3d(x=self.edges["x"], y=self.edges["y"],
                                     z=self.edges["z"],
-                                      line=dict(width=1, color='#888'),
-                                      hoverinfo='none')
+                                      line=dict(width=1, color='#888'))
 
+            self.edges["x"].append(None)
+            self.edges["y"].append(None)
+            self.edges["z"].append(None)
+
+            graphs.append(edge_trace)
 
             node_x = []
             node_y = []
             node_z = []
             for node in self.G.nodes():
-                song_library.append(node)
-                node_x.append(self.positions[node][0])
-                node_y.append(self.positions[node][1])
-                node_z.append(self.positions[node][2])
-
+                if(node in self.neighborhood_nodes[artist] or (node == artist)):
+                    song_library.append(node)
+                    node_x.append(self.positions[node][0])
+                    node_y.append(self.positions[node][1])
+                    node_z.append(self.positions[node][2])
 
 
             graphs.append(go.Scatter3d(
-            x=node_x, y=node_y, z=node_z,
-            mode='markers',
-            hovertext=song_library,
-            hoverinfo='text',
-             marker=dict(
-                showscale=True,
-                # colorscale options
-                # 'Greys' | 'YlGnBu' | 'Greens' | 'YlOrRd' | 'Bluered' | 'RdBu' |
-                # 'Reds' | 'Blues' | 'Picnic' | 'Rainbow' | 'Portland' | 'Jet' |
-                # 'Hot' | 'Blackbody' | 'Earth' | 'Electric' | 'Viridis' |
-                colorscale='Portland',
-                reversescale=True,
-                color=colors,
-                size=10,
-                colorbar=dict(
-                    thickness=15,
-                    title='Node Connections',
-                    xanchor='left',
-                    titleside='right'
-                ),
-            line_width=2),
-            surfaceaxis= 1,
-            surfacecolor='rgba(%s,%s,%s,%s)' %
-                         (random.randint(0, 255), random.randint(0,255),
-                          random.randint(0,255), random.uniform(0,1))))
+                x=node_x, y=node_y, z=node_z,
+                mode='markers',
+                hovertext=song_library,
+                hoverinfo='text',
+                 marker=dict(
+                    showscale=True,
+                    # colorscale options
+                    # 'Greys' | 'YlGnBu' | 'Greens' | 'YlOrRd' | 'Bluered' | 'RdBu' |
+                    # 'Reds' | 'Blues' | 'Picnic' | 'Rainbow' | 'Portland' | 'Jet' |
+                    # 'Hot' | 'Blackbody' | 'Earth' | 'Electric' | 'Viridis' |
+                    colorscale='Earth',
+                    reversescale=True,
+                    color=colors,
+                    size=10,
+                    colorbar=dict(
+                        thickness=15,
+                        title='Node Connections',
+                        xanchor='left',
+                        titleside='right'
+                    ),
+                line_width=2),
+                surfaceaxis= 1,
+                surfacecolor='rgba(%s,%s,%s,%s)' %
+                             (random.randint(0, 255), random.randint(0,255),
+                              random.randint(0,255), random.uniform(0.4,1))))
 
-        graphs.append(edge_trace)
+
 
 
         fig = go.Figure(data=graphs, layout=go.Layout(
@@ -238,7 +245,7 @@ class music_graph:
         fig.show()
 
 
-w = music_graph(["childish gambino","alt-J","darwin deez"])
+w = music_graph(["childish gambino","slipknot", "vampire weekend","cage the elephant"])
            #      , "two door cinema club", "vampire weekend", "cage the elephant", "drake", "still woozy",
            # "Cosmo Pyke", "Linkin Park", "Jay-Z", "Peach Pit", "Animal Collective", "Jimmy Hendrix", "John Mayer",
            # "tobi lou", "mac miller", "flume", "rex orange county", "louis the child",
@@ -249,3 +256,7 @@ w = music_graph(["childish gambino","alt-J","darwin deez"])
 # w.construct_neighborhood(w.artists[1])
 w.draw_neighborhoods(w.artists)
 
+# try and generalize all musical artists to a few given genres (fixed number of classes) to use as labels in dataset
+#
+# need to create normal cluster graphs with nodes positioned around artist, neighborhood by genre, and the node
+# is parameterized by some high dimensional feature vector that we will compress when creating 3d embedding for each node
