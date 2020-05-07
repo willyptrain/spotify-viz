@@ -10,14 +10,13 @@ import random
 import plotly.graph_objs as go
 
 
-token = spotipy.util.prompt_for_user_token('fignick', 'streaming', client_id='eb173f7af2f14a189be9011019c90df2', client_secret='859a9fd7c02d42dbaa60519163071386', redirect_uri='http://localhost')
 
 class Graph:
     def __init__(self):
         self.G = nx.Graph()
         self.lookup = Lookup()
         self.all_artist_nodes = []
-        self.sp = spotipy.Spotify(auth=token)
+        self.sp = spotipy.Spotify(client_credentials_manager=SpotifyCredentials())
         self.tracks_by_artist = {}
         self.artist_graphs = {}
         self.albums_by_artist = {}
