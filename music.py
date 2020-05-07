@@ -8,10 +8,9 @@ import math
 import random
 
 
-token = spotipy.util.prompt_for_user_token('fignick', 'streaming', client_id='eb173f7af2f14a189be9011019c90df2', client_secret='859a9fd7c02d42dbaa60519163071386', redirect_uri='http://localhost')
 
 
-sp = spotipy.Spotify(auth=token)
+sp = spotipy.Spotify(client_credentials_manager=SpotifyCredentials())
 
 class Track:
 
