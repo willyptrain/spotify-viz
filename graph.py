@@ -18,39 +18,79 @@ class Graph:
         self.sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
         self.tracks_by_artist = {}
         self.artist_graphs = {}
+        self.albums_by_artist = {}
+        self.artist_album_graphs = {}
 
 
-    def construct_neighborhood(self, artist, k=15):
-        if(artist not in self.artist_graphs):
-            get = self.sp.search(q=artist, limit=k)
-            g = nx.Graph()
-            g.add_node(artist, genres=self.lookup.get_genres(artist))
-            self.tracks_by_artist[artist] = []
-            for track in get["tracks"]["items"]:
-                self.tracks_by_artist[artist].append(track["name"])
-                features = self.sp.audio_features(track["uri"])[0]
-                g.add_node(track["name"], features=features)
-                g.add_edge(artist, track["name"])
+    def construct_neighborhood(self, artist, media='tracks', k=15):
+        if media == 'tracks':
+            if(artist not in self.artist_graphs):
+                get = self.sp.search(q=artist, limit=k)
+                g = nx.Graph()
+                g.add_node(artist, genres=self.lookup.get_genres(artist))
+                self.tracks_by_artist[artist] = []
+                for track in get["tracks"]["items"]:
+                    self.tracks_by_artist[artist].append(track["name"])
+                    features = self.sp.audio_features(track["uri"])[0]
+                    g.add_node(track["name"], features=features)
+                    g.add_edge(artist, track["name"])
 
-            self.artist_graphs[artist] = g
-            return g
+                self.artist_graphs[artist] = g
+                return g
+            else:
+                return self.artist_graphs[artist]
+        elif media == 'albums':
+            if(artist not in self.artist_graphs):
+                get = self.sp.search(q=artist, type='artist', limit=k)
+                artist_id = get['artists']['items'][0]['id']
+                self.albums_by_artist[artist] = self.sp.artist_albums(artist_id, limit=10)
+                print(self.albums_by_artist[artist]['items'])
+                g = nx.Graph()
+                g.add_node(artist, genres=self.lookup.get_genres(artist))
+                for album in self.albums_by_artist[artist]['items']:
+                    print(album)
+                    g.add_node(album['name'], id=album['id'])
+                    album_id = album['id']
+                    for track in self.sp.album_tracks(album_id)['items']:
+                        if track == 'href':
+                            continue
+                        else:
+                            features = self.sp.audio_features(track["uri"])[0]
+                            g.add_node(track["name"], features=features)
+                            g.add_edge(artist, track["name"])
+                    
+
+                self.artist_album_graphs[artist] = g
+                return g
+            else:
+                return self.artist_album_graphs[artist]
         else:
-            return self.artist_graphs[artist]
+            return "Invalid type parameter."
 
 
     def construct_music_graph(self, artists):
         for artist in artists:
             if(artist not in self.artist_graphs):
-                artist_tracks = self.construct_neighborhood(artist)
+                artist_tracks = self.construct_neighborhood(artist, media='tracks')
                 self.G.add_nodes_from(artist_tracks.nodes(data=True))
                 self.G.add_edges_from(artist_tracks.edges(data=True))
             recommendations = self.lookup.get_recommendations(artist)
             for track in recommendations:
                 self.all_artist_nodes.append(track.artist)
-                new_g = self.construct_neighborhood(track.artist)
+                new_g = self.construct_neighborhood(track.artist, media='tracks')
                 self.G.add_nodes_from(new_g.nodes(data=True))
                 self.G.add_edges_from(new_g.edges(data=True))
                 self.G.add_edge(artist, track.artist)
+    
+
+    # input 1 artist, graph their albums
+    def construct_album_graph(self, artists):
+        for artist in artists:
+            if(artist not in self.artist_graphs):
+                artist_tracks = self.construct_neighborhood(artist, media='albums')
+                self.G.add_nodes_from(artist_tracks.nodes(data=True))
+                self.G.add_edges_from(artist_tracks.edges(data=True))
+            
 
 
     def singular_value_decomp(self):
@@ -77,9 +117,29 @@ class Graph:
                     colors[node[1]["genres"][0]] = random.randint(0,255)  # "rgb(%s,%s,%s)" % (random.randint(0,255),random.randint(0,255),random.randint(0,255))
                     curr_color = colors[curr_genre]
                     # color_scatter.append(curr_color)
+            
+            if ("genres" not in node[1] and "id" in node[1]):
+                #print("yo")
+                found_id = False
+                for i in range(0, len(node[1]["id"])):
+                    if (node[1]["id"][i] in colors):
+                        curr_id = node[1]["id"][i]
+                        curr_color = colors[curr_id]
+                        found_id = True
+                        break
+                        # color_scatter.append(curr_color)
+                if(not found_id and len(node[1]["id"]) > 0):
+                    curr_id = node[1]["id"][0]
+                    colors[node[1]["id"][0]] = random.randint(0,255)  # "rgb(%s,%s,%s)" % (random.randint(0,255),random.randint(0,255),random.randint(0,255))
+                    curr_color = colors[curr_id]
+                    # color_scatter.append(curr_color)
+
+            # track
             if("features" in node[1]):
-                # print(node[0], list(node[1]["features"]))
+                
                 if(node[1]["features"]):
+                    #print(np.array(list(node[1]["features"].values())[0:11]))
+                    #print("color", curr_color)
                     features.append(np.array(list(node[1]["features"].values())[0:11]))
                     color_scatter.append(curr_color)
                     node_color[node[0]] = curr_color
@@ -92,6 +152,7 @@ class Graph:
     def draw_graph(self):
 
         u, colors = self.singular_value_decomp()
+        
         x = u[:,0]
         y = u[:,1]
         z = u[:,2]
@@ -153,8 +214,13 @@ class Graph:
 
 g = Graph()
 # g.construct_neighborhood("drake")
-g.construct_music_graph(["ludwig van beethoven","slipknot"])
+
+#g.construct_music_graph(["ludwig van beethoven","slipknot"])
+#g.draw_graph()
+
+g.construct_album_graph(["childish gambino"])
 g.draw_graph()
+
 # next: use 3d value decomp to use as position in 3d graph construction, essentially just add nodes
 
 

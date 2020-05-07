@@ -7,9 +7,7 @@ import numpy as np
 import math
 import random
 
-
 sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
-
 
 class Track:
 
