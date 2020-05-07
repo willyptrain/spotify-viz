@@ -11,7 +11,22 @@ import random
 sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 
 
-class artist_lookup:
+class Track:
+
+    def __init__(self, name, url, by_artist, genres=[]):
+        self.url = url
+        self.name = name
+        self.artist = by_artist
+        self.genres = genres
+
+    def __str__(self):
+        return "%s; %s; %s; %s" \
+               % (self.name,self.artist,self.genres,self.url)
+
+
+
+
+class Lookup:
 
     def __init__(self):
         self.artist_info = {}
@@ -21,7 +36,7 @@ class artist_lookup:
         self.artist_info[artist] = {}
         self.artists.append(artist)
 
-    def get_artist_tags(self, arg_name="darwin deez", tags=None):
+    def get_artist_tags(self, arg_name, tags=None):
         if tags is None:
             tags = ["genres", "popularity"]
         search = sp.search(q='artist:' + arg_name, type='artist')
@@ -35,6 +50,10 @@ class artist_lookup:
                     if(not isinstance(artist[tag],list)):
                         info["content"][tag] = artist[tag]
         return info
+
+    def get_artist(self, artist):
+        get = sp.search(q='artist:'+artist, type='artist')
+        return get
 
     def get_artists_tags(self, artists=[], tags=None):
         data = []
@@ -120,25 +139,33 @@ class artist_lookup:
     def get_recommendations(self, artist, k=10):
         artist_search = sp.search(q=artist,type='artist')["artists"]["items"][0]
         results = sp.recommendations(seed_artists=[artist_search['id']], limit=k)
+
+        tracks = []
+
         for track in results['tracks']:
             if(track['artists'][0]['name'].lower() != artist.lower()):
-                print(track['name'], track['artists'][0]['name'], self.get_genres(track['artists'][0]['name']), track['uri'])
+                genres = self.get_genres(track['artists'][0]['name'])
+                temp = Track(name=track['name'], url=track["uri"],by_artist=track['artists'][0]['name'], genres=genres)
+                tracks.append(temp)
+
+        return tracks
 
 
 
 
-class Track:
-
-    def __init__(self, name, url, by_artist):
-        self.url = url
-        self.name = name
-        self.artist = by_artist
 
 
 
 
-arts = artist_lookup()
-arts.get_recommendations("darwin deez")
+
+
+
+
+
+
+
+arts = Lookup()
+arts.get_recommendations("darwin deez", 10)
 
 
 

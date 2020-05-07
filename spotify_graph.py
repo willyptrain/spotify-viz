@@ -256,7 +256,3 @@ w = music_graph(["childish gambino","slipknot", "vampire weekend","cage the elep
 # w.construct_neighborhood(w.artists[1])
 w.draw_neighborhoods(w.artists)
 
-# try and generalize all musical artists to a few given genres (fixed number of classes) to use as labels in dataset
-#
-# need to create normal cluster graphs with nodes positioned around artist, neighborhood by genre, and the node
-# is parameterized by some high dimensional feature vector that we will compress when creating 3d embedding for each node
