@@ -10,12 +10,14 @@ import random
 import plotly.graph_objs as go
 
 
+token = spotipy.util.prompt_for_user_token('fignick', 'streaming', client_id='eb173f7af2f14a189be9011019c90df2', client_secret='859a9fd7c02d42dbaa60519163071386', redirect_uri='http://localhost')
+
 class Graph:
     def __init__(self):
         self.G = nx.Graph()
         self.lookup = Lookup()
         self.all_artist_nodes = []
-        self.sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+        self.sp = spotipy.Spotify(auth=token)
         self.tracks_by_artist = {}
         self.artist_graphs = {}
         self.albums_by_artist = {}
@@ -44,11 +46,9 @@ class Graph:
                 get = self.sp.search(q=artist, type='artist', limit=k)
                 artist_id = get['artists']['items'][0]['id']
                 self.albums_by_artist[artist] = self.sp.artist_albums(artist_id, limit=10)
-                print(self.albums_by_artist[artist]['items'])
                 g = nx.Graph()
                 g.add_node(artist, genres=self.lookup.get_genres(artist))
                 for album in self.albums_by_artist[artist]['items']:
-                    print(album)
                     g.add_node(album['name'], id=album['id'])
                     album_id = album['id']
                     for track in self.sp.album_tracks(album_id)['items']:
@@ -114,7 +114,7 @@ class Graph:
                         # color_scatter.append(curr_color)
                 if(not found_genre and len(node[1]["genres"]) > 0):
                     curr_genre = node[1]["genres"][0]
-                    colors[node[1]["genres"][0]] = random.randint(0,255)  # "rgb(%s,%s,%s)" % (random.randint(0,255),random.randint(0,255),random.randint(0,255))
+                    colors[node[1]["genres"][0]] = f'rgb({np.random.randint(0,256)}, {np.random.randint(0,256)}, {np.random.randint(0,256)})'  # "rgb(%s,%s,%s)" % (random.randint(0,255),random.randint(0,255),random.randint(0,255))
                     curr_color = colors[curr_genre]
                     # color_scatter.append(curr_color)
             
@@ -123,14 +123,15 @@ class Graph:
                 found_id = False
                 for i in range(0, len(node[1]["id"])):
                     if (node[1]["id"][i] in colors):
-                        curr_id = node[1]["id"][i]
+                        curr_id = node[1]["id"]
                         curr_color = colors[curr_id]
+                        print(curr_id)
                         found_id = True
                         break
                         # color_scatter.append(curr_color)
                 if(not found_id and len(node[1]["id"]) > 0):
-                    curr_id = node[1]["id"][0]
-                    colors[node[1]["id"][0]] = random.randint(0,255)  # "rgb(%s,%s,%s)" % (random.randint(0,255),random.randint(0,255),random.randint(0,255))
+                    curr_id = node[1]["id"]
+                    colors[node[1]["id"]] = f'rgb({np.random.randint(0,256)}, {np.random.randint(0,256)}, {np.random.randint(0,256)})' 
                     curr_color = colors[curr_id]
                     # color_scatter.append(curr_color)
 
@@ -152,7 +153,7 @@ class Graph:
     def draw_graph(self):
 
         u, colors = self.singular_value_decomp()
-        
+        #print(colors)
         x = u[:,0]
         y = u[:,1]
         z = u[:,2]
@@ -214,11 +215,12 @@ class Graph:
 
 g = Graph()
 # g.construct_neighborhood("drake")
+'''
+g.construct_music_graph(["ludwig van beethoven","slipknot"])
+g.draw_graph()
+'''
 
-#g.construct_music_graph(["ludwig van beethoven","slipknot"])
-#g.draw_graph()
-
-g.construct_album_graph(["childish gambino"])
+g.construct_album_graph(["kanye west"])
 g.draw_graph()
 
 # next: use 3d value decomp to use as position in 3d graph construction, essentially just add nodes
