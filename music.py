@@ -9,8 +9,7 @@ import random
 
 
 
-
-sp = spotipy.Spotify(client_credentials_manager=SpotifyCredentials())
+sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 
 class Track:
 

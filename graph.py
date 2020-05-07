@@ -16,11 +16,13 @@ class Graph:
         self.G = nx.Graph()
         self.lookup = Lookup()
         self.all_artist_nodes = []
-        self.sp = spotipy.Spotify(client_credentials_manager=SpotifyCredentials())
+        self.sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
         self.tracks_by_artist = {}
         self.artist_graphs = {}
         self.albums_by_artist = {}
         self.artist_album_graphs = {}
+        self.album_graphs = {}
+        self.albums = {}
 
 
     def construct_neighborhood(self, artist, media='tracks', k=15):
@@ -66,6 +68,30 @@ class Graph:
         else:
             return "Invalid type parameter."
 
+    # input album, construct neighborhood for album
+    def construct_album_neighborhood(self, album, k=5):
+        if(album not in self.album_graphs):
+                get = self.sp.search(q=album, type='album', limit=k)
+                album_id = get['albums']['items'][0]['id']
+                album_name = get['albums']['items'][0]['name']
+                #print(album_name, album_id, get)
+                self.albums[album] = self.sp.albums([album_id])
+                g = nx.Graph()
+                g.add_node(album, id=album_id)
+                for track in self.sp.album_tracks(album_id)['items']:
+                        if track == 'href':
+                            continue
+                        else:
+                            features = self.sp.audio_features(track["uri"])[0]
+                            g.add_node(track["name"], features=features)
+                            g.add_edge(album, track["name"])
+
+                self.album_graphs[album] = g
+                return g
+        else:
+            return self.album_graphs[album]
+
+
 
     def construct_music_graph(self, artists):
         for artist in artists:
@@ -82,13 +108,23 @@ class Graph:
                 self.G.add_edge(artist, track.artist)
     
 
-    # input 1 artist, graph their albums
-    def construct_album_graph(self, artists):
-        for artist in artists:
-            if(artist not in self.artist_graphs):
-                artist_tracks = self.construct_neighborhood(artist, media='albums')
-                self.G.add_nodes_from(artist_tracks.nodes(data=True))
-                self.G.add_edges_from(artist_tracks.edges(data=True))
+    # input list of artists or list of albums, graph the albums
+    def construct_album_graph(self, artists=None, albums=None):
+        if artists:
+            for artist in artists:
+                if(artist not in self.artist_graphs):
+                    artist_tracks = self.construct_neighborhood(artist, media='albums')
+                    self.G.add_nodes_from(artist_tracks.nodes(data=True))
+                    self.G.add_edges_from(artist_tracks.edges(data=True))
+        elif albums:
+            for album in albums:
+                if(album not in self.album_graphs):
+                    album = self.construct_album_neighborhood(album)
+                    self.G.add_nodes_from(album.nodes(data=True))
+                    self.G.add_edges_from(album.edges(data=True))
+        else:
+            return 0
+
             
 
 
@@ -219,7 +255,8 @@ g.construct_music_graph(["ludwig van beethoven","slipknot"])
 g.draw_graph()
 '''
 
-g.construct_album_graph(["kanye west"])
+g.construct_album_graph(albums=["Rubber Soul", "Beautiful Thugger Girls", "Finally Rich"])
+#g.construct_album_graph(artists=["The Doobie Brothers"])
 g.draw_graph()
 
 # next: use 3d value decomp to use as position in 3d graph construction, essentially just add nodes
