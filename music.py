@@ -9,8 +9,6 @@ import random
 
 
 
-sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
-
 class Track:
 
     def __init__(self, name, url, by_artist, genres=[]):

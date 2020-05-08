@@ -1,6 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 from music import Lookup, Track
+import music
 import json
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -10,20 +11,24 @@ import random
 import plotly.graph_objs as go
 
 
-
 class Graph:
     def __init__(self):
         self.G = nx.Graph()
         self.lookup = Lookup()
         self.all_artist_nodes = []
-        self.sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+        self.sp = spotipy.Spotify(auth=token)
         self.tracks_by_artist = {}
         self.artist_graphs = {}
         self.albums_by_artist = {}
         self.artist_album_graphs = {}
         self.album_graphs = {}
         self.albums = {}
+        self.tracks = {}
 
+
+    # gets user saved songs
+    def get_saved_tracks(self, limit=50):
+        return self.sp.current_user_saved_tracks(limit=limit)['items']
 
     def construct_neighborhood(self, artist, media='tracks', k=15):
         if media == 'tracks':
@@ -42,6 +47,30 @@ class Graph:
                 return g
             else:
                 return self.artist_graphs[artist]
+        elif media == 'track_list':
+            if artist in self.tracks_by_artist.keys():
+                if(track["name"] not in self.tracks_by_artist[artist]):
+                    g = self.track_graphs[artist]
+                    g.add_node(artist, genres=self.lookup.get_genres(artist))
+                    self.tracks_by_artist[artist].append(track["name"])
+                    features = self.sp.audio_features(track["uri"])[0]
+                    g.add_node(track["name"], features=features)
+                    g.add_edge(artist, track["name"])
+                    self.track_graphs[artist] = g
+                    return g
+                else:
+                    return self.track_graphs[artist]
+            else:
+                    g = nx.Graph()
+                    g.add_node(artist, genres=self.lookup.get_genres(artist))
+                    self.tracks_by_artist[artist].append(track["name"])
+                    features = self.sp.audio_features(track["uri"])[0]
+                    g.add_node(track["name"], features=features)
+                    g.add_edge(artist, track["name"])
+                    self.track_graphs[artist] = g
+                    return g
+
+
         elif media == 'albums':
             if(artist not in self.artist_graphs):
                 get = self.sp.search(q=artist, type='artist', limit=k)
@@ -96,7 +125,7 @@ class Graph:
     def construct_music_graph(self, artists):
         for artist in artists:
             if(artist not in self.artist_graphs):
-                artist_tracks = self.construct_neighborhood(artist, media='tracks')
+                artist_tracks = self.construct_neighborhood(artist, media='track_list')
                 self.G.add_nodes_from(artist_tracks.nodes(data=True))
                 self.G.add_edges_from(artist_tracks.edges(data=True))
             recommendations = self.lookup.get_recommendations(artist)
@@ -106,6 +135,17 @@ class Graph:
                 self.G.add_nodes_from(new_g.nodes(data=True))
                 self.G.add_edges_from(new_g.edges(data=True))
                 self.G.add_edge(artist, track.artist)
+    
+    # constructs graph for set of a tracks / saved songs
+    def construct_track_graph(self, tracks):
+        for track in tracks:
+            #print(track[0])
+            if(track['track']['id'] not in self.tracks):
+                artist = track['track']['artists'][0]['name']
+                new_track = self.construct_neighborhood(artist, media='tracks')
+                self.G.add_nodes_from(new_track.nodes(data=True))
+                self.G.add_edges_from(new_track.edges(data=True))
+            
     
 
     # input list of artists or list of albums, graph the albums
@@ -255,9 +295,14 @@ g.construct_music_graph(["ludwig van beethoven","slipknot"])
 g.draw_graph()
 '''
 
-g.construct_album_graph(albums=["Rubber Soul", "Beautiful Thugger Girls", "Finally Rich"])
-#g.construct_album_graph(artists=["The Doobie Brothers"])
+# yo check these two functions out
+#g.construct_album_graph(albums=["Rubber Soul", "Beautiful Thugger Girls", "Finally Rich"])
+my_saved_songs = g.get_saved_tracks()
+print(my_saved_songs[0]['track']['artists'][0]['name'])
+g.construct_track_graph(my_saved_songs)
+
 g.draw_graph()
+
 
 # next: use 3d value decomp to use as position in 3d graph construction, essentially just add nodes
 
