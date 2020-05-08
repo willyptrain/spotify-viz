@@ -54,7 +54,7 @@ class Data:
             for artist in search["artists"]["items"]:
                 name = artist['name']
                 genres = artist['genres']
-                get_features = self.lookup.get_top_k_track_info(artist['name'], k)
+                get_features = self.lookup.get_top_k_track_info(name, k)
                 for key, value in get_features.items():
                     self.df[key] += value
                     k = len(value)
@@ -64,8 +64,30 @@ class Data:
                 else:
                     self.metadata_df["genre"] += ["N/A" for i in range(0, k)]
 
+                if(name != '' and name != None):
+                    k = 50
+                    try:
+                        recommended_tracks = self.lookup.get_recommendations(name, k)
+                        # for track in recommended_tracks:
+                        recommended_artist = [track.by_artist for track in recommended_tracks]
+                        for name in recommended_artist:
+                            get_features = self.lookup.get_top_k_track_info(name, k)
+                            for key, value in get_features.items():
+                                self.df[key] += value
+                                k = len(value)
+                            self.metadata_df["artist"] += [name for i in range(0, k)]
+                            if (len(genres) > 0):
+                                self.metadata_df["genre"] += [genres[0] for i in range(0, k)]
+                            else:
+                                self.metadata_df["genre"] += ["N/A" for i in range(0, k)]
+                    except:
+                        print("Could not get tracks for: ", name)
+
         self.df = pd.DataFrame(self.df)
         self.metadata_df = pd.DataFrame(self.metadata_df)
+        self.df = self.df.join(self.metadata_df)
+
+
 
     def random_lookup(self, char):
         return self.lookup.get_artist(char)
@@ -76,5 +98,7 @@ class Data:
 
 d = Data()
 d.create_dataset()
-d.df.to_csv('take2.tsv',index=False,sep='\t', quoting=csv.QUOTE_NONE)
-d.metadata_df.to_csv('take2_metadata.tsv',sep='\t', quoting=csv.QUOTE_NONE)
+print(d.df)
+
+# d.df.to_csv('dataset2_large.csv',index=False)
+# d.metadata_df.to_csv('take2_metadata.tsv',sep='\t', quoting=csv.QUOTE_NONE)
