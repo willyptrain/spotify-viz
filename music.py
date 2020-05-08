@@ -8,7 +8,7 @@ import math
 import random
 
 
-sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
+
 
 
 class Track:
@@ -31,6 +31,7 @@ class Lookup:
     def __init__(self):
         self.artist_info = {}
         self.artists = {}
+        self.sp = spotipy.Spotify(client_credentials_manager=SpotifyClientCredentials())
 
     def add_artist(self,artist):
         self.artist_info[artist] = {}
@@ -39,7 +40,7 @@ class Lookup:
     def get_artist_tags(self, arg_name, tags=None):
         if tags is None:
             tags = ["genres", "popularity"]
-        search = sp.search(q='artist:' + arg_name, type='artist')
+        search = self.sp.search(q='artist:' + arg_name, type='artist')
         info = {"artist":arg_name, "content":{}}
         if(len(search['artists']['items']) > 0):
             artist = search['artists']['items'][0]
@@ -52,7 +53,7 @@ class Lookup:
         return info
 
     def get_artist(self, artist):
-        get = sp.search(q='artist:'+artist, type='artist')
+        get = self.sp.search(q='artist:'+artist, type='artist')
         return get
 
     def get_artists_tags(self, artists=[], tags=None):
@@ -71,7 +72,7 @@ class Lookup:
     def get_top_k_tracks(self, artist=None, k=10):
         if(artist == None):
             return []
-        results = sp.search(q=artist, limit=k)
+        results = self.sp.search(q=artist, limit=k)
         return results#json.dumps(results, indent=4)
 
     def get_top_k_track_info(self, artist, k=10):
@@ -91,7 +92,7 @@ class Lookup:
         for k,v in enumerate(results["tracks"]["items"]):
             tracks.append(v["uri"])
 
-        features = sp.audio_features(tracks)
+        features = self.sp.audio_features(tracks)
         for feature in features:
             if(feature):
                 danceability.append(feature["danceability"])
@@ -133,12 +134,12 @@ class Lookup:
         return [data-(2*st_dev),data+(2*st_dev)]
 
     def get_genres(self, artist):
-        artist = sp.search(q=artist, type='artist')["artists"]["items"][0]
+        artist = self.sp.search(q=artist, type='artist')["artists"]["items"][0]
         return artist['genres']
 
     def get_recommendations(self, artist, k=10):
-        artist_search = sp.search(q=artist,type='artist')["artists"]["items"][0]
-        results = sp.recommendations(seed_artists=[artist_search['id']], limit=k)
+        artist_search = self.sp.search(q=artist,type='artist')["artists"]["items"][0]
+        results = self.sp.recommendations(seed_artists=[artist_search['id']], limit=k)
 
         tracks = []
 

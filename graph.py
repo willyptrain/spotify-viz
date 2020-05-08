@@ -100,41 +100,8 @@ class Graph:
         new_size = (size - min(size)) / (max(size) - min(size))
         marker_size = np.round(14 * new_size)
 
-        print(len(marker_size))
-        print(len(x))
-
         node_trace = go.Scatter3d(x=x, y=y, z=z,mode='markers',
                                   marker=dict(size=marker_size,colorscale='Earth',color=colors), hovertext=list(self.G.nodes()), hoverinfo='text')
-
-        curr_artist = ""
-
-        # x0 = 0
-        # y0 = 0
-        # z0 = 0
-        # edge_x = []
-        # edge_y = []
-        # edge_z = []
-        #
-        # index = 0
-        # for i, edge in enumerate(self.G.edges()):
-        #     if(edge[0] != curr_artist):
-        #         curr_artist = edge[0]
-        #         x0 = x[index]
-        #         y0 = y[index]
-        #         z0 = z[index]
-        #     else:
-        #         edge_x.append(x0)
-        #         edge_x.append(x[index])
-        #         edge_y.append(y0)
-        #         edge_y.append(y[index])
-        #         edge_z.append(z0)
-        #         edge_z.append(z[index])
-        #         index += 1
-        # edge_trace = go.Scatter3d(x=edge_x, y=edge_y,
-        #                           z=edge_z, line=dict(width=0.5, color='#888'))
-
-
-
 
         fig = go.Figure(data=[node_trace], layout=go.Layout(
             title='<br>Network graph made with Python',
@@ -142,14 +109,11 @@ class Graph:
             showlegend=False,
             hovermode='closest',
             margin=dict(b=20, l=5, r=5, t=40),
-
             xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
-                        )
+            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)))
         fig.show()
 
-
-
+    
 
 g = Graph()
 # g.construct_neighborhood("drake")
