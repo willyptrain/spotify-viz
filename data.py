@@ -54,7 +54,6 @@ class Data:
         for i in range(0, 26):
             search = self.random_lookup(string.ascii_lowercase[i])
             print(i)
-            print(pd.DataFrame(self.metadata_df))
             k1 = k1
             for artist in search["artists"]["items"]:
                 name = artist['name']
@@ -129,10 +128,10 @@ class Data:
 
 
 d = Data()
-d.create_dataset(True)
+d.create_dataset(True,50,50)
 
 
-d.df.to_csv('data/recommendations_k10.csv',index=False)
+d.df.to_csv('data/recommendations_k50.csv',index=False)
 # d.df.to_csv('recommendations_k20_meta.csv',index=False)
 # d.metadata_df.to_csv('recommendations_metadata.tsv',sep='\t', quoting=csv.QUOTE_NONE)
 # d.df.to_csv('recommendations_tsv.tsv',sep='\t', quoting=csv.QUOTE_NONE,index=False)

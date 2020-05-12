@@ -182,8 +182,6 @@ class music_graph:
                     ),
                     line_width=2))
 
-        # plt.hist(node_x)
-        # plt.show()
 
 
         fig = go.Figure(data=[edge_trace, node_trace],layout=go.Layout(

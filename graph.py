@@ -10,6 +10,7 @@ import random
 import plotly.graph_objs as go
 import pandas as pd
 from spotify_graph import music_graph
+from tensorflow_tsne import tsne
 
 
 class Graph:
@@ -126,35 +127,10 @@ class Graph:
 
 
 
-
-
-
     def create_graph_from_csv(self, csv):
         df = self.read_csv(csv)
-
         g = nx.Graph()
-
-
-
-        # print({k: g for k,g in df.groupby("track_names")})
-        # for k,v in df.groupby("track_names"):
-        #     # print(df.loc(k))
-        #     features = v.iloc[0].to_dict()
-        #     artist = features['artist']
-        #     track = features['track_names']
-        #     feature_dict[artist] = {
-        #         track : {
-        #             'features':[],
-        #             'track_details':[]
-        #         }
-        #     }
-        #     feature_dict[artist][track]['features'] = self.get_features(features)
-        #     feature_dict[artist][track]['track_details'] = self.get_track_details(features)
-
-
-
         subgraphs = {}
-        pos = {}
 
         for index, row in df.iterrows():
             artist = row['artist']
@@ -168,13 +144,6 @@ class Graph:
                 subgraphs[artist].add_node(row_dict["track_names"], features=features, details=details)
                 subgraphs[artist].add_node(artist, artist=row_dict["artist"], genre=row_dict["generic genre"])
                 subgraphs[artist].add_edge(artist, row_dict["track_names"])
-
-                # randX = random.randint(0,250000)
-                # randY = random.randint(0,250000)
-                # pos[artist] = (randX,randY)
-                # pos[row_dict["track_names"]] = (randX + ((-1)**(random.randint(1,3)))*random.randint(1,10),
-                #                                 randY + ((-1)**(random.randint(1,3)))*random.randint(1,10))
-
                 g.add_nodes_from(subgraphs[artist].nodes(data=True))
                 g.add_edges_from(subgraphs[artist].edges(data=True))
             else:
@@ -185,15 +154,13 @@ class Graph:
                 g.add_nodes_from(subgraphs[artist].nodes(data=True))
                 g.add_edges_from(subgraphs[artist].edges(data=True))
 
-                # pos[row_dict["track_names"]] = (pos[artist][0] + ((-1) ** (random.randint(1, 3))) * random.randint(1, 10),
-                #                                 pos[artist][1] + ((-1) ** (random.randint(1, 3))) * random.randint(1, 10))
-
             if(recommender in g.nodes()):
                 g.add_edge(recommender,artist)
 
 
-        mg = music_graph()
-        mg.draw_graph(g)
+        # mg = music_graph()
+        # mg.draw_graph(g)
+        return g
 
 
 
@@ -224,8 +191,9 @@ class Graph:
 # g.construct_music_graph(["ludwig van beethoven","slipknot"])
 # g.draw_graph()
 g = Graph()
-g.create_graph_from_csv('data/recommendations_k10.csv')
-
+tf = tsne()
+graph = g.create_graph_from_csv('data/recommendations_k10.csv')
+tf.walk(graph)
 
 
 
