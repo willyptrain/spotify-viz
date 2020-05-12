@@ -16,7 +16,7 @@ class Track:
     def __init__(self, name, url, by_artist, genres=[]):
         self.url = url
         self.name = name
-        self.artist = by_artist
+        self.by_artist = by_artist
         self.genres = genres
 
     def __str__(self):
@@ -56,6 +56,11 @@ class Lookup:
         get = self.sp.search(q='artist:'+artist, type='artist')
         return get
 
+
+    def get_genre(self, genre):
+        get = self.sp.search(q='genre:'+genre)
+        return get
+
     def get_artists_tags(self, artists=[], tags=None):
         data = []
         index = 0
@@ -88,13 +93,17 @@ class Lookup:
         valence = []
         tempo = []
         tracks = []
+        track_names = []
+        track_dict = {}
         results = self.get_top_k_tracks(artist, k)
         for k,v in enumerate(results["tracks"]["items"]):
+            track_dict[v["uri"]] = v["name"]
             tracks.append(v["uri"])
 
         features = self.sp.audio_features(tracks)
         for feature in features:
             if(feature):
+                track_names.append(track_dict[feature["uri"]])
                 danceability.append(feature["danceability"])
                 energy.append(feature["energy"])
                 key.append(feature["key"])
@@ -107,7 +116,9 @@ class Lookup:
                 valence.append(feature["valence"])
                 tempo.append(feature["tempo"])
 
+
         together = {
+            "track_names": track_names,
             "danceability": danceability,
             "energy": energy,
             "key": key,
@@ -144,7 +155,7 @@ class Lookup:
         tracks = []
 
         for track in results['tracks']:
-            if(track['artists'][0]['name'].lower() != artist.lower()):
+            if(track['artists'][0]['name'].lower() != artist.lower() and (track['artists'][0]['name'] != ''or track['artists'][0]['name'] != None)):
                 genres = self.get_genres(track['artists'][0]['name'])
                 temp = Track(name=track['name'], url=track["uri"],by_artist=track['artists'][0]['name'], genres=genres)
                 tracks.append(temp)

@@ -28,14 +28,16 @@ class Data:
         self.lookup = Lookup()
         self.sp = self.lookup.sp
         self.df = pd.DataFrame()
-        self.metadata_df = {"artist":[], "genre":[]}
+        self.metadata_df = {"artist":[], "generic genre":[], "genre":[], "color":[], "recommended_by":[], "track_num": []}
+        self.genre_list = ["rap", "country", "hip hop", "pop", "alternative", "indie", "rock",
+                           "metal", "latin", "r&b"]
 
     #creates dataset from random artists
     #organizes the data into pandas dataframe so it can be fed to tensorflow's
     # embedding projector: https://projector.tensorflow.org/
-    def create_dataset(self):
-        k = 50
+    def create_dataset(self, combine=False, k1=10, k2=10):
         self.df = {
+            "track_names":[],
             "danceability": [],
             "energy": [],
             "key": [],
@@ -51,42 +53,72 @@ class Data:
 
         for i in range(0, 26):
             search = self.random_lookup(string.ascii_lowercase[i])
+            print(i)
+            print(pd.DataFrame(self.metadata_df))
+            k1 = k1
             for artist in search["artists"]["items"]:
                 name = artist['name']
                 genres = artist['genres']
-                get_features = self.lookup.get_top_k_track_info(name, k)
+                get_features = self.lookup.get_top_k_track_info(name, k1)
                 for key, value in get_features.items():
                     self.df[key] += value
-                    k = len(value)
-                self.metadata_df["artist"] += [name for i in range(0, k)]
+                    k1 = len(value)
+                self.metadata_df["artist"] += [name for i in range(0, k1)]
+                self.metadata_df["track_num"] += [i for i in range(0, k1)]
+                self.metadata_df["recommended_by"] += [name for i in range(0, k1)]
                 if(len(genres) > 0):
-                    self.metadata_df["genre"] += [genres[0] for i in range(0, k)]
+                    generic_genre = self.get_generic_genre(genres)
+                    index_genre = self.genre_list.index(generic_genre)+1
+                    self.metadata_df["generic genre"] += [generic_genre for i in range(0, k1)]
+                    self.metadata_df["genre"] += [genres[0] for i in range(0, k1)]
+                    self.metadata_df["color"] += [index_genre for i in range(0, k1)]
                 else:
-                    self.metadata_df["genre"] += ["N/A" for i in range(0, k)]
+                    self.metadata_df["generic genre"] += ["N/A" for i in range(0, k1)]
+                    self.metadata_df["genre"] += ["N/A" for i in range(0, k1)]
+                    self.metadata_df["color"] += [0 for i in range(0, k1)]
 
                 if(name != '' and name != None):
-                    k = 50
+                    k2 = k2
                     try:
-                        recommended_tracks = self.lookup.get_recommendations(name, k)
+                        recommended_tracks = self.lookup.get_recommendations(name, k2)
                         # for track in recommended_tracks:
                         recommended_artist = [track.by_artist for track in recommended_tracks]
-                        for name in recommended_artist:
-                            get_features = self.lookup.get_top_k_track_info(name, k)
+                        for new_artist in recommended_artist:
+                            get_features = self.lookup.get_top_k_track_info(name, k2)
                             for key, value in get_features.items():
                                 self.df[key] += value
-                                k = len(value)
-                            self.metadata_df["artist"] += [name for i in range(0, k)]
+                                k2 = len(value)
+                            self.metadata_df["artist"] += [new_artist for i in range(0, k2)]
+                            self.metadata_df["track_num"] += [i for i in range(0, k2)]
+                            self.metadata_df["recommended_by"] += [name for i in range(0, k2)]
+
                             if (len(genres) > 0):
-                                self.metadata_df["genre"] += [genres[0] for i in range(0, k)]
+                                index_genre = self.genre_list.index(generic_genre) + 1
+                                generic_genre = self.get_generic_genre(genres)
+                                self.metadata_df["generic genre"] += [generic_genre for i in range(0, k2)]
+                                self.metadata_df["genre"] += [genres[0] for i in range(0, k2)]
+                                self.metadata_df["color"] += [index_genre for i in range(0, k2)]
                             else:
-                                self.metadata_df["genre"] += ["N/A" for i in range(0, k)]
+                                self.metadata_df["generic genre"] += ["N/A" for i in range(0, k2)]
+                                self.metadata_df["genre"] += ["N/A" for i in range(0, k2)]
+                                self.metadata_df["color"] += [0 for i in range(0, k2)]
                     except:
                         print("Could not get tracks for: ", name)
 
         self.df = pd.DataFrame(self.df)
         self.metadata_df = pd.DataFrame(self.metadata_df)
-        self.df = self.df.join(self.metadata_df)
+        if(combine):
+            self.df = self.df.join(self.metadata_df)
 
+
+    def get_generic_genre(self, genres):
+        for genre in genres:
+            for generic in self.genre_list:
+                if(generic in genre):
+                    return generic
+        else:
+            self.genre_list.append(genres[0])
+            return genres[0]
 
 
     def random_lookup(self, char):
@@ -97,8 +129,10 @@ class Data:
 
 
 d = Data()
-d.create_dataset()
-print(d.df)
+d.create_dataset(True)
 
-# d.df.to_csv('dataset2_large.csv',index=False)
-# d.metadata_df.to_csv('take2_metadata.tsv',sep='\t', quoting=csv.QUOTE_NONE)
+
+d.df.to_csv('data/recommendations_k10.csv',index=False)
+# d.df.to_csv('recommendations_k20_meta.csv',index=False)
+# d.metadata_df.to_csv('recommendations_metadata.tsv',sep='\t', quoting=csv.QUOTE_NONE)
+# d.df.to_csv('recommendations_tsv.tsv',sep='\t', quoting=csv.QUOTE_NONE,index=False)
