@@ -11,6 +11,7 @@ import plotly.graph_objs as go
 import pandas as pd
 from spotify_graph import music_graph
 from tensorflow_tsne import tsne
+import math
 
 
 class Graph:
@@ -121,14 +122,51 @@ class Graph:
             yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)))
         fig.show()
 
-    def read_csv(self, file):
-        df = pd.read_csv(file)
-        return df.sort_values(by="recommended_by")
+    def read_csv(self, file, index_beg=None, index_end=None):
+        if(not index_beg and not index_beg):
+            df = pd.read_csv(file)
+            return df.sort_values(by="recommended_by")
+        else:
+            if(str(type(index_beg)) == "<class 'int'>"):
+                if(str(type(index_end)) == "<class 'int'>"):
+                    df = pd.read_csv(file)
+                    return df.iloc[index_beg:index_end]
+                else:
+                    df = pd.read_csv(file)
+                    return df.iloc[index_beg:]
+            else:
+                if (str(type(index_end)) == "<class 'int'>"):
+                    df = pd.read_csv(file)
+                    return df.iloc[:index_end]
+                else:
+                    if (str(type(index_beg)) == "<class 'float'>"):
+                        if (str(type(index_end)) == "<class 'float'>"):
+                            df = pd.read_csv(file)
+                            rows = len(df.index)
+                            beg = math.floor(index_beg*rows)
+                            end = math.floor(index_end*rows)
+                            return df.iloc[beg:end]
+                        else:
+                            df = pd.read_csv(file)
+                            rows = len(df.index)
+                            beg = math.floor(index_beg * rows)
+                            return df.iloc[beg:]
+                    else:
+                        if (str(type(index_end)) == "<class 'float'>"):
+                            df = pd.read_csv(file)
+                            rows = len(df.index)
+                            end = math.floor(index_end * rows)
+                            return df.iloc[:end]
+                        else:
+                            raise Exception("Indices must be an integer or float")
 
 
 
-    def create_graph_from_csv(self, csv):
-        df = self.read_csv(csv)
+
+
+
+    def create_graph_from_df(self, df):
+        # df = self.read_csv(csv, index_begin, index_end)
         g = nx.Graph()
         subgraphs = {}
 
@@ -190,11 +228,20 @@ class Graph:
 # # g.construct_neighborhood("drake")
 # g.construct_music_graph(["ludwig van beethoven","slipknot"])
 # g.draw_graph()
+
+
+file = 'data/recommendations_k50.csv'
 g = Graph()
 tf = tsne()
-graph = g.create_graph_from_csv('data/recommendations_k10.csv')
-tf.walk(graph)
 
+training_df = g.read_csv(file, 0,0.75)#g.create_graph_from_csv('data/recommendations_k10.csv')
+testing_df = g.read_csv(file, 0.75, None)#g.create_graph_from_csv('data/recommendations_k10.csv')
+
+training_graph = g.create_graph_from_df(training_df)
+testing_graph = g.create_graph_from_df(testing_df)
+
+model = tf.train_model(training_graph)
+tf.draw_predicted_graph(model, testing_graph)
 
 
 # next: use 3d value decomp to use as position in 3d graph construction, essentially just add nodes

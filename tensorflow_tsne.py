@@ -15,31 +15,8 @@ import node2vec as n2v
 
 
 color_list = """
-        aliceblue, antiquewhite, aqua, aquamarine, azure,
-            beige, bisque, black, blanchedalmond, blue,
-            blueviolet, brown, burlywood, cadetblue,
-            chartreuse, chocolate, coral, cornflowerblue,
-            cornsilk, crimson, cyan, darkblue, darkcyan,
-            darkgoldenrod, darkgray, darkgrey, darkgreen,
-            darkkhaki, darkmagenta, darkolivegreen, darkorange,
-            darkorchid, darkred, darksalmon, darkseagreen,
-            darkslateblue, darkslategray, darkslategrey,
-            darkturquoise, darkviolet, deeppink, deepskyblue,
-            dimgray, dimgrey, dodgerblue, firebrick,
-            floralwhite, forestgreen, fuchsia, gainsboro,
-            ghostwhite, gold, goldenrod, gray, grey, green,
-            greenyellow, honeydew, hotpink, indianred, indigo,
-            ivory, khaki, lavender, lavenderblush, lawngreen,
-            lemonchiffon, lightblue, lightcoral, lightcyan,
-            lightgoldenrodyellow, lightgray, lightgrey,
-            lightgreen, lightpink, lightsalmon, lightseagreen,
-            lightskyblue, lightslategray, lightslategrey,
-            lightsteelblue, lightyellow, lime, limegreen,
-            linen, magenta, maroon, mediumaquamarine,
-            mediumblue, mediumorchid, mediumpurple,
-            mediumseagreen, mediumslateblue, mediumspringgreen,
-            mediumturquoise, mediumvioletred, midnightblue,
-            mintcream, mistyrose, moccasin, navajowhite, navy,
+            darkred, darkseagreen,
+            darkslateblue, moccasin, navajowhite, navy,
             oldlace, olive, olivedrab, orange, orangered,
             orchid, palegoldenrod, palegreen, paleturquoise,
             palevioletred, papayawhip, peachpuff, peru, pink,
@@ -55,18 +32,28 @@ color_list = """
 
 class tsne:
 
-    def walk(self, g):
+    def train_model(self, g):
         walks = n2v.Node2Vec(g, dimensions=3, walk_length=16, num_walks=100)
         model = walks.fit(window=10, min_count=1)
+        return model
+
+    def draw_predicted_graph(self, model, g):
         x = []
         y = []
         z = []
         colors = []
         genres = []
+        labels = []
         for node in g.nodes(data=True):
             x.append(model.wv.get_vector(node[0])[0])
             y.append(model.wv.get_vector(node[0])[1])
             z.append(model.wv.get_vector(node[0])[2])
+            if("artist" in node[1] and node[1]["artist"]):
+                if ("genre" in node[1] and node[1]["genre"]):
+                    labels.append(node[1]["genre"])
+                else:
+                    labels.append(node[1]["artist"])
+
             if ("genre" in node[1] and node[1]["genre"]):
                 genre = node[1]["genre"]
                 if (genre in genres):
@@ -76,15 +63,20 @@ class tsne:
                     colors.append(color_list[genres.index(genre)][:-1])
             elif ("features" in node[1] and "details" in node[1]):
                 genre = node[1]["details"]["generic genre"]
+                track_artist = node[1]["details"]['artist']
+                track_name = node[1]["details"]['track_names']
+                labels.append("%s" % (genre))
                 if (genre in genres):
                     colors.append(color_list[genres.index(genre)][:-1])
                 else:
                     genres.append(genre)
                     colors.append(color_list[genres.index(genre)][:-1])
 
+
         node_trace = go.Scatter3d(x=x, y=y, z=z,
                                   mode='markers',
                                   hoverinfo='text',
+                                  hovertext=labels,
                                   marker=dict(
                                       showscale=True,
                                       # colorscale options
