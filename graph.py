@@ -9,6 +9,10 @@ import numpy as np
 from numpy import linalg
 import random
 import plotly.graph_objs as go
+import pandas as pd
+from spotify_graph import music_graph
+from tensorflow_tsne import tsne
+import math
 
 
 class Graph:
@@ -123,6 +127,7 @@ class Graph:
 
 
     def construct_music_graph(self, artists):
+        g = nx.Graph()
         for artist in artists:
             if(artist not in self.artist_graphs):
                 artist_tracks = self.construct_neighborhood(artist, media='track_list')
@@ -168,7 +173,7 @@ class Graph:
             
 
 
-    def singular_value_decomp(self):
+    def singular_value_decomp(self,g):
 
 
         features = []
@@ -177,7 +182,9 @@ class Graph:
         curr_color = ""
         node_color = {}
 
-        for node in self.G.nodes(data=True):
+        for node in g.nodes(data=True):
+            # print(node)
+            print(node)
             if ("genres" in node[1]):
                 found_genre = False
                 for i in range(0, len(node[1]["genres"])):
@@ -212,23 +219,21 @@ class Graph:
 
             # track
             if("features" in node[1]):
-                
                 if(node[1]["features"]):
-                    #print(np.array(list(node[1]["features"].values())[0:11]))
-                    #print("color", curr_color)
-                    features.append(np.array(list(node[1]["features"].values())[0:11]))
+                    key = list(node[1]["features"].keys())[0]
+                    features.append(np.array([v for k,v in node[1]["features"][key].items()]))
                     color_scatter.append(curr_color)
                     node_color[node[0]] = curr_color
 
+        # print(features)
 
-        u, s, v = linalg.svd(features)
+        u, s, v = linalg.svd(features, full_matrices=False)
 
         return u, color_scatter
 
-    def draw_graph(self):
+    def draw_graph_with_svd(self,g):
 
-        u, colors = self.singular_value_decomp()
-        #print(colors)
+        u, colors = self.singular_value_decomp(g)
         x = u[:,0]
         y = u[:,1]
         z = u[:,2]
@@ -237,41 +242,8 @@ class Graph:
         new_size = (size - min(size)) / (max(size) - min(size))
         marker_size = np.round(14 * new_size)
 
-        print(len(marker_size))
-        print(len(x))
-
         node_trace = go.Scatter3d(x=x, y=y, z=z,mode='markers',
                                   marker=dict(size=marker_size,colorscale='Earth',color=colors), hovertext=list(self.G.nodes()), hoverinfo='text')
-
-        curr_artist = ""
-
-        # x0 = 0
-        # y0 = 0
-        # z0 = 0
-        # edge_x = []
-        # edge_y = []
-        # edge_z = []
-        #
-        # index = 0
-        # for i, edge in enumerate(self.G.edges()):
-        #     if(edge[0] != curr_artist):
-        #         curr_artist = edge[0]
-        #         x0 = x[index]
-        #         y0 = y[index]
-        #         z0 = z[index]
-        #     else:
-        #         edge_x.append(x0)
-        #         edge_x.append(x[index])
-        #         edge_y.append(y0)
-        #         edge_y.append(y[index])
-        #         edge_z.append(z0)
-        #         edge_z.append(z[index])
-        #         index += 1
-        # edge_trace = go.Scatter3d(x=edge_x, y=edge_y,
-        #                           z=edge_z, line=dict(width=0.5, color='#888'))
-
-
-
 
         fig = go.Figure(data=[node_trace], layout=go.Layout(
             title='<br>Network graph made with Python',
@@ -279,13 +251,130 @@ class Graph:
             showlegend=False,
             hovermode='closest',
             margin=dict(b=20, l=5, r=5, t=40),
-
             xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
-                        )
+            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False)))
         fig.show()
 
+    def read_csv(self, file, index_beg=None, index_end=None):
+        if(not index_beg and not index_beg):
+            df = pd.read_csv(file)
+            return df.sort_values(by="recommended_by")
+        else:
+            if(str(type(index_beg)) == "<class 'int'>"):
+                if(str(type(index_end)) == "<class 'int'>"):
+                    df = pd.read_csv(file)
+                    return df.iloc[index_beg:index_end]
+                else:
+                    df = pd.read_csv(file)
+                    return df.iloc[index_beg:]
+            else:
+                if (str(type(index_end)) == "<class 'int'>"):
+                    df = pd.read_csv(file)
+                    return df.iloc[:index_end]
+                else:
+                    if (str(type(index_beg)) == "<class 'float'>"):
+                        if (str(type(index_end)) == "<class 'float'>"):
+                            df = pd.read_csv(file)
+                            rows = len(df.index)
+                            beg = math.floor(index_beg*rows)
+                            end = math.floor(index_end*rows)
+                            return df.iloc[beg:end]
+                        else:
+                            df = pd.read_csv(file)
+                            rows = len(df.index)
+                            beg = math.floor(index_beg * rows)
+                            return df.iloc[beg:]
+                    else:
+                        if (str(type(index_end)) == "<class 'float'>"):
+                            df = pd.read_csv(file)
+                            rows = len(df.index)
+                            end = math.floor(index_end * rows)
+                            return df.iloc[:end]
+                        else:
+                            raise Exception("Indices must be an integer or float")
 
+
+
+
+
+
+    def create_graph_from_df(self, df):
+        # df = self.read_csv(csv, index_begin, index_end)
+        g = nx.Graph()
+        subgraphs = {}
+
+        for index, row in df.iterrows():
+            artist = row['artist']
+            recommender = row['recommended_by']
+            row_dict = row.to_dict()
+            if(artist not in subgraphs):
+                subgraphs[artist] = nx.Graph()
+                subgraphs[artist].add_node(row_dict["track_names"])
+                features = self.get_features(row_dict, True)
+                details = self.get_track_details(row_dict)
+                subgraphs[artist].add_node(row_dict["track_names"], features=features, details=details)
+                subgraphs[artist].add_node(artist, artist=row_dict["artist"], genre=row_dict["generic genre"])
+                subgraphs[artist].add_edge(artist, row_dict["track_names"])
+                g.add_nodes_from(subgraphs[artist].nodes(data=True))
+                g.add_edges_from(subgraphs[artist].edges(data=True))
+            else:
+                features = self.get_features(row_dict, True)
+                details = self.get_track_details(row_dict)
+                subgraphs[artist].add_node(row_dict["track_names"], features=features, details=details)
+                subgraphs[artist].add_edge(artist, row_dict["track_names"])
+                g.add_nodes_from(subgraphs[artist].nodes(data=True))
+                g.add_edges_from(subgraphs[artist].edges(data=True))
+
+            if(recommender in g.nodes()):
+                g.add_edge(recommender,artist)
+
+
+        # mg = music_graph()
+        # mg.draw_graph(g)
+        return g
+
+
+
+    def get_features(self, features, no_tag=False):
+        if(not no_tag):
+            tags = ["danceability","energy","key","loudness","mode","speechiness","acousticness","instrumentalness","liveness","valence","tempo"]
+            feature_dict = {}
+            for key in tags:
+                feature_dict[key] = features[key]
+            return feature_dict
+        else:
+            feature_list = []
+            tags = ["danceability", "energy", "key", "loudness", "mode", "speechiness", "acousticness",
+                    "instrumentalness", "liveness", "valence", "tempo"]
+            for key in tags:
+                feature_list.append(features[key])
+            return feature_list
+
+    def get_track_details(self, features):
+        tags = ["track_names", "artist", "generic genre", "genre", "color", "recommended_by", "track_num"]
+        feature_dict = {}
+        for key in tags:
+            feature_dict[key] = features[key]
+        return feature_dict
+
+# g = Graph()
+# # g.construct_neighborhood("drake")
+# g.construct_music_graph(["ludwig van beethoven","slipknot"])
+# g.draw_graph()
+
+
+file = 'data/recommendations_k50.csv'
+g = Graph()
+tf = tsne()
+
+training_df = g.read_csv(file, 0,0.75)#g.create_graph_from_csv('data/recommendations_k10.csv')
+testing_df = g.read_csv(file, 0.75, None)#g.create_graph_from_csv('data/recommendations_k10.csv')
+
+training_graph = g.create_graph_from_df(training_df)
+testing_graph = g.create_graph_from_df(testing_df)
+
+model = tf.train_model(training_graph)
+tf.draw_predicted_graph(model, testing_graph)
 
 
 g = Graph()

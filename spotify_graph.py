@@ -86,6 +86,115 @@ class music_graph:
         ]
 
 
+    def draw_graph(self, g):
+
+        positions = {}
+        edge_x = []
+        edge_y = []
+        edge_z = []
+        node_x = []
+        node_y = []
+        node_z = []
+
+
+        genres = []
+        colors = []
+        labels = []
+
+
+
+        for node in g.nodes(data=True):
+
+            if("artist" in node[1] and node[1]["artist"]):
+                if(node[1]["artist"] not in positions):
+                    x = random.randint(0, 250000)
+                    y = random.randint(0, 250000)
+                    z = random.randint(0, 250000)
+                    positions[node[1]["artist"]] = [x,y,z]
+                labels.append(node[1]["artist"])
+
+            if ("genre" in node[1] and node[1]["genre"]):
+                genre = node[1]["genre"]
+                if (genre in genres):
+                    colors.append(color_list[genres.index(genre)][:-1])
+                else:
+                    genres.append(genre)
+                    colors.append(color_list[genres.index(genre)][:-1])
+
+            elif("features" in node[1] and "details" in node[1]):
+                # features = node[1]["features"]
+
+                track_artist = node[1]["details"]['artist']
+                labels.append("%s, by: %s" % (node[1]["details"]['track_names'], track_artist))
+                genre = node[1]["details"]["generic genre"]
+                if(genre in genres):
+                    colors.append(color_list[genres.index(genre)][:-1])
+                else:
+                    genres.append(genre)
+                    colors.append(color_list[genres.index(genre)][:-1])
+
+                if(track_artist not in positions):
+                    x = random.randint(0, 250000)
+                    y = random.randint(0, 250000)
+                    z = random.randint(0, 250000)
+                    positions[track_artist] = [x, y, z]
+
+                x2 = positions[track_artist][0] * ((-1)**(random.randint(1,3)))*random.uniform(0,4)
+                y2 = positions[track_artist][1] * ((-1)**(random.randint(1,3)))*random.uniform(0,4)
+                z2 = positions[track_artist][2] * ((-1)**(random.randint(1,3)))*random.uniform(0,4)
+
+                node_x.append(x2)
+                node_x.append(positions[track_artist][0])
+                node_y.append(y2)
+                node_y.append(positions[track_artist][1])
+                node_z.append(z2)
+                node_z.append(positions[track_artist][2])
+
+                edge_x.append(positions[track_artist][0])
+                edge_x.append(x2)
+                edge_y.append(positions[track_artist][1])
+                edge_y.append(y2)
+                edge_z.append(positions[track_artist][2])
+                edge_z.append(z2)
+
+        edge_trace = go.Scatter3d(x=edge_x, y=edge_y,
+                                  z=edge_z, line=dict(width=0.5, color='#888'))
+
+        node_trace = go.Scatter3d(x=node_x, y=node_y, z=node_z,
+                mode='markers',
+                hoverinfo='text',
+                hovertext=labels,
+                marker=dict(
+                    showscale=True,
+                    # colorscale options
+                    #'Greys' | 'YlGnBu' | 'Greens' | 'YlOrRd' | 'Bluered' | 'RdBu' |
+                    #'Reds' | 'Blues' | 'Picnic' | 'Rainbow' | 'Portland' | 'Jet' |
+                    #'Hot' | 'Blackbody' | 'Earth' | 'Electric' | 'Viridis' |
+                    colorscale='YlGnBu',
+                    reversescale=True,
+                    color=colors,#[random.randint(0, 255),random.randint(0, 255),random.randint(0, 255)],
+                    size=10,
+                    colorbar=dict(
+                        thickness=15,
+                        title='Node Connections',
+                        xanchor='left',
+                        titleside='right'
+                    ),
+                    line_width=2))
+
+
+
+        fig = go.Figure(data=[edge_trace, node_trace],layout=go.Layout(
+                            title='<br>Network graph made with Python',
+                            titlefont_size=16,
+                            showlegend=False,
+                            hovermode='closest',
+                            margin=dict(b=20,l=5,r=5,t=40),
+
+                            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False))
+        )
+        fig.show()
 
 
     def draw_neighborhood(self, artist):
@@ -117,6 +226,8 @@ class music_graph:
                 node_x.append(self.positions[node][0])
                 node_y.append(self.positions[node][1])
                 node_z.append(self.positions[node][2])
+
+
 
             node_trace = go.Scatter3d(
                 x=node_x, y=node_y,z=node_z,
@@ -245,14 +356,14 @@ class music_graph:
         fig.show()
 
 
-w = music_graph(["childish gambino","slipknot", "vampire weekend","cage the elephant"])
-           #      , "two door cinema club", "vampire weekend", "cage the elephant", "drake", "still woozy",
-           # "Cosmo Pyke", "Linkin Park", "Jay-Z", "Peach Pit", "Animal Collective", "Jimmy Hendrix", "John Mayer",
-           # "tobi lou", "mac miller", "flume", "rex orange county", "louis the child",
-           # "frank ocean", "clairo", "broken bells", "giraffage", "odesza", "chet faker",
-           # "steve lacy", "sampha","healy","felly","j.cole","modest mouse","xxxtentacion",
-           # "mounika","childish gambino","alt-J"])
-# w.construct_neighborhood(w.artists[0])
-# w.construct_neighborhood(w.artists[1])
-w.draw_neighborhoods(w.artists)
+# w = music_graph(["childish gambino","slipknot", "vampire weekend","cage the elephant"])
+#            #      , "two door cinema club", "vampire weekend", "cage the elephant", "drake", "still woozy",
+#            # "Cosmo Pyke", "Linkin Park", "Jay-Z", "Peach Pit", "Animal Collective", "Jimmy Hendrix", "John Mayer",
+#            # "tobi lou", "mac miller", "flume", "rex orange county", "louis the child",
+#            # "frank ocean", "clairo", "broken bells", "giraffage", "odesza", "chet faker",
+#            # "steve lacy", "sampha","healy","felly","j.cole","modest mouse","xxxtentacion",
+#            # "mounika","childish gambino","alt-J"])
+# # w.construct_neighborhood(w.artists[0])
+# # w.construct_neighborhood(w.artists[1])
+# w.draw_neighborhoods(w.artists)
 
