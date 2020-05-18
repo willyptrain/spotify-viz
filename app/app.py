@@ -7,6 +7,8 @@ from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 import spotipy
 from flask_material import Material
 import json
+import webbrowser
+
 
 
 
@@ -39,57 +41,53 @@ def spotify_login():
         return redirect(url_for('spotify.login'))#url_for('spotify.login'))
     try:
         resp = spotify.get('v1/me')
-        json_reponse = resp.json()
-        session['nickname'] = json_reponse['display_name']
-        return redirect(url_for('user',name= resp.json()['display_name']))
+        json_response = resp.json()
+        session['nickname'] = json_response['display_name']
+        if(len(json_response['images']) > 0 and 'url' in  json_response['images'][0]):
+            session['user_img'] = json_response['images'][0]['url']
+        # print(json_response)
+        return redirect(url_for('user',name=resp.json()['display_name'], time_range='short_term'))
 
     except (TokenExpiredError) as e: #was getting weird TokenExpiredError
         return redirect(url_for('spotify.login'))
 
 
-@app.route('/user/<name>')
-def user(name):
+@app.route('/user/<name>/<time_range>')
+def user(name, time_range):
     nickname = session.get('nickname', None)
+    image_url = session.get('user_img',None)
     token = spotify_blueprint.token["access_token"]
-    top_tracks = {'short_term':[], 'medium_term':[], 'long_term':[]}
+    top_tracks = []
     if(token):
         sp = spotipy.Spotify(auth=token)
         sp.trace = False
-        ranges = ['short_term', 'medium_term', 'long_term']
-        k = 10
-        for range in top_tracks.keys():
-            results = sp.current_user_top_tracks(time_range=range, limit=k)
-            for i, result in enumerate(results['items']):
-                top_tracks[range].append({
-                    'track_name':result['name'],
-                    'artist':result['artists'][0]['name'],
-                    'uri':result['uri'],
-                    'image':result['album']['images'][0]['url']
-                })
+        k = 5
+        range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
+        results = sp.current_user_top_tracks(time_range=time_range, limit=k)
+        for i, result in enumerate(results['items']):
+            top_tracks.append({
+                'track_name':result['name'],
+                'artist':result['artists'][0]['name'],
+                'uri':result['uri'],
+                'image':result['album']['images'][0]['url']
+            })
 
-                # print(json.dumps({
-                #     'track_name':result['name'],
-                #     'artist':result['artists'][0]['name'],
-                #     'uri':result['uri'],
-                #     'image':result['album']['images'][0]['url']
-                # },indent=4))
 
 
     return render_template('home.html',
+                           username=name,
+                           user_img=image_url,
                            top_tracks=top_tracks,
-                           k=5, ranges=ranges)
+                           k=k, time_range=range_nicknames[time_range])
 
 
 @app.route('/logout')
 def spotify_logout():
-    # logout_user()
-    token = spotify_blueprint.token["access_token"]
     for key in list(session.keys()):
         session.pop(key)
 
-    del token
-    # print(url_for('sp'))
-    return redirect('/spotify')
+    webbrowser.open_new('https://www.spotify.com/logout/')
+    return redirect('https://www.spotify.com/logout/')
 
 
 
