@@ -12,7 +12,7 @@ from web_app.graphing import graph as viz
 from web_app.graphing import music
 from web_app.settings import spotify_secret, spotify_id
 import chart_studio.tools as tls
-from web_app.forms import AlbumForm
+from web_app.forms import AlbumForm, ArtistForm
 
 spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
                                            client_secret=spotify_secret,
@@ -124,6 +124,21 @@ def album_graph():
         embed_html = tls.get_embed(link)
         return render_template('album_graph_view.html', graph=embed_html, username=nickname, user_img=image_url)
     return render_template('album_graph.html', form=form)
+
+@app.route('/artist_graph/', methods=['GET', 'POST'])
+def artist_graph():
+    form = ArtistForm()
+    if form.validate_on_submit():
+        artists = form.artist_list.data
+        artists = artists.split(",")
+        nickname = session.get('nickname', None)
+        image_url = session.get('user_img',None)
+        g = viz.Graph()
+        g.construct_music_graph(artists=artists)
+        link = g.draw_graph()
+        embed_html = tls.get_embed(link)
+        return render_template('artist_graph_view.html', graph=embed_html, username=nickname, user_img=image_url)
+    return render_template('artist_graph.html', form=form)
 
 
 @app.route('/logout')

@@ -60,28 +60,20 @@ class Graph:
             else:
                 return self.artist_graphs[artist]
         elif media == 'track_list':
-            if artist in self.tracks_by_artist.keys():
-                if(track["name"] not in self.tracks_by_artist[artist]):
-                    g = self.track_graphs[artist]
-                    g.add_node(artist, genres=self.lookup.get_genres(artist))
+            if(artist not in self.artist_graphs):
+                get = self.sp.search(q=artist, limit=k)
+                g = nx.Graph()
+                g.add_node(artist, genres=self.lookup.get_genres(artist))
+                self.tracks_by_artist[artist] = []
+                for track in get["tracks"]["items"]:
                     self.tracks_by_artist[artist].append(track["name"])
                     features = self.sp.audio_features(track["uri"])[0]
                     g.add_node(track["name"], features=features)
                     g.add_edge(artist, track["name"])
-                    self.track_graphs[artist] = g
-                    return g
-                else:
-                    return self.track_graphs[artist]
+                self.artist_graphs[artist] = g
+                return g
             else:
-                    g = nx.Graph()
-                    g.add_node(artist, genres=self.lookup.get_genres(artist))
-                    self.tracks_by_artist[artist] = [track["name"]]
-                    features = self.sp.audio_features(track["uri"])[0]
-                    g.add_node(track["name"], features=features)
-                    g.add_edge(artist, track["name"])
-                    self.track_graphs[artist] = g
-                    return g
-
+                return self.artist_graphs[artist]
 
         elif media == 'albums':
             if(artist not in self.artist_graphs):
@@ -143,11 +135,11 @@ class Graph:
                 self.G.add_edges_from(artist_tracks.edges(data=True))
             recommendations = self.lookup.get_recommendations(artist)
             for track in recommendations:
-                self.all_artist_nodes.append(track.artist)
-                new_g = self.construct_neighborhood(track.artist, media='tracks')
+                self.all_artist_nodes.append(track.by_artist)
+                new_g = self.construct_neighborhood(track.by_artist, media='tracks')
                 self.G.add_nodes_from(new_g.nodes(data=True))
                 self.G.add_edges_from(new_g.edges(data=True))
-                self.G.add_edge(artist, track.artist)
+                self.G.add_edge(artist, track.by_artist)
     
     # constructs graph for set of a tracks / saved songs
     def construct_track_graph(self, tracks):
@@ -460,9 +452,9 @@ class Graph:
             feature_dict[key] = features[key]
         return feature_dict
 
-# g = Graph()
+#g = Graph()
 # # g.construct_neighborhood("drake")
-# g.construct_music_graph(["ludwig van beethoven","slipknot"])
+#g.construct_music_graph(["ludwig van beethoven","slipknot"])
 # g.draw_graph()
 
 '''

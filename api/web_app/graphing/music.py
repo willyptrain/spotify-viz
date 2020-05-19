@@ -21,7 +21,7 @@ class Track:
 
     def __str__(self):
         return "%s; %s; %s; %s" \
-               % (self.name,self.artist,self.genres,self.url)
+               % (self.name,self.by_artist,self.genres,self.url)
 
 
 
