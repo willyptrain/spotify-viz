@@ -1,0 +1,100 @@
+
+<!DOCTYPE html>
+<html>
+      <head>
+
+<!--        Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<!--        Material-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/materialize.min.css') }}"  media="screen,projection"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
+
+
+          <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+          <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='home.css') }}">
+
+
+
+
+<!--            <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
+<!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>-->
+<!--  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
+
+  </head>
+
+  <body>
+
+
+
+
+      <div class="gradient-background">
+
+          <div class="nav-bar">
+              <a onclick="" href="#topBar" aria-expanded="false" class="waves-effect btn-flat top-bar-toggle" data-toggle="collapse">
+                    <i class="nav-bar-username large material-icons">dehaze</i>
+
+              </a>
+          </div>
+          <div id="topBar" class="collapse sidebar align-content-center">
+
+
+<div class="sidebar-header">
+          <a href="#topBar" aria-expanded="false" class="waves-effect btn-flat exit-sidebar" data-toggle="collapse">
+              <i class="exit-btn large material-icons">close</i>
+          </a>
+      </div>
+<!--                SIDEBAR-HIDDEN-->
+         <div class="sidebar-items">
+                      <img class="profile-img" src="{{ user_img }}" alt="">
+                      <h4 class="sidebar-username">{{ username }}</h4>
+                  </div>
+              <footer class="footer-logout">
+                          <form action="/logout">
+                              <input class="btn logout-btn" type="submit" value="Logout">
+                          </form>
+                      </footer>
+          </div>
+
+
+
+          <div class="time-range-tabs tabs-fixed-width">
+                <ul id="tabs-swipe-demo" class="tabs">
+                  <li class="tab col s3"><a class="active range-tab" href="{{ url_for('user',name=username, time_range='short_term') }}">This Week</a></li>
+                  <li class="tab col s3"><a class="range-tab" href="{{ url_for('user',name=username, time_range='medium_term') }}">This Year</a></li>
+                  <li class="tab col s3"><a class="range-tab" href="{{ url_for('user',name=username, time_range='long_term') }}">All Time</a></li>
+                </ul>
+          </div>
+
+
+
+
+
+
+
+           <h5 style="text-align: center" class="page-title">Recommendations</h5>
+
+           <div style="width:100%">
+                        <ul>
+                      {%for c in range(0, k)%}
+                          <li class="row song-list-item">
+                              <img class="col s6 track-img" src="{{ rec_list[c]['image']   }}" alt="">
+                              <h6 class="col s6 track-text">{{ rec_list[c]['track_name']   }}</h6>
+                          </li>
+                      {%endfor%}
+                          </ul>
+                    </div>
+
+      </div>
+  </body>
+
+
+
+</html>

@@ -1,0 +1,77 @@
+
+<!DOCTYPE html>
+<html>
+      <head>
+
+<!--        Bootstrap-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+<!--        Material-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='css/materialize.min.css') }}"  media="screen,projection"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/javascript" src="{{ url_for('static',filename='js/materialize.min.js') }}"></script>
+
+
+          <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+          <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='home.css') }}">
+
+
+
+
+<!--            <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">-->
+<!--  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>-->
+<!--  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>-->
+
+  </head>
+
+  <body>
+
+
+
+
+      <div class="gradient-background">
+
+          <div class="nav-bar">
+              <a onclick="" href="#topBar" aria-expanded="false" class="waves-effect btn-flat top-bar-toggle" data-toggle="collapse">
+                    <i class="nav-bar-username large material-icons">dehaze</i>
+
+              </a>
+          </div>
+          <div id="topBar" class="collapse sidebar align-content-center">
+
+
+<div class="sidebar-header">
+          <a href="#topBar" aria-expanded="false" class="waves-effect btn-flat exit-sidebar" data-toggle="collapse">
+              <i class="exit-btn large material-icons">close</i>
+          </a>
+      </div>
+<!--                SIDEBAR-HIDDEN-->
+         <div class="sidebar-items">
+                      <img class="profile-img" src="{{ user_img }}" alt="">
+                      <h4 class="sidebar-username">{{ username }}</h4>
+                  </div>
+              <footer class="footer-logout">
+                          <form action="/logout">
+                              <input class="btn logout-btn" type="submit" value="Logout">
+                          </form>
+                      </footer>
+          </div>
+
+
+
+           <h5 style="text-align: center" class="page-title">Input albums:</h5>
+
+           <div style="width:100%">
+            <form method="POST" action="/album_graph/">
+                {{ form.csrf_token }}
+                {{ form.album_list.label }} {{ form.album_list }}
+                <input type="submit" value="Go">
+            </form>
+      </div>
+  </body>

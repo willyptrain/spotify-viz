@@ -1,0 +1,139 @@
+
+.gradient-background {
+    height: 100vh;
+    width: 100%;
+    display: inline-block;
+    align-items: center;
+}
+
+body {
+    font-family: Montserrat, Roboto, Roboto Slab, Gill Sans and Lora;
+    background-image: linear-gradient(to bottom right, #70e1f5, #ffd194);
+
+}
+
+.track-card {
+    margin-left: 15px !important;
+    margin-right: 15px !important;
+}
+.track-img {
+    display:inline;
+
+}
+.track-text {
+    display:inline;
+    color: #232b2b;
+}
+.song-list-item {
+    padding-left: 10px;
+
+}
+.page-title {
+    font-weight: bold;
+    color: #232b2b;
+    text-shadow: 2px 2px white;
+    margin-bottom: 25px;
+}
+
+.nav-bar {
+    margin-top: 0px;
+    background: white;
+    height: 40px;
+    box-shadow: 1px 0px 10px -1px black;
+}
+
+.sidebar {
+    height: 100%;
+    width: 75%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #232b2b;
+    box-shadow: 0.25px 1px 10px black;
+    overflow-x: hidden;
+    padding-top: 20px;
+    text-align: center;
+
+}
+.sidebar-items {
+    position: absolute;
+}
+.sidebar-username {
+    color: wheat;
+    width: 75%;
+    text-align: center;
+    margin: auto;
+    font-weight: bolder;
+    position: fixed;
+    top: 32%;
+}
+.profile-img {
+    border-radius: 100%;
+    border: 5.5px solid wheat;
+    position: fixed;
+    /*margin-right: 10%;
+    margin-left: 10%;*/
+      top: 50%;
+  left: 25%;
+  margin: -100px 0 0 -150px;
+    top: 5%;
+    height: 25%;
+}
+
+.exit-sidebar {
+    float: right;
+    color: white;
+    cursor: pointer;
+    font-weight: bolder;
+        height: 100px;
+    max-height: 100px;
+
+}
+
+.nav-bar-username {
+    font-weight: 600;
+    color: black;
+    font-size: 1.7rem !important;
+    -webkit-font-smoothing: none;
+    opacity: 0.9;
+}
+
+.range-tab {
+    color: #232b2b !important;
+}
+
+
+.exit-btn {
+    color: wheat;
+}
+.time-range-tabs {
+    margin-top: 10px;
+
+}
+
+
+.footer-logout {
+    position: absolute;
+    bottom: 5px;
+    margin-right: 5%;
+    margin-left: 5%;
+    width: 90%;
+}
+.logout-btn {
+    width: 100%;
+    height: 6em;
+    background: transparent;
+    border: 5px solid wheat;
+    color: wheat;
+    font-weight: bolder;
+}
+
+
+.top-bar-toggle, .top-bar-toggle:hover, .top-bar-toggle:active, .top-bar-toggle:focus  {
+    text-decoration: none !important;
+    color: #FFFFF0;
+    text-shadow: 1px 1px black;
+    font-size: 1.2em;
+}
+
