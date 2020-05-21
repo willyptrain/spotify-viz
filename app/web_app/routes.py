@@ -8,8 +8,9 @@ import json
 import webbrowser
 from web_app import app
 from web_app.settings import spotify_id, spotify_secret
-#from settings import spotify_secret, spotify_id
+# from settings import spotify_secret, spotify_id
 
+print(spotify_id)
 spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
                                            client_secret=spotify_secret,
                                            redirect_url='http://127.0.0.1:5000/spotify',
@@ -20,21 +21,17 @@ app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')
 @app.route('/spotify', methods=['GET'], strict_slashes=False)
 def spotify_login():
     if not spotify.authorized:
-        print("yoo")
-        print(url_for('spotify.login'))
-        return redirect(url_for('spotify.login'))#url_for('spotify.login'))
+        return redirect(url_for('spotify.login'))
     try:
-        print("yo")
         resp = spotify.get('v1/me')
         json_response = resp.json()
-        print(json_response)
-        session['nickname'] = json_response['display_name']
+        session['nickname'] = json_response['display_name'] if len(json_response['display_name']) > 0 else ""
         if(len(json_response['images']) > 0 and 'url' in  json_response['images'][0]):
             session['user_img'] = json_response['images'][0]['url']
         else:
             session['user_img'] = 'https://via.placeholder.com/150'
         print(json_response)
-        return redirect(url_for('user', name='fignick', time_range='short_term'))
+        return redirect(url_for('user', name=json_response['display_name'], time_range='short_term'))
     except (TokenExpiredError) as e: #was getting weird TokenExpiredError
         return redirect(url_for('spotify.login'))
 
@@ -42,7 +39,8 @@ def spotify_login():
 @app.route('/user/<name>/<time_range>')
 def user(name, time_range):
     print(name, time_range)
-    nickname = session.get('nickname', None)
+    nickname = name
+    # nickname = session.get('nickname', None)
     image_url = session.get('user_img',None)
     #nickname = name
     #image_url = 'https://via.placeholder.com/150'

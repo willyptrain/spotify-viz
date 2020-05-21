@@ -46,16 +46,25 @@
             <div id="topBar" class="collapse sidebar align-content-center">
 
 
-<div class="sidebar-header">
+        <div class="sidebar-header">
             <a href="#topBar" aria-expanded="false" class="waves-effect btn-flat exit-sidebar" data-toggle="collapse">
                 <i class="exit-btn large material-icons">close</i>
             </a>
         </div>
-<!--                SIDEBAR-HIDDEN-->
+           <!-- SIDEBAR-HIDDEN-->
            <div class="sidebar-items">
-                        <img class="profile-img" src="{{ user_img }}" alt="">
+                        <div class="profile-img-container">
+                            <img class="profile-img" src="{{ user_img }}" alt="">
+                        </div>
                         <h4 class="sidebar-username">{{ username }}</h4>
+                    
+                    
+                    <div class="sidebar-link-container collection">
+                        <a class="sidebar-link collection-item" href="#">My Top Tracks</a>
+                        <a class="sidebar-link collection-item" href="#">Music Graphs</a>
+                        <a class="sidebar-link collection-item" href="#">Recommendations</a>
                     </div>
+
                 <footer class="footer-logout">
                             <form action="/logout">
                                 <input class="btn logout-btn" type="submit" value="Logout">
@@ -63,7 +72,7 @@
                         </footer>
             </div>
 
-
+        </div>
 
             <div class="time-range-tabs tabs-fixed-width">
                   <ul id="tabs-swipe-demo" class="tabs">

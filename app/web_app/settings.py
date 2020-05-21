@@ -1,2 +1,2 @@
-spotify_secret = '859a9fd7c02d42dbaa60519163071386'
-spotify_id = 'eb173f7af2f14a189be9011019c90df2'
+spotify_secret = 'a7ddc6607ab847c79b068c1db9c54184'
+spotify_id = '1baf4c92ee52493ca20eee235097de8d'

@@ -11,7 +11,28 @@ body {
     background-image: linear-gradient(to bottom right, #70e1f5, #ffd194);
 
 }
+.sidebar-link {
+    margin-left: 10%;
+    margin-right: 10%;
+    margin-bottom: 10%;
+    text-decoration: none;
+    background: transparent !important;
+    color: wheat !important;
+    font-size: 1.8em;
+    border-bottom: none !important;
 
+}
+.sidebar-link-container  {
+
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    border: none;
+    position: absolute;
+    margin-top: 200px;
+
+}
 .track-card {
     margin-left: 15px !important;
     margin-right: 15px !important;
@@ -58,6 +79,7 @@ body {
 }
 .sidebar-items {
     position: absolute;
+    height: 100%;
 }
 .sidebar-username {
     color: wheat;
@@ -65,20 +87,21 @@ body {
     text-align: center;
     margin: auto;
     font-weight: bolder;
-    position: fixed;
-    top: 32%;
+    position: absolute;
+    margin-top: 50px;
 }
 .profile-img {
     border-radius: 100%;
     border: 5.5px solid wheat;
-    position: fixed;
-    /*margin-right: 10%;
-    margin-left: 10%;*/
-      top: 50%;
-  left: 25%;
-  margin: -100px 0 0 -150px;
-    top: 5%;
+    position: absolute;
+    /* top: 5%; */
     height: 25%;
+}
+
+.profile-img-container {
+    width: 100%;
+    align-content: center;
+    align-items: center;
 }
 
 .exit-sidebar {
@@ -115,7 +138,7 @@ body {
 
 .footer-logout {
     position: absolute;
-    bottom: 5px;
+    bottom: 10%;
     margin-right: 5%;
     margin-left: 5%;
     width: 90%;
