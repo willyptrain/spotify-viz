@@ -72,7 +72,7 @@ def user(name, time_range):
 
 
 
-    return render_template('home.html',
+    return render_template('index.html',
                            username=name,
                            user_img=image_url,
                            top_tracks=top_tracks,
