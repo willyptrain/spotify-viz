@@ -1,18 +1,25 @@
 import React from "react";
 import './Navbar.css';
 import {Button, Navbar, Nav, NavDropdown, Form, FormControl} from 'react-bootstrap';
-import logout from '../util/auth.js';
+import {logout} from '../util/auth.js';
 
 class NavBar extends React.Component{
-    render() {
+
+    render(){
+        const userLinks = (
+            <Nav.Link onClick={logout}>Logout</Nav.Link>
+        );
+        const guestLinks = (
+            <Nav.Link href="/login">Login</Nav.Link>
+        );
         return(
             <Navbar bg="light" expand="lg">
                 <Navbar.Brand href="#home">Spotify-Viz</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
+                <Nav.Link onClick={logout}>Logout</Nav.Link>
+                <Nav.Link href="/login">Login</Nav.Link>
                     <Nav className="mr-auto">
-                    <Nav.Link href="/logout">Logout</Nav.Link>
-                    <Nav.Link href="/login">Login</Nav.Link>
                     <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>

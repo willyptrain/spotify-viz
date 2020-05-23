@@ -11,6 +11,7 @@ class App extends Component{
   state = {
     userInfo: {},
   }
+
   setUserInfo = (userInfo) => this.setState({ userInfo });
 
   async componentDidMount() {
@@ -31,13 +32,12 @@ class App extends Component{
               <Route exact path="/login" component={(props) => 
                 <Login {...props} setUserInfo={this.setUserInfo} userInfo={userInfo} />
               }/>
-            </Switch>
-            <Route exact path="/" component={(props) =>
+              <Route exact path="/" component={(props) =>
                 <div>
-                  <NavBar/> 
-                  <Home />
+                  <Home userInfo={userInfo} />
                 </div>
               }/>
+            </Switch>
           </div>
         </Router>
       </div>
