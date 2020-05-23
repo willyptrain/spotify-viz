@@ -5,20 +5,23 @@ import {logout} from '../util/auth.js';
 
 class NavBar extends React.Component{
 
+    constructor(props) {
+        super(props);
+      }
     render(){
         const userLinks = (
-            <Nav.Link onClick={logout}>Logout</Nav.Link>
+            <Nav.Link href= "/logout" onClick={logout}>Logout</Nav.Link>
         );
         const guestLinks = (
             <Nav.Link href="/login">Login</Nav.Link>
         );
+        console.log(this.props)
         return(
             <Navbar bg="light" expand="lg">
                 <Navbar.Brand href="#home">Spotify-Viz</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
-                <Nav.Link onClick={logout}>Logout</Nav.Link>
-                <Nav.Link href="/login">Login</Nav.Link>
+                {this.props.userInfo === `Not logged in` ? guestLinks : userLinks}
                     <Nav className="mr-auto">
                     <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                         <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>

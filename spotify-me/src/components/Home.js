@@ -11,19 +11,17 @@ class Home extends React.Component{
     async componentDidMount() {
         const { userInfo, history } = this.props; 
     }
-
-
     logout = async () => {
         const res = await logout();
         if (res.status === 200) {
         }
         }
         
-
     render(){
+        console.log(this.props.userInfo);
         return(
             <div>
-            <NavBar logout={this.logout} />
+            <NavBar userInfo={this.props.userInfo} logout={this.logout}/>
             <h1>Hello!</h1>
             </div>
         );

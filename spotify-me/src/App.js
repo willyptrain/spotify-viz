@@ -4,6 +4,7 @@ import { getSpotifyUser } from './util/auth';
 import Login from './components/login';
 import Home from './components/Home';
 import NavBar from './components/Navbar';
+import Logout from './components/Logout';
 import './App.css';
 import {logout} from './util/auth';
 
@@ -37,6 +38,9 @@ class App extends Component{
                   <Home userInfo={userInfo} />
                 </div>
               }/>
+              <Route exact path="/logout">
+                <Logout/>
+              </Route>
             </Switch>
           </div>
         </Router>
