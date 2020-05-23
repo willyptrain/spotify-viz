@@ -12,7 +12,7 @@ from web_app.settings import spotify_id, spotify_secret
 
 spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
                                            client_secret=spotify_secret,
-                                           redirect_url='http://127.0.0.1:5000',
+                                           redirect_url='http://127.0.0.1:3000/callback',
                                            scope=['user-top-read'])
 
 app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')

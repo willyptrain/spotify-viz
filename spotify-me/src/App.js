@@ -1,23 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { getSpotifyUser } from './util/auth';
+import Login from './components/login';
+import Home from './components/Home';
+import NavBar from './components/Navbar';
 import './App.css';
+import {logout} from './util/auth';
 
-function App() {
-  const [currentTime, setCurrentTime] = useState(0);
+class App extends Component{
+  state = {
+    userInfo: {},
+  }
+  setUserInfo = (userInfo) => this.setState({ userInfo });
 
-  useEffect(() => {
-    fetch('/time').then(res => res.json()).then(data => {
-      setCurrentTime(data.time);
-    });
-  }, []);
+  async componentDidMount() {
+    const userInfo = await getSpotifyUser();
+    
+    if (userInfo) {
+      this.setUserInfo(userInfo);
+    }
+  }
+  render(){
+    const { userInfo } = this.state;
 
-  return (
-    <div className="App">
-      <header className="App-header">
-
-        <p>The current time is {currentTime}.</p>
-      </header>
-    </div>
-  );
+    return (
+      <div className="App">
+        <Router>
+          <div>
+            <Switch>
+              <Route exact path="/login" component={(props) => 
+                <Login {...props} setUserInfo={this.setUserInfo} userInfo={userInfo} />
+              }/>
+            </Switch>
+            <Route exact path="/" component={(props) =>
+                <div>
+                  <NavBar/> 
+                  <Home />
+                </div>
+              }/>
+          </div>
+        </Router>
+      </div>
+    );
+  }
 }
+
 
 export default App;
