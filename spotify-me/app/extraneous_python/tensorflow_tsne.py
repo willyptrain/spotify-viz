@@ -32,8 +32,8 @@ color_list = """
 
 class tsne:
 
-    def train_model(self, g):
-        walks = n2v.Node2Vec(g, dimensions=3, walk_length=16, num_walks=100)
+    def train_model(self, g, dimensions=2):
+        walks = n2v.Node2Vec(g, dimensions=dimensions, num_walks=200, walk_length=8)
         model = walks.fit(window=10, min_count=1)
         return model
 
