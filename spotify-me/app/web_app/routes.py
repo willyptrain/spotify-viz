@@ -34,7 +34,7 @@ def spotify_login():
         return redirect(url_for('spotify.login'))
 
 
-@app.route('/user/<name>/<time_range>')
+@app.route('/no/')
 def user(name, time_range):
     token = spotify_blueprint.token["access_token"]
     top_tracks = []
@@ -42,7 +42,6 @@ def user(name, time_range):
         #nickname = name
         #nickname = session.get('nickname', None)
         #image_url = session.get('user_img',None)
-        nickname = name
         image_url = 'https://via.placeholder.com/150'
         #print(type(image_url))
         print(token)
@@ -74,13 +73,42 @@ def user(name, time_range):
                     top_tracks=top_tracks,
                     k=k, time_range=range_nicknames[time_range])
 
-
-@app.route("/home")
-def get_auth():
-    if current_user.is_authenticated:
-        return {'auth':True}
+@app.route('/user/<time_range>/<token>')
+def user_tracks(time_range, token):
+    top_tracks = []
+    image_url = 'https://via.placeholder.com/150'
+    sp = spotipy.Spotify(auth=token)
+    sp.trace = False
+    k = 5
+    range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
+    results = sp.current_user_top_tracks(time_range=time_range, limit=k)
+    if len(results['items']) < 5:
+        for i in range(0, 5):
+            top_tracks.append({
+                'track_name':'Empty',
+                'artist':'Empty',
+                'uri':'Empty',
+                'image':'Empty'
+            })
     else:
-        return {'auth': False}
+        for i, result in enumerate(results['items']):
+            top_tracks.append({
+                'track_name':result['name'],
+                'artist':result['artists'][0]['name'],
+                'uri':result['uri'],
+                'image':result['album']['images'][0]['url']
+            })
+
+    print(top_tracks)
+    return jsonify(top_tracks=top_tracks)
+
+@app.route('/toptracks/<token>', methods=['GET', 'POST'])
+def top_tracks(token):
+    sp = spotipy.Spotify(auth=token)
+    results = sp.current_user_top_tracks(time_range='short_term', limit=5)
+    tracks = results['items']
+    print(tracks[0]['name'])
+    return jsonify(track=tracks[0]['name'])
 
 @app.route('/logout')
 def spotify_logout():

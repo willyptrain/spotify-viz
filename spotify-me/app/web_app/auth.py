@@ -21,7 +21,7 @@ SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
 REDIRECT_URI = "http://localhost:3000/login"
-SCOPE = "streaming"
+SCOPE = "streaming, user-top-read, user-read-private, user-library-read"
 STATE = ""
 SHOW_DIALOG_bool = True
 SHOW_DIALOG_str = str(SHOW_DIALOG_bool).lower()
@@ -76,7 +76,6 @@ def get_user():
         auth_token = data['code']
 
         post_request = requests.post(SPOTIFY_TOKEN_URL, data=auth_payload(auth_token))
-
         response_data = json.loads(post_request.text)
         access_token = response_data["access_token"]
         refresh_token = response_data["refresh_token"]

@@ -5,10 +5,11 @@ import Login from './components/login';
 import Home from './components/Home';
 import NavBar from './components/Navbar';
 import Logout from './components/Logout';
-import TopTracks from './components/UserTop.js';
 import './App.css';
 import {logout} from './util/auth';
 import { User } from 'react-spotify-api';
+
+import TopTracks from './components/TopTracks';
 
 class App extends Component{
   state = {
@@ -42,6 +43,9 @@ class App extends Component{
               }/>
               <Route exact path="/logout">
                 <Logout/>
+              </Route>
+              <Route exact path="/top">
+                <TopTracks/>
               </Route>
             </Switch>
           </div>
