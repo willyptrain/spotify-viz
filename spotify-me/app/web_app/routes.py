@@ -1,4 +1,4 @@
-from flask import redirect, url_for, session, render_template, request
+from flask import redirect, url_for, session, render_template, request, jsonify
 from flask_dance.contrib.spotify import spotify, make_spotify_blueprint
 import tekore as tk
 from flask_session import Session
@@ -36,20 +36,22 @@ def spotify_login():
 
 @app.route('/user/<name>/<time_range>')
 def user(name, time_range):
-    nickname = name
-    # nickname = session.get('nickname', None)
-    image_url = session.get('user_img',None)
-    #nickname = name
-    #image_url = 'https://via.placeholder.com/150'
     token = spotify_blueprint.token["access_token"]
     top_tracks = []
     if(token):
+        #nickname = name
+        #nickname = session.get('nickname', None)
+        #image_url = session.get('user_img',None)
+        nickname = name
+        image_url = 'https://via.placeholder.com/150'
+        #print(type(image_url))
+        print(token)
         sp = spotipy.Spotify(auth=token)
         sp.trace = False
         k = 5
         range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
         results = sp.current_user_top_tracks(time_range=time_range, limit=k)
-        if len(results['items']) == 0:
+        if len(results['items']) < 5:
             for i in range(0, 5):
                 top_tracks.append({
                     'track_name':'Empty',
@@ -67,19 +69,18 @@ def user(name, time_range):
             })
 
 
-
-    return render_template('index.html',
-                           username=name,
-                           user_img=image_url,
-                           top_tracks=top_tracks,
-                           k=k, time_range=range_nicknames[time_range])
+    return jsonify(username=name,
+                    user_img=image_url,
+                    top_tracks=top_tracks,
+                    k=k, time_range=range_nicknames[time_range])
 
 
-@app.route("/time")
-def get_time():
-    import time
-    return {'time':time.time()}
-
+@app.route("/home")
+def get_auth():
+    if current_user.is_authenticated:
+        return {'auth':True}
+    else:
+        return {'auth': False}
 
 @app.route('/logout')
 def spotify_logout():

@@ -1,3 +1,4 @@
+//returns access token
 export function getUrlParams() {
     const vars = {};
     const parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {

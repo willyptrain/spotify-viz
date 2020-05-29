@@ -19,7 +19,7 @@ class Login extends Component {
     const params = getUrlParams();
     const code = params.code || null;
     const { setUserInfo, history, userInfo } = this.props;
-
+    console.log(code);
     if (userInfo.id) {
       history.push('/');
       return;
