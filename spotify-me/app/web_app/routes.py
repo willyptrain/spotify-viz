@@ -33,8 +33,8 @@ def spotify_login():
     except (TokenExpiredError) as e: #was getting weird TokenExpiredError
         return redirect(url_for('spotify.login'))
 
-
-@app.route('/no/')
+'''
+@app.route('')
 def user(name, time_range):
     token = spotify_blueprint.token["access_token"]
     top_tracks = []
@@ -72,6 +72,7 @@ def user(name, time_range):
                     user_img=image_url,
                     top_tracks=top_tracks,
                     k=k, time_range=range_nicknames[time_range])
+'''
 
 @app.route('/user/<time_range>/<token>')
 def user_tracks(time_range, token):
@@ -102,13 +103,6 @@ def user_tracks(time_range, token):
     print(top_tracks)
     return jsonify(top_tracks=top_tracks)
 
-@app.route('/toptracks/<token>', methods=['GET', 'POST'])
-def top_tracks(token):
-    sp = spotipy.Spotify(auth=token)
-    results = sp.current_user_top_tracks(time_range='short_term', limit=5)
-    tracks = results['items']
-    print(tracks[0]['name'])
-    return jsonify(track=tracks[0]['name'])
 
 @app.route('/logout')
 def spotify_logout():

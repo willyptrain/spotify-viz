@@ -2,14 +2,14 @@ import React, { useState, useEffect, Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { getSpotifyUser } from './util/auth';
 import Login from './components/login';
-import Home from './components/Home';
-import NavBar from './components/Navbar';
-import Logout from './components/Logout';
+import Home from './components/home/Home';
+import NavBar from './components/common/navbar/Navbar';
+import Logout from './components/logout/Logout';
 import './App.css';
 import {logout} from './util/auth';
 import { User } from 'react-spotify-api';
 
-import TopTracks from './components/TopTracks';
+import TopTracks from './components/top_tracks/TopTracks';
 
 class App extends Component{
   state = {

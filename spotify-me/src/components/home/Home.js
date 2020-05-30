@@ -1,6 +1,6 @@
 import React from "react";
-import { logout } from '../util/auth';
-import NavBar from './Navbar.js';
+import { logout } from '../../util/auth';
+import NavBar from '../common/navbar/Navbar';
 import { Album } from 'react-spotify-api';
 import { SpotifyApiContext} from 'react-spotify-api';
 class Home extends React.Component{

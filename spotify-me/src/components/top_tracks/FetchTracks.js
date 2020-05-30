@@ -21,7 +21,7 @@ export function FetchTracks(data) {
         <div>
             <ul>
             {
-                tracks.map(track => <li key={track.track_name}>{track.track_name}</li>)
+                tracks.map(track => <li key={track.track_name}>{track.track_name} by {track.artist}</li>)
             }
             </ul>
         </div>

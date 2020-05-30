@@ -1,7 +1,7 @@
 import React from "react";
 import './Navbar.css';
 import {Button, Navbar, Nav, NavDropdown, Form, FormControl} from 'react-bootstrap';
-import {logout} from '../util/auth.js';
+import {logout} from '../../../util/auth.js';
 
 class NavBar extends React.Component{
 
