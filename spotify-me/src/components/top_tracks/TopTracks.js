@@ -27,7 +27,7 @@ class TopTracks extends React.Component{
         return(
             <div>
                 <form onSubmit={this.handleSubmit}>
-                    <label>Choose a time period:
+                    <label>
                 <select onChange={this.handleChange} required>
                     <option value="selected"> Select option...</option>
                     <option value="short_term">Week</option>
@@ -35,7 +35,6 @@ class TopTracks extends React.Component{
                     <option value="long_term">All Time</option>
                 </select>
                 </label>
-                <input type="submit" value="Submit"/>
                 </form>
                 {track_list}
             </div>

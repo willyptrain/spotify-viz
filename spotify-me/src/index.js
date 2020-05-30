@@ -8,7 +8,7 @@ import { SpotifyApiAxiosContext, SpotifyApiContext } from 'react-spotify-api';
 import axios from 'axios';
 
 ReactDOM.render(
-  <SpotifyApiContext.Provider><App /></SpotifyApiContext.Provider>,
+  <App />,
   document.getElementById('root')
 );
 

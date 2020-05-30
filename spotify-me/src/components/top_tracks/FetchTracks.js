@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import cookie from 'js-cookie';
 import axios from 'axios';
+import { List, Image } from 'semantic-ui-react';
 
 export function FetchTracks(data) {
     console.log(data.data)
@@ -19,11 +20,23 @@ export function FetchTracks(data) {
     }, [data.data])
     return(
         <div>
-            <ul>
+        <List>
             {
-                tracks.map(track => <li key={track.track_name}>{track.track_name} by {track.artist}</li>)
-            }
-            </ul>
+                tracks.map(track =>
+        <List.Item>
+          <Image avatar  src={track.image} circular/>
+          <List.Content>
+            <List.Header as='a'>{track.track_name}</List.Header>
+            <List.Description>
+              by{' '}
+              <a>
+                <b>{track.artist}</b>
+              </a>{' '}
+            </List.Description>
+          </List.Content>
+        </List.Item>)
+                }
+        </List>
         </div>
     );
 }
