@@ -2,40 +2,21 @@ import React, {useEffect, useState} from 'react';
 import cookie from 'js-cookie';
 import axios from 'axios';
 
-/*
-export function FetchTracks() {
-    const [state, setState] = useState({track_list: null})
-    let token = cookie.get('access_token');
-    useEffect(() => {
-        setState({track_list: state.track_list})
-        fetch(`http://localhost:5000/user/short_term/${token}`).then(res => res.json()).then(data => {
-           let tl = [];
-          for (let i = 0; i < 5; i++) {
-            tl.push(data.top_tracks[i].artist)
-            setState({track_list: state.track_list.push({
-                artist: data.top_tracks[i].artist,
-            })});
-        }
-        }).then();
-      }, [setState]);
-    console.log(state);
-    return state;
-};
-*/
-export function FetchTracks(time_period){
-    console.log(time_period)
+export function FetchTracks(data) {
+    console.log(data.data)
     const [tracks, setTracks] = useState([]);
     let token = cookie.get('access_token');
     useEffect(() => {
-        axios.get(`http://localhost:5000/user/${time_period}/${token}`)
+        axios.get(`http://localhost:5000/user/${data.data}/${token}`)
         .then(res => {
-            console.log(res)
+            console.log(res.data.top_tracks)
             setTracks(res.data.top_tracks)
         })
         .catch(err => {
+            console.log('yo')
             console.log(err)
-        }, [])
-    })
+        })
+    }, [data.data])
     return(
         <div>
             <ul>
