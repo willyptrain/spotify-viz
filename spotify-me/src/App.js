@@ -27,7 +27,6 @@ class App extends Component{
   }
   render(){
     const { userInfo } = this.state;
-    console.log(this.auth);
     return (
       <div className="App">
         <Router>
@@ -44,7 +43,8 @@ class App extends Component{
               <Route exact path="/logout">
                 <Logout/>
               </Route>
-              <Route exact path="/top">
+              <Route exact path="/top_tracks">
+                <NavBar/>
                 <TopTracks/>
               </Route>
             </Switch>
