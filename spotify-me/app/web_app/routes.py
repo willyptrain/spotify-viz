@@ -80,11 +80,11 @@ def user_tracks(time_range, token):
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
-    k = 5
+    k = 10
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_tracks(time_range=time_range, limit=k)
-    if len(results['items']) < 5:
-        for i in range(0, 5):
+    if len(results['items']) < k:
+        for i in range(0, k):
             top_tracks.append({
                 'track_name':'Empty',
                 'artist':'Empty',
@@ -103,6 +103,20 @@ def user_tracks(time_range, token):
     print(top_tracks)
     return jsonify(top_tracks=top_tracks)
 
+@app.route('/album_graph/', methods=['GET', 'POST'])
+def album_graph():
+    form = AlbumForm()
+    if form.validate_on_submit():
+        albums = form.album_list.data
+        albums = albums.split(",")
+        nickname = session.get('nickname', None)
+        image_url = session.get('user_img',None)
+        g = viz.Graph()
+        g.construct_album_graph(albums=albums)
+        link = g.draw_graph()
+        embed_html = tls.get_embed(link)
+        return render_template('album_graph_view.html', graph=embed_html, username=nickname, user_img=image_url)
+    return render_template('album_graph.html', form=form)
 
 @app.route('/logout')
 def spotify_logout():

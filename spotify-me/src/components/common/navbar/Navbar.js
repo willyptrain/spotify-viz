@@ -23,12 +23,19 @@ class NavBar extends React.Component{
                 <Navbar.Collapse id="basic-navbar-nav">
                 {this.props.userInfo === `Not logged in` ? guestLinks : userLinks}
                     <Nav className="mr-auto">
-                    <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                    <NavDropdown title="Listening History" id="basic-nav-dropdown">
+                        <NavDropdown.Item href="/top_tracks">Top Tracks</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.2">Top Albums</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.3">Top Artists</NavDropdown.Item>
                         <NavDropdown.Divider />
-                        <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                        {/*<NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>*/}
+                    </NavDropdown>
+                    <NavDropdown title="Graphs" id="basic-nav-dropdown">
+                        <NavDropdown.Item href="/top_tracks">Artists</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.2">Albums</NavDropdown.Item>
+                        <NavDropdown.Item href="#action/3.3">Playlists</NavDropdown.Item>
+                        <NavDropdown.Divider />
+                        <NavDropdown.Item href="#action/3.4">My Listening</NavDropdown.Item>
                     </NavDropdown>
                     </Nav>
                     <Form inline>
