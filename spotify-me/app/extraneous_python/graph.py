@@ -225,8 +225,8 @@ class Graph:
         return feature_dict
 
 
-    related artists: https://github.com/plamere/spotipy/blob/master/examples/show_related.py !!!
-    oh and analysis_url !
+    # related artists: https://github.com/plamere/spotipy/blob/master/examples/show_related.py !!!
+    # oh and analysis_url !
 
 # g = Graph()
 # # g.construct_neighborhood("drake")
