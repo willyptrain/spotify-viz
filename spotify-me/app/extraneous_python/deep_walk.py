@@ -17,6 +17,7 @@ import node2vec as n2v
 from gensim.models import KeyedVectors
 from user import User
 from urllib3.exceptions import ReadTimeoutError
+import time
 
 
 def get_generic_top_genre(genre):
@@ -48,59 +49,74 @@ print(len(all_genres))
 avg_popularity = {}
 
 def construct_graph(save=False, path=""):
+    average = 0
+    now = 0
     for i, genre in enumerate(all_genres):
+        if(i > 0):
+            curr = time.time()
+            average = ((average*(i-1) + curr-now)/(i))
+            print("Time Elapsed,", curr-now, "seconds; Expected Remaining Time:", average*(len(all_genres)-i)/3600, "hours")
+        now = time.time()
         print(i, len(g.nodes()), len(g.edges()))
         g.add_node(genre, genre=genre, color=colors[i][:-1])
         recommendation = sp.recommendations(seed_genres=[genre], limit=k)
         artists[genre] = []
         avg_popularity[genre] = 0
         for w in range(0, len(recommendation["tracks"])):
-            artist_name = recommendation["tracks"][w]["artists"][0]["name"]
-            artist_id = recommendation["tracks"][w]["artists"][0]["id"]
-            artist_uri = recommendation["tracks"][w]["artists"][0]["uri"]
-            try:
-                artist_info = sp.artist(artist_uri)
-                if(len(artist_info['genres']) > 0):
-                    artists[genre].append({
-                        'artist':artist_name,
-                        'id': artist_id,
-                        'uri': artist_uri,
-                        'generic_genre':genre,
-                        'genres':artist_info['genres'],
-                        'popularity':recommendation["tracks"][w]["popularity"]
-                    })
-                for feat in artist_info['genres'][0:4]:
-                    g.add_node(feat, genre=feat, color=colors[i][:-1])
-                    g.add_edge(genre, feat)
-                    generic_top_genre = get_generic_top_genre(feat)
-                    if(generic_top_genre != None):
-                        g.add_edge(generic_top_genre, feat)
-                avg_popularity[genre] += recommendation["tracks"][w]["popularity"]
-
-                new_rec = sp.recommendations(seed_artists=[artist_uri], limit=50)
-                for x in range(0, len(new_rec["tracks"])):
-                    artist_name = new_rec["tracks"][x]["artists"][0]["name"]
-                    artist_id = new_rec["tracks"][x]["artists"][0]["id"]
-                    artist_uri = new_rec["tracks"][x]["artists"][0]["uri"]
+            current_id = recommendation["tracks"][w]["artists"][0]["id"]
+            related_artists = sp.artist_related_artists(current_id)["artists"]
+            avg_popularity[genre] += recommendation["tracks"][w]["popularity"]
+            current_ = recommendation["tracks"][w]["artists"][0]
+            related_artists.insert(0, current_)
+            for i, artist in enumerate(related_artists):
+                artist_name = artist["name"]
+                artist_id = artist["id"]
+                artist_uri = artist["uri"]
+                try:
                     artist_info = sp.artist(artist_uri)
-                    if (len(artist_info['genres']) > 0):
+                    if(len(artist_info['genres']) > 0):
                         artists[genre].append({
-                            'artist': artist_name,
+                            'artist':artist_name,
                             'id': artist_id,
                             'uri': artist_uri,
-                            'generic_genre': genre,
-                            'genres': artist_info['genres'],
-                            'popularity': new_rec["tracks"][x]["popularity"]
+                            'generic_genre':genre,
+                            'genres':artist_info['genres'],
+                            'popularity':recommendation["tracks"][w]["popularity"]
                         })
-                    for feat2 in artist_info['genres'][0:4]:
-                        g.add_node(feat2, genre=feat2, color=colors[i][:-1])
-                        g.add_edge(genre, feat2)
-                        generic_top_genre = get_generic_top_genre(feat2)
-                        if (generic_top_genre != None):
-                            g.add_edge(generic_top_genre, feat2)
-            except:
-                print("Error for ", artist_name)
-                continue
+                    for feat in artist_info['genres'][0:4]:
+                        g.add_node(feat, genre=feat, color=colors[i][:-1])
+                        g.add_edge(genre, feat)
+                        generic_top_genre = get_generic_top_genre(feat)
+                        if(generic_top_genre != None):
+                            g.add_edge(generic_top_genre, feat)
+
+
+
+
+                # new_rec = sp.recommendations(seed_artists=[artist_uri], limit=50)
+                # for x in range(0, len(new_rec["tracks"])):
+                #     artist_name = new_rec["tracks"][x]["artists"][0]["name"]
+                #     artist_id = new_rec["tracks"][x]["artists"][0]["id"]
+                #     artist_uri = new_rec["tracks"][x]["artists"][0]["uri"]
+                #     artist_info = sp.artist(artist_uri)
+                #     if (len(artist_info['genres']) > 0):
+                #         artists[genre].append({
+                #             'artist': artist_name,
+                #             'id': artist_id,
+                #             'uri': artist_uri,
+                #             'generic_genre': genre,
+                #             'genres': artist_info['genres'],
+                #             'popularity': new_rec["tracks"][x]["popularity"]
+                #         })
+                #     for feat2 in artist_info['genres'][0:4]:
+                #         g.add_node(feat2, genre=feat2, color=colors[i][:-1])
+                #         g.add_edge(genre, feat2)
+                #         generic_top_genre = get_generic_top_genre(feat2)
+                #         if (generic_top_genre != None):
+                #             g.add_edge(generic_top_genre, feat2)
+                except ReadTimeoutError:
+                    print("Error for ", artist_name)
+                    continue
 
 
 
@@ -118,7 +134,7 @@ def construct_graph(save=False, path=""):
 
 
 
-def draw_graph(g, three_dim=False):
+def draw_graph(g, three_dim=False, save=False, load_from_path=None):
     x = []
     y = []
     z = []
@@ -136,13 +152,15 @@ def draw_graph(g, three_dim=False):
     
 
     dimensions = 2 if not three_dim else 80
-
-    # walks = n2v.Node2Vec(g, dimensions=dimensions, num_walks=80, walk_length=6)
-    # model = walks.fit(min_count=1, workers=8)
-    # model.wv.save("model_kv.kv")
+    if(save == True):
+        walks = n2v.Node2Vec(g, dimensions=dimensions, num_walks=80, walk_length=6)
+        model = walks.fit(min_count=1, workers=8)
+        wv = model.wv
+        model.wv.save("model_kv.kv")
 
     # model = model.load('model.model')
-    wv = KeyedVectors.load("model_kv.kv", mmap='r')
+    if(load_from_path != None):
+        wv = KeyedVectors.load(load_from_path, mmap='r')
 
     for i, node in enumerate(g.nodes(data=True)):
         if("genre" in node[1] and (node[1]["genre"] in top_genres)):
@@ -225,10 +243,10 @@ def draw_graph(g, three_dim=False):
 
     
 
-construct_graph(save=True, path="new_graph2.pickle")
+# construct_graph(save=True, path="final.pickle")
 
-g = nx.read_gpickle(path="new_graph2.pickle")
-draw_graph(g, three_dim=False)
+# g = nx.read_gpickle(path="final.pickle")
+# draw_graph(g, three_dim=False, save=False, load_from_path=None)
 
 def load_word_vectors(path):
     wv = KeyedVectors.load(path, mmap='r')
@@ -239,15 +257,16 @@ def load_word_vectors(path):
     genre_mappings = {}
 
     for artist in top_artists[range]:
-        user_genres.append(artist["genres"][0])
+        # user_genres.append(artist["genres"][0])
+        user_genres += artist["genres"]
 
-    for artist in top_artists[range]:
-        user_genre = artist["genres"][0]
+    for user_genre in user_genres:
+        # user_genre = artist["genres"][0]
         for genre in top_genres:
             try:
                 similarity = wv.similarity(user_genre, genre)
-                if(genre == "country"):
-                    print(artist["name"], user_genre, genre, similarity)
+                # if(genre == "country"):
+                    # print(artist["name"], user_genre, genre, similarity)
                 if(genre in genre_mappings):
                     genre_mappings[genre] += similarity
                 else:
@@ -255,14 +274,20 @@ def load_word_vectors(path):
             except:
                 continue
 
-    print(user_genres)
-    print(genre_mappings)
+    sorted_mappings = sorted(genre_mappings.items(), key=(lambda x: x[1]), reverse=True)
+    print(sorted_mappings)
+    minimum = sorted_mappings[-1][1]
+    for genre in sorted_mappings:
+        print(genre)#, int(genre[1]),int(minimum))
 
 
 
 
 
 
+
+
+load_word_vectors("model_kv.kv")
 
 
 
