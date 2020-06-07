@@ -1,0 +1,34 @@
+.login-container {
+
+
+
+}
+body {
+    background: -webkit-linear-gradient(top, #C5FDFD, #4F84DD) !important;
+    background: -moz-linear-gradient(top, #C5FDFD, #4F84DD) !important;
+    background: linear-gradient(to bottom, #C5FDFD, #4F84DD) !important;
+}
+
+.login-container {
+    height: 60vh;
+    width: 50vh;
+    box-shadow: none !important;
+    background: transparent !important;
+}
+.login-button {
+    background-color: white !important;
+    border: 4px solid #4F84DD !important;
+    bottom: -15vh;
+    position: absolute;
+    width: 40vh !important;
+    height: 7vh;
+}
+.login-title {
+    height: 50vh;
+}
+.spotify-title {
+    color: white;
+    text-shadow: 2px 2px #4F84DD;
+    font-weight: 600 !important;
+}
+

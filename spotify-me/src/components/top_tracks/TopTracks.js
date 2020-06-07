@@ -1,6 +1,9 @@
 import React, { useState, useEffect, Component, setState } from 'react';
 import cookie from 'js-cookie';
 import {FetchTracks} from './FetchTracks.js';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import './tracks.css'
 
 
 class TopTracks extends React.Component{
@@ -9,31 +12,39 @@ class TopTracks extends React.Component{
         this.state = {value: 'short_term'};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.value = 'short_term'
     }
-    handleChange = (event) => {
-        this.setState({value: event.target.value});
+    handleChange = (event, new_value) => {
+        this.setState({value: new_value});
+
       }
-    handleSubmit = (event) => {
+    handleSubmit = (event, new_value) => {
         event.preventDefault();
-        this.setState({value: event.target.value});
+        this.setState({value: new_value});
     }
+
 
      async componentDidMount() {
       }
 
     render(){
-        console.log("yo")
         const track_list = <FetchTracks data={this.state.value}/>;
+
         return(
             <div>
                 <form onSubmit={this.handleSubmit}>
                     <label>
-                <select onChange={this.handleChange} required>
-                    <option value="selected"> Select option...</option>
-                    <option value="short_term">Week</option>
-                    <option value="medium_term">Month</option>
-                    <option value="long_term">All Time</option>
-                </select>
+                    <Tabs
+                        value={this.state["value"]}
+                        indicatorColor="primary"
+                        textColor="primary"
+                        onChange={this.handleChange}
+                        aria-label="disabled tabs example"
+                      >
+                            <Tab className="track-tab" value="short_term" label="Week" />
+                            <Tab className="track-tab" value="medium_term" label="Month" />
+                            <Tab className="track-tab" value="long_term" label="All Time" />
+                      </Tabs>
                 </label>
                 </form>
                 {track_list}

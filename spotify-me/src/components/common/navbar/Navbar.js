@@ -17,20 +17,20 @@ class NavBar extends React.Component{
         );
         console.log(this.props)
         return(
-            <Navbar bg="light" expand="lg">
+            <Navbar className="top-navbar" bg="light" expand="lg">
                 <Navbar.Brand href="#home">Spotify-Viz</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
+                <Navbar.Toggle className="navBar-font" aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse className="navBar-font" id="basic-navbar-nav">
                 {this.props.userInfo === `Not logged in` ? guestLinks : userLinks}
                     <Nav className="mr-auto">
-                    <NavDropdown title="Listening History" id="basic-nav-dropdown">
+                    <NavDropdown title="Listening History" className="navBar-font" id="basic-nav-dropdown">
                         <NavDropdown.Item href="/top_tracks">Top Tracks</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">Top Albums</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.3">Top Artists</NavDropdown.Item>
                         <NavDropdown.Divider />
                         {/*<NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>*/}
                     </NavDropdown>
-                    <NavDropdown title="Graphs" id="basic-nav-dropdown">
+                    <NavDropdown title="Graphs" className="navBar-font" id="basic-nav-dropdown">
                         <NavDropdown.Item href="/top_tracks">Artists</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">Albums</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.3">Playlists</NavDropdown.Item>

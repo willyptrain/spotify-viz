@@ -1,0 +1,7 @@
+.top-navbar {
+    border-bottom: 1px solid black;
+    box-shadow: 0.1px 0.1px 1px 1px black;
+}
+#basic-nav-dropdown {
+    color: rgba(0,0,0,0.95) !important;
+}
