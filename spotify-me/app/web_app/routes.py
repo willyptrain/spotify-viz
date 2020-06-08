@@ -6,9 +6,17 @@ from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 import spotipy
 import json
 import webbrowser
-from web_app import app
+from web_app import app, lists, user, node2vec_model
 from web_app.settings import spotify_id, spotify_secret
+
 # from settings import spotify_secret, spotify_id
+# import node2vec_model
+from web_app.node2vec_model import Node2VecModel
+from web_app.lists import items
+from web_app.user import User
+from spotipy.exceptions import SpotifyException
+import spotipy.util as util
+
 
 spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
                                            client_secret=spotify_secret,
@@ -76,13 +84,17 @@ def user(name, time_range):
 
 @app.route('/user/<time_range>/<token>')
 def user_tracks(time_range, token):
+
     top_tracks = []
     image_url = 'https://via.placeholder.com/150'
-    sp = spotipy.Spotify(auth=token)
-    sp.trace = False
     k = 10
+    try:
+        sp = spotipy.Spotify(auth=token)
+        sp.trace = False
+        results = sp.current_user_top_tracks(time_range=time_range, limit=k)
+    except:
+        raise Exception("Error")
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
-    results = sp.current_user_top_tracks(time_range=time_range, limit=k)
     if len(results['items']) < k:
         for i in range(0, k):
             top_tracks.append({
@@ -102,6 +114,21 @@ def user_tracks(time_range, token):
 
     print(top_tracks)
     return jsonify(top_tracks=top_tracks)
+
+
+@app.route('/graphs/<time_range>/<token>')
+def user_graph(time_range, token):
+    n2v = Node2VecModel('model_kv.kv')
+    print(token)
+    labels = []
+    scores = []
+    labels, scores = n2v.get_mappings_by_range("screamywill", time_range)
+    # print(labels,scores)
+    return jsonify({
+        'labels':labels,
+        'scores':scores
+    })
+
 
 @app.route('/album_graph/', methods=['GET', 'POST'])
 def album_graph():

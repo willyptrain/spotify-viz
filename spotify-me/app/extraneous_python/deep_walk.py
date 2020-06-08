@@ -13,7 +13,7 @@ import math
 import os
 from tensorflow_tsne import tsne
 from lists import items
-import node2vec as n2v
+import node2vec_model as n2v
 from gensim.models import KeyedVectors
 from user import User
 from urllib3.exceptions import ReadTimeoutError
