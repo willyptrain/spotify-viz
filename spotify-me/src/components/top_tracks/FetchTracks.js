@@ -45,7 +45,7 @@ export function FetchTracks(data) {
             <Card className="track-card">
                     <CardMedia className="track-img" image={track.image}></CardMedia>
                     <CardContent className="track-info">
-                        <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {track.track_name} by {track.artist}</Typography>
+                        <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {track.track_name} by {track.artist} <br /></Typography>
                     </CardContent>
             </Card>
          </Grid>
