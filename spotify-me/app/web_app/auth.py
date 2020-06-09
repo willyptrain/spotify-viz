@@ -75,7 +75,17 @@ def get_user():
         data = request.json
         auth_token = data['code']
 
+        print()
+        print(data)
+        print()
+
         post_request = requests.post(SPOTIFY_TOKEN_URL, data=auth_payload(auth_token))
+        print()
+        print(post_request)
+        print()
+
+
+
         response_data = json.loads(post_request.text)
         access_token = response_data["access_token"]
         refresh_token = response_data["refresh_token"]
@@ -137,3 +147,4 @@ def load_logged_in_user():
 def logout():
     session.clear()
     return 'True'
+

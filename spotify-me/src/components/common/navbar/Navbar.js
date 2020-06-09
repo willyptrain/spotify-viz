@@ -15,7 +15,6 @@ class NavBar extends React.Component{
         const guestLinks = (
             <Nav.Link href="/login">Login</Nav.Link>
         );
-        console.log(this.props)
         return(
             <Navbar className="top-navbar" bg="light" expand="lg">
                 <Navbar.Brand href="#home">Spotify-Viz</Navbar.Brand>
@@ -31,7 +30,7 @@ class NavBar extends React.Component{
                         {/*<NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>*/}
                     </NavDropdown>
                     <NavDropdown title="Graphs" className="navBar-font" id="basic-nav-dropdown">
-                        <NavDropdown.Item href="/top_tracks">Artists</NavDropdown.Item>
+                        <NavDropdown.Item href="/graphs">Artists</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.2">Albums</NavDropdown.Item>
                         <NavDropdown.Item href="#action/3.3">Playlists</NavDropdown.Item>
                         <NavDropdown.Divider />

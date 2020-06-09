@@ -21,12 +21,14 @@ export function FetchTracks(data) {
     let token = cookie.get('access_token');
     useEffect(() => {
         axios.get(`http://localhost:5000/user/${data.data}/${token}`)
+//        axios.get(`http://localhost:5000/graphs/short_term/${token}`)
+
         .then(res => {
-            console.log(res.data.top_tracks)
+            console.log(res.data)
             setTracks(res.data.top_tracks)
         })
         .catch(err => {
-            console.log('yo')
+            console.log('error :(')
             console.log(err)
         })
     }, [data.data])

@@ -116,17 +116,18 @@ def user_tracks(time_range, token):
     return jsonify(top_tracks=top_tracks)
 
 
-@app.route('/graphs/<time_range>/<token>')
-def user_graph(time_range, token):
+@app.route('/graphs/<time_range>/<username>/<token>')
+def user_graph(time_range, username,token):
     n2v = Node2VecModel('model_kv.kv')
     print(token)
     labels = []
     scores = []
-    labels, scores = n2v.get_mappings_by_range("screamywill", time_range)
+    labels, scores,colors = n2v.get_mappings_by_range(username, time_range)
     # print(labels,scores)
     return jsonify({
         'labels':labels,
-        'scores':scores
+        'scores':scores,
+        'colors':colors
     })
 
 

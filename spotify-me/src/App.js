@@ -5,6 +5,7 @@ import Login from './components/login';
 import Home from './components/home/Home';
 import NavBar from './components/common/navbar/Navbar';
 import Logout from './components/logout/Logout';
+import GenreGraphs from './components/graphs/GenreGraphs'
 import './App.css';
 import {logout} from './util/auth';
 import { User } from 'react-spotify-api';
@@ -34,7 +35,7 @@ class App extends Component{
           <div>
             <Switch>
               <Route exact path="/login" component={(props) => 
-                <Login {...props} setUserInfo={this.setUserInfo} userInfo={userInfo} />
+                <Login setUserInfo={this.setUserInfo} userInfo={userInfo} />
               }/>
               <Route exact path="/" component={(props) =>
                 <div>
@@ -48,6 +49,12 @@ class App extends Component{
                 <NavBar/>
                 <TopTracks/>
               </Route>
+               <Route exact path="/graphs" component={(props) =>
+                <>
+                <NavBar/>
+                <GenreGraphs {...props} userInfo={userInfo}  />
+                </>
+              }/>
             </Switch>
           </div>
         </Router>

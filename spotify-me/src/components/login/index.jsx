@@ -31,9 +31,12 @@ class Login extends Component {
     const params = getUrlParams();
     const code = params.code || null;
     const { setUserInfo, history, userInfo } = this.props;
-    console.log(code);
+    console.log(this.props);
+
     if (userInfo.id) {
-      history.push('/');
+      if(history != null) {
+        history.push('/');
+      }
       return;
     };
     if (!code) return;
@@ -67,7 +70,6 @@ class Login extends Component {
                             <Typography style={{ top: '10px', position: 'relative'  }} className="spotify-title" component="h2" variant="h2">Spotify</Typography>
                             <Typography style={{ top: '30px', position: 'relative'  }} className="spotify-title" component="h2" variant="h2">Dashboard</Typography>
                         </div>
-                        <i class="fa fa-spotify"></i>
                     </CardContent>
 
                 </Card>
