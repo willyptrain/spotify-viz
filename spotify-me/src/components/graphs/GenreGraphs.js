@@ -15,7 +15,6 @@ class GenreGraphs extends React.Component{
 
     constructor(props) {
         super(props);
-        console.log(this.props.userInfo.display_name);
       }
     async componentDidMount() {
         const { userInfo, history } = this.props;
@@ -29,7 +28,7 @@ class GenreGraphs extends React.Component{
         }
 
     render(){
-        const labels = <Mappings data={this.props.userInfo.display_name}/>;
+        const labels = <Mappings data={this.token}/>;
         return(
             <div>
             <h1>Graphs</h1>

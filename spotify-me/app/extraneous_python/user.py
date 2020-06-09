@@ -40,11 +40,22 @@ class User:
 
         return self.top_tracks
 
-    def get_top_artists(self, term=None, limit=10):
+
+
+
+    def get_top_artists(self, token, term=None, limit=10):
         artist_info = {}
-        if self.token:
-            sp = spotipy.Spotify(auth=self.token)
-            sp.trace = False
+        if token != "":
+            try:
+                sp = spotipy.Spotify(auth=token)
+                sp.trace = False
+            except Exception:
+                print()
+                print()
+                print()
+                print()
+                print()
+                raise Exception("Token Error!")
             if(not term):
                 ranges = ['short_term', 'medium_term', 'long_term']
                 for range in ranges:

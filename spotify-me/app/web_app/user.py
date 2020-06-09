@@ -13,11 +13,12 @@ import pprint
 
 
 class User:
-    def __init__(self, username):
+    def __init__(self, token):
         client_credentials_manager = SpotifyClientCredentials()
         sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
         scope = 'user-top-read'
-        self.token = util.prompt_for_user_token(username, scope=scope,redirect_uri='http://localhost:5000')
+        self.token = token
+        # self.token = util.prompt_for_user_token(username, scope=scope,redirect_uri='http://localhost:5000')
         if(not self.token):
             print("Could not get token")
         self.top_tracks = {'short_term':[], 'medium_term':[], 'long_term':[]}
@@ -32,7 +33,6 @@ class User:
                 for range in ranges:
                     results = sp.current_user_top_tracks(time_range=range, limit=limit)
                     for i, result in enumerate(results['items']):
-                        # print(i, item['name'], '//', item['artists'][0]['name'])
                         song_dict = {'name':result['name'], 'artist':result['artists'][0]['name']}
                         self.top_tracks[range].append(song_dict)
 

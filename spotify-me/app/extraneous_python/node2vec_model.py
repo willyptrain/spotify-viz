@@ -54,13 +54,30 @@ class Node2Vec:
 
                 return genre_mappings
 
-    def get_mappings_by_range(self, username, range, k=50):
+    def get_mappings_by_range(self, token, range, k=50):
         scores = []
         colors = []
         pretransform_scores = []
         labels = []
-        user = User(username)
+        print()
+        print()
+        print()
+        print("dab1")
+        print()
+        user = User(token)
+        print()
+        print()
+        print()
+        print("dab2")
+        print()
         top_artists = user.get_top_artists(limit=k)
+        print()
+        print()
+        print("yeet")
+        print()
+        print()
+
+
         genre_mappings = {"short_term": {}, "medium_term": {}, "long_term": {}}
         sorted_mappings = {"short_term": {}, "medium_term": {}, "long_term": {}}
         for artist in top_artists[range]:
@@ -104,5 +121,5 @@ class Node2Vec:
 
 
 
-node2 = Node2Vec()
-node2.get_mappings_by_range("screamywill", range="short_term")
+# node2 = Node2Vec()
+# node2.get_mappings_by_range("screamywill", range="short_term")

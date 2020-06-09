@@ -84,17 +84,13 @@ def user(name, time_range):
 
 @app.route('/user/<time_range>/<token>')
 def user_tracks(time_range, token):
-
     top_tracks = []
     image_url = 'https://via.placeholder.com/150'
+    sp = spotipy.Spotify(auth=token)
+    sp.trace = False
     k = 10
-    try:
-        sp = spotipy.Spotify(auth=token)
-        sp.trace = False
-        results = sp.current_user_top_tracks(time_range=time_range, limit=k)
-    except:
-        raise Exception("Error")
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
+    results = sp.current_user_top_tracks(time_range=time_range, limit=k)
     if len(results['items']) < k:
         for i in range(0, k):
             top_tracks.append({
@@ -115,15 +111,27 @@ def user_tracks(time_range, token):
     print(top_tracks)
     return jsonify(top_tracks=top_tracks)
 
-
-@app.route('/graphs/<time_range>/<username>/<token>')
-def user_graph(time_range, username,token):
+@app.route('/graphs/<time_range>/<token>')
+def user_graph(time_range, token):
+    print()
+    print()
+    print()
+    print("doing something")
+    print()
+    print()
     n2v = Node2VecModel('model_kv.kv')
     print(token)
     labels = []
     scores = []
-    labels, scores,colors = n2v.get_mappings_by_range(username, time_range)
-    # print(labels,scores)
+    colors = []
+
+    labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
+    print(labels,scores)
+    print()
+    print()
+    print()
+    print()
+    print()
     return jsonify({
         'labels':labels,
         'scores':scores,

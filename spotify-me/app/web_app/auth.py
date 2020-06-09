@@ -49,6 +49,7 @@ def auth_payload(token):
         "client_secret": spotify_secret,
     }
 
+
 def get_user_profile(token):
     user_profile_api_endpoint = "{}/me".format(SPOTIFY_API_URL)
     profile_response = requests.get(
@@ -56,7 +57,6 @@ def get_user_profile(token):
     )
 
     return json.loads(profile_response.text)
-
 
 
 @bp.route("/redirect-spotify")
@@ -75,17 +75,7 @@ def get_user():
         data = request.json
         auth_token = data['code']
 
-        print()
-        print(data)
-        print()
-
         post_request = requests.post(SPOTIFY_TOKEN_URL, data=auth_payload(auth_token))
-        print()
-        print(post_request)
-        print()
-
-
-
         response_data = json.loads(post_request.text)
         access_token = response_data["access_token"]
         refresh_token = response_data["refresh_token"]
@@ -100,9 +90,9 @@ def get_user():
 
     if 'error' in profile_data:
         return 'Not logged in'
-      
+
     session['user_id'] = profile_data['id']
-    
+
     create_user(profile_data)
 
     res = make_response(jsonify(profile_data), 200)
@@ -115,7 +105,7 @@ def create_user(data):
     db = get_db()
 
     if db.execute(
-        'SELECT spotify_id FROM users WHERE spotify_id = ?', (data['id'],)
+            'SELECT spotify_id FROM users WHERE spotify_id = ?', (data['id'],)
     ).fetchone() is None:
         print(data['images'])
         if data['images'] != []:
@@ -126,7 +116,8 @@ def create_user(data):
         else:
             db.execute(
                 'INSERT INTO users (spotify_id, full_name, display_image) VALUES (?, ?, ?)',
-                (data['id'], data['display_name'], 'https://f0.pngfuel.com/png/981/645/default-profile-picture-png-clip-art.png')
+                (data['id'], data['display_name'],
+                 'https://f0.pngfuel.com/png/981/645/default-profile-picture-png-clip-art.png')
             )
         db.commit()
 
@@ -148,3 +139,9 @@ def logout():
     session.clear()
     return 'True'
 
+# <Route exact path="/graphs" component={(props) =>
+#                 <>
+#                 <NavBar/>
+#                 <GenreGraphs {...props} userInfo={userInfo}  />
+#                 </>
+# }/>

@@ -29,7 +29,7 @@ class Mappings extends React.Component {
     }
 
     async componentDidMount()  {
-        axios.get(`http://localhost:5000/graphs/short_term/${this.username}/${this.token}`)
+        axios.get(`http://localhost:5000/graphs/short_term/${this.token}`)
         .then(res => {
             this.setState({
                 scores: res.data.scores,
