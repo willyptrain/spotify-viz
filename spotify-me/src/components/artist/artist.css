@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+
+
+.album-carousel {
+
+    height: 200px;
+    bottom: 100px;
+    border: 2px solid black;
+}
+div.slick-initialized.slick-slider {
+   position: relative!important;
+}
+.artist-card {
+    background: red;
+    height: 50%;
+    width: 100%;
+    border: 1px solid black;
+}
+.grid-container {
+    justify-content: center;
+    height: 50%;
+    position: absolute;
+}
+.artist-img-container {
+    float: left;
+    height: 100%;
+    position: relative;
+    top: 25px;
+    left: 0px;
+}
+.artist-img {
+    border: 6px solid rgba(0,0,0,0.75);
+    width: calc(100% - 50px);
+    height: calc(100% - 50px);
+}
+.genre-doughnut {
+    height: 200px;
+}
+.artist-top-container {
+    height: 65%;
+}
+.carousel-bgd {
+    height: 15vh;
+}
+.album-carousel-item {
+    height: 15vh;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

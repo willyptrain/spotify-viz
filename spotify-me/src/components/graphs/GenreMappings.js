@@ -76,16 +76,8 @@ class Mappings extends React.Component {
                 data={this.state.data[0]} />
               </div>
            </Grid>
-
-
-
       </Grid>
-
-
-
-
-
-        );
+);
        } else {
        return (<div></div>)
        }

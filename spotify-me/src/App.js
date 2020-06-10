@@ -10,6 +10,8 @@ import {logout} from './util/auth';
 import { User } from 'react-spotify-api';
 import GenreGraphs from './components/graphs/GenreGraphs';
 import GenreMappings from './components/graphs/GenreMappings';
+import ArtistPage from './components/artist/ArtistPage';
+
 
 
 import TopTracks from './components/top_tracks/TopTracks';
@@ -34,7 +36,7 @@ class App extends Component{
       <div className="App">
         <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" />
         <Router>
-          <div>
+          <div style={{height:'100%'}}>
             <Switch>
               <Route exact path="/login" component={(props) =>
                 <Login {...props} setUserInfo={this.setUserInfo} userInfo={userInfo} />
@@ -55,6 +57,12 @@ class App extends Component{
                 <NavBar/>
                 <GenreGraphs />
               </Route>
+              <Route exact path="/artist/:uri" render={(props) =>
+                <div style={{height:'100%'}}>
+                <NavBar/>
+                <ArtistPage style={{height:'100%'}} id={props.match.params} />
+                </div>
+               } />
             </Switch>
           </div>
         </Router>

@@ -105,33 +105,52 @@ def user_tracks(time_range, token):
                 'track_name':result['name'],
                 'artist':result['artists'][0]['name'],
                 'uri':result['uri'],
+                'id':result['artists'][0]['id'],
                 'image':result['album']['images'][0]['url']
             })
 
     print(top_tracks)
     return jsonify(top_tracks=top_tracks)
 
+@app.route('/artist/<id>/<token>')
+def artist_info(id, token):
+    sp = spotipy.Spotify(auth=token)
+    get_artist = sp.artist(id)
+    n2v = Node2VecModel('model_kv.kv')
+    labels,scores,colors = n2v.get_mappings_for_genres(get_artist['genres'])
+
+
+    if(len(scores) == 1):
+        return jsonify({
+            'artist_info': get_artist,
+            'albums': sp.artist_albums(id),
+            'genre_data': {
+                'labels': [labels[0]],
+                'scores': [1],
+                'colors': [colors[0]]
+            }
+        })
+
+    return jsonify({
+        'artist_info':get_artist,
+        'albums':sp.artist_albums(id),
+        'genre_data': {
+            'labels': labels,
+            'scores': scores,
+            'colors': colors
+        }
+    })
+
+
+
+
 @app.route('/graphs/<time_range>/<token>')
 def user_graph(time_range, token):
-    print()
-    print()
-    print()
-    print("doing something")
-    print()
-    print()
     n2v = Node2VecModel('model_kv.kv')
-    print(token)
     labels = []
     scores = []
     colors = []
-
     labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
-    print(labels,scores)
-    print()
-    print()
-    print()
-    print()
-    print()
     return jsonify({
         'labels':labels,
         'scores':scores,

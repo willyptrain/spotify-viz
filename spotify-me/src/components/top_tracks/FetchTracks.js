@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import './tracks.css'
-import Badge from '@material-ui/core/Badge';
+import { Link } from 'react-router-dom';
 
 
 
@@ -34,22 +34,23 @@ export function FetchTracks(data) {
 
     return(
 
-<div container>
+<div>
     <Grid container className="grid-container"
   alignItems="center"
   justify="center" spacing={0}>
 
          {
         tracks.map((track,index) =>
-        <Grid item xs={6} sm={3}>
+            <Grid item xs={6} sm={3}>
+                    <a href={`/artist/${track.id}`}>
             <Card className="track-card">
                     <CardMedia className="track-img" image={track.image}></CardMedia>
                     <CardContent className="track-info">
                         <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {track.track_name} by {track.artist}</Typography>
                     </CardContent>
             </Card>
+        </a>
          </Grid>
-
         )}
 
       </Grid>

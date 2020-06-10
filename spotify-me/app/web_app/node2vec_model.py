@@ -21,6 +21,7 @@ class Node2VecModel:
         self.wv = self.load_wv(path)
         self.lists = items()
         self.top_genres = self.lists.top_genres()
+        self.big_list_genres = self.lists.get_genres()
         client_credentials_manager = SpotifyClientCredentials()
         sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
@@ -97,6 +98,61 @@ class Node2VecModel:
             colors.append("rgba(0," + str(random.randint(0, 255)) + ","+str(random.randint(0, 255))+"," + str(random.uniform(0, 1)) + ")")
 
         return [labels, scores,colors]
+
+
+    def get_mappings_for_genres(self, genres, k=50):
+        scores = []
+        colors = []
+        labels = []
+        genre_mappings = {}
+        sorted_mappings = {}
+
+        for user_genre in genres:
+            for genre in self.big_list_genres:
+                try:
+                    similarity = self.wv.similarity(user_genre, genre)
+                    if (genre in genre_mappings):
+                        genre_mappings[genre] += similarity
+                    else:
+                        genre_mappings[genre] = similarity
+                except Exception:
+                    continue
+
+        if(len(genre_mappings.items()) > 0):
+            print(genre_mappings.items())
+            sorted_mappings = sorted(genre_mappings.items(), key=(lambda x: x[1]), reverse=True)
+            top_genre = sorted_mappings[0][0]
+            artist_genres = {}
+            sum_similarities = 0
+            scores = []
+            for artist_genre in genres:
+                similarity = self.wv.similarity(artist_genre, top_genre)
+                sum_similarities += similarity
+                artist_genres[artist_genre] = similarity
+                scores.append(similarity)
+
+            avg_score = sum_similarities/(len(genres))
+            st_dev = np.std(np.array(scores))
+
+            labels = []
+            scores = []
+            colors = []
+            print(artist_genres.items())
+
+            for artist_genre in artist_genres.items():
+                labels.append(artist_genre[0])
+                if (st_dev != 0):
+                    scores.append(abs(artist_genre[1]-avg_score)/st_dev)
+                else:
+                    print(artist_genre[1])
+                    scores.append(artist_genre[1])
+                colors.append("rgba(0,0,"+str(random.randint(0, 255))+"," + str((random.uniform(0, 1)*0.8)+0.2) + ")")
+
+            print(labels, scores, colors)
+            return [labels, scores, colors]
+        else:
+            return [[],[],[]]
+
 
     def load_wv(self, path):
         wv = KeyedVectors.load(path, mmap='r')
