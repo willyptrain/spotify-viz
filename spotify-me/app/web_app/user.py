@@ -13,9 +13,8 @@ import pprint
 
 
 class User:
-    def __init__(self, token):
-        client_credentials_manager = SpotifyClientCredentials()
-        sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+    def __init__(self):
+        sp = spotipy.Spotify(auth=token)
         scope = 'user-top-read'
         self.token = token
         # self.token = util.prompt_for_user_token(username, scope=scope,redirect_uri='http://localhost:5000')
@@ -65,5 +64,4 @@ class User:
         return artist_info
 
 
-user = User("screamywill")
 # user.get_top_tracks()
