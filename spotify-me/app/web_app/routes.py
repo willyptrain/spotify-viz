@@ -226,7 +226,7 @@ def artist_info(id, token):
 
 @app.route('/graphs/<time_range>/<token>')
 def user_graph(time_range, token):
-    n2v = Node2VecModel('model_kv.kv')
+    n2v = Node2VecModel('model_kv.kv', token)
     labels = []
     scores = []
     colors = []

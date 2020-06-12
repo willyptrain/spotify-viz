@@ -13,7 +13,7 @@ import pprint
 
 
 class User:
-    def __init__(self):
+    def __init__(self, token):
         sp = spotipy.Spotify(auth=token)
         scope = 'user-top-read'
         self.token = token
