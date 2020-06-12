@@ -114,6 +114,9 @@ def user_tracks(time_range, token):
 
 @app.route('/artist/<id>/<token>')
 def artist_info(id, token):
+    if(not id):
+        print(id)
+        raise Exception("ID Error")
     sp = spotipy.Spotify(auth=token)
     get_artist = sp.artist(id)
     n2v = Node2VecModel('model_kv.kv')
@@ -147,15 +150,17 @@ def artist_info(id, token):
 @app.route('/graphs/<time_range>/<token>')
 def user_graph(time_range, token):
     n2v = Node2VecModel('model_kv.kv')
-    labels = []
-    scores = []
-    colors = []
-    labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
-    return jsonify({
-        'labels':labels,
-        'scores':scores,
-        'colors':colors
-    })
+    if(time_range == 'all_term'):
+        genre_mappings = n2v.get_genre_mappings()
+        print(genre_mappings)
+    else:
+
+        labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
+        return jsonify({
+            'labels':labels,
+            'scores':scores,
+            'colors':colors
+        })
 
 
 @app.route('/album_graph/', methods=['GET', 'POST'])

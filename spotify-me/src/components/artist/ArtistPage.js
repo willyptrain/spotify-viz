@@ -15,6 +15,11 @@ import Typography from '@material-ui/core/Typography';
 import { Doughnut, Radar } from 'react-chartjs-2';
 import Paper from '@material-ui/core/Paper';
 import ItemsCarousel from 'react-items-carousel';
+import IconButton from '@material-ui/core/IconButton';
+import CancelIcon from '@material-ui/icons/Cancel';
+import "font-awesome/css/font-awesome.css";
+import Icon from '@material-ui/core/Icon';
+
 
 
 
@@ -24,8 +29,10 @@ class ArtistPage extends React.Component{
         super(props);
         this.state = {};
         this.chartReference = React.createRef();
-
-        this.artist_uri = this.props.id.uri;
+        console.log(this.props);
+        this.onClose = this.props.onClose;
+        console.log(this.props.onClose);
+        this.artist_uri = this.props.id.id;
         this.token = cookie.get('access_token');
 
 
@@ -111,6 +118,11 @@ class ArtistPage extends React.Component{
         })
     }
 
+    handleClose() {
+        this.onClose();
+
+    }
+
 
     render(){
 
@@ -153,8 +165,13 @@ class ArtistPage extends React.Component{
 
                         <Grid style={{height:'100%'}} item sm={6}>
                              <div className="artist-info">
-                            <Typography className="artist-name" style={{fontFamily: 'Montserrat'}}
+                            <IconButton className="exit-artist-modal" onClick={() => this.handleClose()}>
+                                <Icon onClick={() => this.handleClose()} className="fa fa-times" />
+                            </IconButton>
+                            <div className="artist-name-container">
+                                <Typography className="artist-name" style={{fontFamily: 'Montserrat'}}
                                         gutterBottom variant="h3" component="h3">{this.state['name']}</Typography>
+                            </div>
                             <div className="genre-doughnut">
                                 <Radar ref={this.chartReference}
                                 data={this.state.data[0]} options={{
@@ -164,7 +181,25 @@ class ArtistPage extends React.Component{
                                             display: true,
                                             position: "center",
                                             text: 'Upcoming Meetings' },
-                                        legend: { display: false },
+                                        scale: {
+                        ticks: {
+                            display: false
+                        },
+                        yAxis: {
+                            display: false
+                        },
+                        pointLabels: {
+                            fontSize: 16,
+                            fontColor: '#111111',
+                            fontFamily: "'Montserrat','Roboto'"
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    radius: {
+                        fontSize: 24
+                    }
                                 }} />
                             </div>
                         </div>
