@@ -17,7 +17,7 @@ class NavBar extends React.Component{
         );
         return(
             <Navbar className="top-navbar" bg="light" expand="lg">
-                <Navbar.Brand href="#home">Spotify-Viz</Navbar.Brand>
+                <Navbar.Brand href="/">Spotify-Viz</Navbar.Brand>
                 <Navbar.Toggle className="navBar-font" aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse className="navBar-font" id="basic-navbar-nav">
                 {this.props.userInfo === `Not logged in` ? guestLinks : userLinks}

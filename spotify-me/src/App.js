@@ -73,6 +73,10 @@ class App extends Component{
                  <NavBar/>
                  <TopAlbums/>
                </Route>
+               <Route exact path="/dashboard">
+                 <NavBar/>
+                 <Dash/>
+               </Route>
             </Switch>
           </div>
         </Router>
