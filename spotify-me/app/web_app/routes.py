@@ -112,6 +112,41 @@ def user_tracks(time_range, token):
     print(top_tracks)
     return jsonify(top_tracks=top_tracks)
 
+
+@app.route('/user_artists/<time_range>/<token>')
+def user_artists(time_range, token):
+    top_artists = []
+    image_url = 'https://via.placeholder.com/150'
+    sp = spotipy.Spotify(auth=token)
+    sp.trace = False
+    k = 10
+    range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
+    results = sp.current_user_top_artists(time_range=time_range, limit=k)
+    print(results['items'][0].keys())
+
+    if len(results['items']) < k:
+        for i in range(0, k):
+            top_artists.append({
+                'artist_name':'Empty',
+                'followers':'Empty',
+                'popularity':'Empty',
+                'uri':'Empty',
+                'id': 'Empty',
+                'image':'Empty'
+            })
+    else:
+        for i, result in enumerate(results['items']):
+            top_artists.append({
+                'artist_name':result['name'],
+                'popularity':result['popularity'],
+                'genres': result['genres'],
+                'uri':result['uri'],
+                'id':result['id'],
+                'image':result['images'][0]['url']
+            })
+    print(top_artists)
+    return jsonify(top_artists=top_artists)
+
 @app.route('/artist/<id>/<token>')
 def artist_info(id, token):
     sp = spotipy.Spotify(auth=token)

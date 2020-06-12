@@ -11,10 +11,12 @@ import { User } from 'react-spotify-api';
 import GenreGraphs from './components/graphs/GenreGraphs';
 import GenreMappings from './components/graphs/GenreMappings';
 import ArtistPage from './components/artist/ArtistPage';
-
+import Dash from './components/dashboard/Dash';
+import TopArtists from './components/top_artists/TopArtists';
 
 
 import TopTracks from './components/top_tracks/TopTracks';
+import { Nav } from 'react-bootstrap';
 
 class App extends Component{
   state = {
@@ -63,6 +65,10 @@ class App extends Component{
                 <ArtistPage style={{height:'100%'}} id={props.match.params} />
                 </div>
                } />
+               <Route exact path="/top_artists">
+                <NavBar/>
+                <TopArtists/>
+               </Route>
             </Switch>
           </div>
         </Router>
