@@ -13,7 +13,7 @@ import GenreMappings from './components/graphs/GenreMappings';
 import ArtistPage from './components/artist/ArtistPage';
 import Dash from './components/dashboard/Dash';
 import TopArtists from './components/top_artists/TopArtists';
-
+import TopAlbums from './components/top_albums/TopAlbums';
 
 import TopTracks from './components/top_tracks/TopTracks';
 import { Nav } from 'react-bootstrap';
@@ -68,6 +68,10 @@ class App extends Component{
                <Route exact path="/top_artists">
                 <NavBar/>
                 <TopArtists/>
+               </Route>
+               <Route exact path="/top_albums">
+                 <NavBar/>
+                 <TopAlbums/>
                </Route>
             </Switch>
           </div>

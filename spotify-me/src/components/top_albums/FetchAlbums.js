@@ -10,20 +10,20 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import './artists.css';
+import './topalbums.css'
 import { Link } from 'react-router-dom';
 
 
 
-export function FetchArtists(data) {
+export function FetchAlbums(data) {
     console.log(data.data)
-    const [artists, setArtists] = useState([]);
+    const [albums, setAlbums] = useState([]);
     let token = cookie.get('access_token');
     useEffect(() => {
-        axios.get(`http://localhost:5000/user_artists/${data.data}/${token}`)
+        axios.get(`http://localhost:5000/user_albums/${data.data}/${token}`)
         .then(res => {
             console.log(res.data)
-            setArtists(res.data.top_artists)
+            setAlbums(res.data.albums)
         })
         .catch(err => {
             console.log('error :(')
@@ -40,16 +40,16 @@ export function FetchArtists(data) {
   justify="center" spacing={0}>
 
          {
-        artists.map((artist,index) =>
+        albums.map((album,index) =>
             <Grid item xs={6} sm={3}>
-                    <a href={`/artist/${artist.id}`}>
-            <Card className="topartists-card">
-                    <CardMedia className="topartists-img" image={artist.image}></CardMedia>
-                    <CardContent className="topartists-info">
-                        <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {artist.artist_name}</Typography>
+                    <a href={`/artist/${album.artists[0].id}`}>
+            <Card className="topalbums-card">
+                    <CardMedia className="topalbums-img" image={album.images[0].url}></CardMedia>
+                    <CardContent className="topalbums-info">
+                        <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {album.name} by {album.artists[0].name}</Typography>
                     </CardContent>
             </Card>
-        </a>
+            </a>
          </Grid>
         )}
 

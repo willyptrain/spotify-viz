@@ -8,7 +8,7 @@ import json
 import webbrowser
 from web_app import app, lists, user, node2vec_model
 from web_app.settings import spotify_id, spotify_secret
-
+import math
 # from settings import spotify_secret, spotify_id
 # import node2vec_model
 from web_app.node2vec_model import Node2VecModel
@@ -108,10 +108,55 @@ def user_tracks(time_range, token):
                 'id':result['artists'][0]['id'],
                 'image':result['album']['images'][0]['url']
             })
-
-    print(top_tracks)
     return jsonify(top_tracks=top_tracks)
 
+
+@app.route('/user_albums/<time_range>/<token>')
+def user_albums(time_range, token):
+    top_tracks = []
+    image_url = 'https://via.placeholder.com/150'
+    sp = spotipy.Spotify(auth=token)
+    sp.trace = False
+    k = 50
+    range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
+    results = sp.current_user_top_tracks(time_range=time_range, limit=k)
+    if len(results['items']) < k:
+        for i in range(0, k):
+            top_tracks.append({
+                'track_name':'Empty',
+                'album' : 'Empty',
+                'artist':'Empty',
+                'uri':'Empty',
+                'image':'Empty'
+            })
+    else:
+        for i, result in enumerate(results['items']):
+            top_tracks.append({
+                'track_name':result['name'],
+                'artist':result['artists'][0]['name'],
+                'album' : result['album'],
+                'uri':result['uri'],
+                'id':result['artists'][0]['id'],
+                'image':result['album']['images'][0]['url']
+            })
+    album_points = {}
+    albums = []
+    for i in range(0, len(top_tracks)):
+        track = top_tracks[i]
+        cur_points = math.ceil((50 - i)/5)
+        if track['album']['name'] not in album_points.keys():
+            album_points[track['album']['name']] = cur_points
+            albums.append(track['album'])
+        else:
+            album_points[track['album']['name']] += cur_points
+    sort_albums = sorted(album_points.items(), key=lambda x: x[1], reverse=True)
+    final_albums = []
+    for i in range(0, len(sort_albums)):
+        for album in albums:
+            if album['name'] == sort_albums[i][0]:
+                final_albums.append(album)
+    print(final_albums)
+    return jsonify(albums=final_albums)
 
 @app.route('/user_artists/<time_range>/<token>')
 def user_artists(time_range, token):

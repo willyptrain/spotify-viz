@@ -1,5 +1,4 @@
-
-.music-title {
+usic-title {
     position: relative;
     top: -10px;
     overflow: hidden;
@@ -15,26 +14,26 @@
     overflow: hidden;
     left: 0.5vh;
 }
-.topartists-card {
+.topalbums-card {
     height: 28vh;
     margin-bottom: 2vh;
     width: 95% !important;
     max-width: 35vh;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2) !important;
 }
-.topartists-card:hover, .topartists-card:active {
+.topalbums-card:hover, .topalbums-card:active {
     opacity: 0.8;
     cursor: pointer;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2) !important;
 
 }
-.topartists-info {
+.topalbums-info {
     line-height: 10%;
     overflow: hidden;
     height: 10%;
     background: #272c34 !important;
 }
-.topartists-img {
+.topalbums-img {
     height: 100%;
     width: 100%;
     -webkit-transition: height 0.2s linear;
@@ -43,10 +42,10 @@
     -o-transition: height 0.2s linear;
     transition: height 0.2s linear;
 }
-.topartists-img:hover {
+.topalbums-img:hover {
     height: 90%;
 }
-.topartists-tab {
+.topalbums-tab {
     border-top: none !important;
     border-left: none !important;
     border-right: none !important;
@@ -55,7 +54,7 @@
     font-weight: 600 !important;
     font-size: 0.9em !important;
 }
-.topartists-tab:active {
+.topalbums-tab:active {
     border-top: none !important;
     border-left: none !important;
     border-right: none !important;
