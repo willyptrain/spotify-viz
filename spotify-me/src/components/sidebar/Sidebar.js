@@ -89,6 +89,9 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
+  customizeToolbar: {
+    minHeight: 64,
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
@@ -138,7 +141,7 @@ export default function MiniDrawer() {
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar style={{backgroundColor: '#323733', color: '#DFE0E3'}}>
+        <Toolbar style={{backgroundColor: '#323733', color: '#DFE0E3'}} className={classes.customizeToolbar} >
           <IconButton
             color="inherit"
             aria-label="open drawer"

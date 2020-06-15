@@ -31,7 +31,7 @@ class TopAlbums extends React.Component{
         const track_list = <FetchAlbums data={this.state.value}/>;
 
         return(
-            <div>
+            <div style={{ marginTop: `64px`, marginLeft: '84px'}}>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                     <Tabs

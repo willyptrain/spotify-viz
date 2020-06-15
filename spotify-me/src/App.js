@@ -71,7 +71,7 @@ class App extends Component{
                 <TopArtists/>
                </Route>
                <Route exact path="/top_albums">
-                 <NavBar/>
+                 <Sidebar/>
                  <TopAlbums/>
                </Route>
                <Route exact path="/dashboard">
