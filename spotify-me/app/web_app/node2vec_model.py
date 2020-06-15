@@ -6,15 +6,16 @@ from numpy import linalg
 import random
 import math
 import os
+from gensim.models import KeyedVectors
 from . import lists
 from web_app.lists import items
-# import node2vec as n2v
-from gensim.models import KeyedVectors
+import node2vec as n2v
 from web_app.user import User
 from flask import jsonify
 
 from urllib3.exceptions import ReadTimeoutError
 import time
+# from lists import items
 
 
 class Node2VecModel:
@@ -24,7 +25,7 @@ class Node2VecModel:
         self.top_genres = self.lists.top_genres()
         self.big_list_genres = self.lists.get_genres()
         client_credentials_manager = SpotifyClientCredentials()
-        sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+        self.sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
     def get_genre_mappings(self, token, k=100, range=None):
         if(self.wv == None):
@@ -156,10 +157,21 @@ class Node2VecModel:
             return [[],[],[]]
 
 
+
+    def get_mappings_for_artist(self, artist_id):
+        artist_tracks = self.sp.artist_top_tracks(artist_id)["tracks"]
+        for track in artist_tracks:
+            id = track["id"]
+            features = self.sp.track(id)
+            print(json.dumps(features,indent=4))
+
+
+
     def load_wv(self, path):
         wv = KeyedVectors.load(path, mmap='r')
         return wv
 
 
-
-# node2.get_mappings_by_range("screamywill", range="short_term")
+node2 = Node2VecModel("model_kv.kv")
+# print(json.dumps(node2.sp.album('2MbEjelAESGKIBDL54OYeY'),indent=4))
+print(json.dumps(node2.sp.categories(),indent=4))

@@ -17,7 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import ItemsCarousel from 'react-items-carousel';
 import IconButton from '@material-ui/core/IconButton';
 import CancelIcon from '@material-ui/icons/Cancel';
-import "font-awesome/css/font-awesome.css";
+//import "font-awesome/css/font-awesome.css";
 import Icon from '@material-ui/core/Icon';
 
 
