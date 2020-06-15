@@ -17,6 +17,7 @@ import TopAlbums from './components/top_albums/TopAlbums';
 
 import TopTracks from './components/top_tracks/TopTracks';
 import { Nav } from 'react-bootstrap';
+import Sidebar from './components/sidebar/Sidebar';
 
 class App extends Component{
   state = {
@@ -74,6 +75,7 @@ class App extends Component{
                  <TopAlbums/>
                </Route>
                <Route exact path="/dashboard">
+                 <Sidebar/>
                  <NavBar/>
                  <Dash/>
                </Route>

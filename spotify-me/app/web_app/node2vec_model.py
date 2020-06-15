@@ -61,7 +61,7 @@ class Node2VecModel:
         colors = []
         pretransform_scores = []
         labels = []
-        user = User(token)
+        user = User(token=token)
         top_artists = user.get_top_artists(limit=k)
         genre_mappings = {"short_term": {}, "medium_term": {}, "long_term": {}}
         sorted_mappings = {"short_term": {}, "medium_term": {}, "long_term": {}}
