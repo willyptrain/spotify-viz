@@ -4,9 +4,7 @@
 
 }
 body {
-    background: -webkit-linear-gradient(top, #C5FDFD, #4F84DD) !important;
-    background: -moz-linear-gradient(top, #C5FDFD, #4F84DD) !important;
-    background: linear-gradient(to bottom, #C5FDFD, #4F84DD) !important;
+    background: '#CFD3CF' !important;
 }
 
 .login-container {

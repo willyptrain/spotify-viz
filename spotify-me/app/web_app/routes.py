@@ -226,11 +226,12 @@ def artist_info(id, token):
 
 @app.route('/graphs/<time_range>/<token>')
 def user_graph(time_range, token):
-    n2v = Node2VecModel('model_kv.kv', token)
+    n2v = Node2VecModel('model_kv.kv', token=token)
     labels = []
     scores = []
     colors = []
     labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
+    print(labels, scores, colors)
     return jsonify({
         'labels':labels,
         'scores':scores,
