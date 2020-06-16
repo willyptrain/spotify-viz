@@ -8,6 +8,7 @@ import json
 import webbrowser
 from web_app import app, lists, user, node2vec_model
 from web_app.settings import spotify_id, spotify_secret
+import math
 
 # from settings import spotify_secret, spotify_id
 # import node2vec_model
@@ -109,13 +110,11 @@ def user_tracks(time_range, token):
                 'image':result['album']['images'][0]['url']
             })
 
-    print(top_tracks)
     return jsonify(top_tracks=top_tracks)
 
 @app.route('/artist/<id>/<token>')
 def artist_info(id, token):
     if(not id):
-        print(id)
         raise Exception("ID Error")
     sp = spotipy.Spotify(auth=token)
     get_artist = sp.artist(id)
@@ -144,7 +143,59 @@ def artist_info(id, token):
         }
     })
 
+@app.route('/track/<track>/<token>')
+def track_info(track, token):
+    sp = spotipy.Spotify(auth=token)
+    popularity = sp.track(track)['popularity']
+    features = sp.audio_features(track)
+    feature_list = ['danceability', 'energy', 'instrumentalness', 'liveness','loudness']
+    labels = ['Danceability', 'Energy', 'Instrumentalness', 'Liveness','Loudness']
+    scores = []
+    colors = ['#f1a5ba', '#f5b565', '#fbd981', '#93dcdc', '#6cb8ee']
+    for k,v in features[0].items():
+        if(k in feature_list):
+            if(k == 'loudness'):
+                if(math.log10(60+v) < 1):
+                    value = 0
+                else:
+                    val = 60 + v
+                    value = (math.log10(val))/math.log10(60)
+                scores.append(value)
+            else:
+                scores.append(v)
 
+
+
+    return jsonify({
+        'popularity': popularity,
+        'scores': scores,
+        'labels': labels,
+        'colors': colors
+    })
+
+
+@app.route('/related_tracks/<track>/<token>')
+def related_tracks(track, token):
+    sp = spotipy.Spotify(auth=token)
+    recommendations = sp.recommendations(seed_artists=[track])
+    artists = []
+    images = []
+    song_names = []
+    for result in recommendations["tracks"]:
+        artist = result['artists'][0]['name']
+        name = result['name']
+        artists.append(artist)
+        song_names.append(name)
+        print(artist, name)
+        print(json.dumps(result,indent=4))
+        print(result["album"]["images"][0]["url"])
+        images.append(result["album"]["images"][0]["url"])
+
+    return jsonify({
+        'artists':artists,
+        'song_names':song_names,
+        'images':images
+    })
 
 
 @app.route('/graphs/<time_range>/<token>')
@@ -152,7 +203,6 @@ def user_graph(time_range, token):
     n2v = Node2VecModel('model_kv.kv')
     if(time_range == 'all_term'):
         genre_mappings = n2v.get_genre_mappings()
-        print(genre_mappings)
     else:
 
         labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
