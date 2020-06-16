@@ -158,6 +158,96 @@ def user_albums(time_range, token):
     print(final_albums)
     return jsonify(albums=final_albums)
 
+
+
+@app.route('/artist/<id>/<token>')
+def artist_info(id, token):
+    if(not id):
+        raise Exception("ID Error")
+    sp = spotipy.Spotify(auth=token)
+    get_artist = sp.artist(id)
+    n2v = Node2VecModel('model_kv.kv')
+    labels,scores,colors = n2v.get_mappings_for_genres(get_artist['genres'])
+
+
+    if(len(scores) == 1):
+        return jsonify({
+            'artist_info': get_artist,
+            'albums': sp.artist_albums(id),
+            'genre_data': {
+                'labels': [labels[0]],
+                'scores': [1],
+                'colors': [colors[0]]
+            }
+        })
+
+    return jsonify({
+        'artist_info':get_artist,
+        'albums':sp.artist_albums(id),
+        'genre_data': {
+            'labels': labels,
+            'scores': scores,
+            'colors': colors
+        }
+    })
+
+
+@app.route('/track/<track>/<token>')
+def track_info(track, token):
+    sp = spotipy.Spotify(auth=token)
+    popularity = sp.track(track)['popularity']
+    features = sp.audio_features(track)
+    feature_list = ['danceability', 'energy', 'instrumentalness', 'liveness','loudness']
+    labels = ['Danceability', 'Energy', 'Instrumentalness', 'Liveness','Loudness']
+    scores = []
+    colors = ['#f1a5ba', '#f5b565', '#fbd981', '#93dcdc', '#6cb8ee']
+    for k,v in features[0].items():
+        if(k in feature_list):
+            if(k == 'loudness'):
+                if(math.log10(60+v) < 1):
+                    value = 0
+                else:
+                    val = 60 + v
+                    value = (math.log10(val))/math.log10(60)
+                scores.append(value)
+            else:
+                scores.append(v)
+
+
+
+    return jsonify({
+        'popularity': popularity,
+        'scores': scores,
+        'labels': labels,
+        'colors': colors
+    })
+
+
+@app.route('/related_tracks/<track>/<token>')
+def related_tracks(track, token):
+    sp = spotipy.Spotify(auth=token)
+    recommendations = sp.recommendations(seed_artists=[track])
+    artists = []
+    images = []
+    song_names = []
+    for result in recommendations["tracks"]:
+        artist = result['artists'][0]['name']
+        name = result['name']
+        artists.append(artist)
+        song_names.append(name)
+        print(artist, name)
+        print(json.dumps(result,indent=4))
+        print(result["album"]["images"][0]["url"])
+        images.append(result["album"]["images"][0]["url"])
+
+    return jsonify({
+        'artists':artists,
+        'song_names':song_names,
+        'images':images
+    })
+
+
+
 @app.route('/user_artists/<time_range>/<token>')
 def user_artists(time_range, token):
     top_artists = []
@@ -191,35 +281,6 @@ def user_artists(time_range, token):
             })
     print(top_artists)
     return jsonify(top_artists=top_artists)
-
-@app.route('/artist/<id>/<token>')
-def artist_info(id, token):
-    sp = spotipy.Spotify(auth=token)
-    get_artist = sp.artist(id)
-    n2v = Node2VecModel(path='model_kv.kv', token=token)
-    labels,scores,colors = n2v.get_mappings_for_genres(get_artist['genres'])
-
-
-    if(len(scores) == 1):
-        return jsonify({
-            'artist_info': get_artist,
-            'albums': sp.artist_albums(id),
-            'genre_data': {
-                'labels': [labels[0]],
-                'scores': [1],
-                'colors': [colors[0]]
-            }
-        })
-
-    return jsonify({
-        'artist_info':get_artist,
-        'albums':sp.artist_albums(id),
-        'genre_data': {
-            'labels': labels,
-            'scores': scores,
-            'colors': colors
-        }
-    })
 
 
 

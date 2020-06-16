@@ -12,17 +12,23 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import './tracks.css'
 import { Link } from 'react-router-dom';
-
+import Modal from '@material-ui/core/Modal';
+import ArtistPage from '../artist/ArtistPage.js'
+import TopTracks from './TopTracks.js';
+import PropTypes from 'prop-types'
 
 
 export function FetchTracks(data) {
-    console.log(data.data)
+
     const [tracks, setTracks] = useState([]);
+    const [track, setTrack] = useState([]);
+    const [artistId, setArtistId] = useState([]);
+    const isCardFunction = (data.handleChange != null);
+
     let token = cookie.get('access_token');
     useEffect(() => {
         axios.get(`http://localhost:5000/user/${data.data}/${token}`)
         .then(res => {
-            console.log(res.data)
             setTracks(res.data.top_tracks)
         })
         .catch(err => {
@@ -32,28 +38,36 @@ export function FetchTracks(data) {
     }, [data.data])
 
 
-    return(
 
-<div>
-    <Grid container className="grid-container"
-  alignItems="center"
-  justify="center" spacing={0}>
 
-         {
-        tracks.map((track,index) =>
-            <Grid item xs={6} sm={3}>
-                    <a href={`/artist/${track.id}`}>
-            <Card className="track-card">
-                    <CardMedia className="track-img" image={track.image}></CardMedia>
-                    <CardContent className="track-info">
-                        <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {track.track_name} by {track.artist}</Typography>
-                    </CardContent>
-            </Card>
-        </a>
-         </Grid>
-        )}
 
-      </Grid>
-      </div>
-    );
+
+            return(
+
+        <div>
+        <Card>
+            <Grid container className="grid-container"
+          alignItems="center"
+          justify="center" spacing={0}>
+
+                 {
+                tracks.map((track,index) =>
+                    <Grid item xs={6} sm={4} md={4} lg={4}>
+                    {isCardFunction &&
+                        <Card onClick={() => data.handleChange(track)} className="track-card">
+                            <CardMedia className="track-img" image={track.image}></CardMedia>
+                            <CardContent className="track-info">
+                                <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {track.track_name} by {track.artist}</Typography>
+                            </CardContent>
+                    </Card>
+                    }
+
+                 </Grid>
+                )}
+
+              </Grid>
+              </Card>
+              </div>
+            );
+
 }

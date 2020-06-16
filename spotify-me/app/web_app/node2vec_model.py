@@ -6,29 +6,32 @@ from numpy import linalg
 import random
 import math
 import os
+from gensim.models import KeyedVectors
 from . import lists
 from web_app.lists import items
-# import node2vec as n2v
-from gensim.models import KeyedVectors
+import node2vec as n2v
 from web_app.user import User
+from flask import jsonify
 
 from urllib3.exceptions import ReadTimeoutError
 import time
+# from lists import items
 
 
 class Node2VecModel:
-    def __init__(self, path, token):
+    def __init__(self, path):
         self.wv = self.load_wv(path)
         self.lists = items()
         self.top_genres = self.lists.top_genres()
         self.big_list_genres = self.lists.get_genres()
-        sp = spotipy.Spotify(auth=token)
+        client_credentials_manager = SpotifyClientCredentials()
+        self.sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
-    def get_genre_mappings(self, username, k=100, range=None):
+    def get_genre_mappings(self, token, k=100, range=None):
         if(self.wv == None):
             raise Exception("No Keyed Vector found")
         else:
-            user = User(username)
+            user = User(token)
             top_artists = user.get_top_artists(limit=k)
             genre_mappings = {"short_term": {}, "medium_term": {}, "long_term": {}}
             sorted_mappings = {"short_term": {}, "medium_term": {}, "long_term": {}}
@@ -48,7 +51,7 @@ class Node2VecModel:
                                     continue
 
                     sorted_mappings[range] = sorted(genre_mappings[range].items(), key=(lambda x: x[1]), reverse=True)
-                    total = float(sum( [math.e**(i) for i in genre_mappings[range].values()]  ))
+                    total = float(sum( [i for i in genre_mappings[range].values()]  ))
                     print(total)
                     print(range.upper())
                     for genre in sorted_mappings[range]:
@@ -57,11 +60,12 @@ class Node2VecModel:
                 return genre_mappings
 
     def get_mappings_by_range(self, token, range, k=50):
+        print(self.get_genre_mappings(token))
         scores = []
         colors = []
         pretransform_scores = []
         labels = []
-        user = User(token=token)
+        user = User(token)
         top_artists = user.get_top_artists(limit=k)
         genre_mappings = {"short_term": {}, "medium_term": {}, "long_term": {}}
         sorted_mappings = {"short_term": {}, "medium_term": {}, "long_term": {}}
@@ -70,10 +74,11 @@ class Node2VecModel:
                 for genre in self.top_genres:
                     try:
                         similarity = self.wv.similarity(user_genre, genre)
+                        print(similarity)
                         if (genre in genre_mappings[range]):
-                            genre_mappings[range][genre] += similarity
+                            genre_mappings[range][genre] += min(0, 0.5-similarity)
                         else:
-                            genre_mappings[range][genre] = similarity
+                            genre_mappings[range][genre] = min(0, 0.5-similarity)
                     except:
                         continue
             pretransform_scores.append(genre_mappings[range][genre])
@@ -93,7 +98,7 @@ class Node2VecModel:
             index_of_genre = genre_order[curr_genre]
             power = -(index_of_genre + 1) * lambda_coef
             labels.append(curr_genre)
-            scores.append(lambda_coef * (math.e ** (power)) * float(curr_score))
+            scores.append((lambda_coef * (math.e ** (power)) * float(curr_score)))
             colors.append("rgba(0," + str(random.randint(0, 255)) + ","+str(random.randint(0, 255))+"," + str(random.uniform(0, 1)) + ")")
 
         return [labels, scores,colors]
@@ -118,7 +123,6 @@ class Node2VecModel:
                     continue
 
         if(len(genre_mappings.items()) > 0):
-            print(genre_mappings.items())
             sorted_mappings = sorted(genre_mappings.items(), key=(lambda x: x[1]), reverse=True)
             top_genre = sorted_mappings[0][0]
             artist_genres = {}
@@ -153,11 +157,21 @@ class Node2VecModel:
             return [[],[],[]]
 
 
+
+    def get_mappings_for_artist(self, artist_id):
+        artist_tracks = self.sp.artist_top_tracks(artist_id)["tracks"]
+        for track in artist_tracks:
+            id = track["id"]
+            features = self.sp.track(id)
+            print(json.dumps(features,indent=4))
+
+
+
     def load_wv(self, path):
         wv = KeyedVectors.load(path, mmap='r')
         return wv
 
 
-
-# node2 = Node2VecModel('model_kv.kv')
-# node2.get_mappings_by_range("screamywill", range="short_term")
+node2 = Node2VecModel("model_kv.kv")
+# print(json.dumps(node2.sp.album('2MbEjelAESGKIBDL54OYeY'),indent=4))
+print(json.dumps(node2.sp.categories(),indent=4))
