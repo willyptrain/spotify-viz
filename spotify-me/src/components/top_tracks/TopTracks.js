@@ -31,7 +31,7 @@ class TopTracks extends React.Component{
         const track_list = <FetchTracks data={this.state.value}/>;
 
         return(
-            <div>
+            <div style={{ marginTop: `64px`, marginLeft: '84px'}}>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                     <Tabs

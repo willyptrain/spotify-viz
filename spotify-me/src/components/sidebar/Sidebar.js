@@ -22,7 +22,8 @@ import LibraryMusicIcon from '@material-ui/icons/LibraryMusic';
 import AlbumIcon from '@material-ui/icons/Album';
 import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import BarChartIcon from '@material-ui/icons/BarChart';
-
+import Link from '@material-ui/core/Link';
+import {logout} from '../../util/auth.js';
 
 const drawerWidth = 240;
 
@@ -65,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    background: '#959C96',
+    background: '#343834',
     color: '#DFE0E3'
   },
   drawerClose: {
@@ -78,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
     },
-    background: '#959C96',
+    background: '#343834',
     color: '#DFE0E3'
   },
   toolbar: {
@@ -98,9 +99,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const userLinks = (
+  <Link href= "/logout" onClick={logout}>Logout</Link>
+);
+const guestLinks = (
+  <Link href="/login">Login</Link>
+);
 
 
-export default function MiniDrawer() {
+export default function MiniDrawer(userInfo) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -131,7 +138,7 @@ export default function MiniDrawer() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+  console.log(userInfo);
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -141,7 +148,7 @@ export default function MiniDrawer() {
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar style={{backgroundColor: '#323733', color: '#DFE0E3'}} className={classes.customizeToolbar} >
+        <Toolbar style={{backgroundColor: '#343834', color: '#DFE0E3'}} className={classes.customizeToolbar} >
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -154,7 +161,7 @@ export default function MiniDrawer() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Spotify-Viz
+          {userInfo.userInfo === `Not logged in` ? guestLinks : userLinks}
           </Typography>
         </Toolbar>
       </AppBar>

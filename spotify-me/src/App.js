@@ -35,6 +35,7 @@ class App extends Component{
   }
   render(){
     const { userInfo } = this.state;
+    console.log(userInfo);
     return (
       <div className="App">
         <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" />
@@ -53,21 +54,21 @@ class App extends Component{
                 <Logout/>
               </Route>
               <Route exact path="/top_tracks">
-                <NavBar/>
+                <Sidebar/>
                 <TopTracks/>
               </Route>
               <Route exact path="/graphs">
-                <NavBar/>
+                <Sidebar/>
                 <GenreGraphs />
               </Route>
               <Route exact path="/artist/:uri" render={(props) =>
                 <div style={{height:'100%'}}>
-                <NavBar/>
+                <Sidebar/>
                 <ArtistPage style={{height:'100%'}} id={props.match.params} />
                 </div>
                } />
                <Route exact path="/top_artists">
-                <NavBar/>
+               <Sidebar/>
                 <TopArtists/>
                </Route>
                <Route exact path="/top_albums">
@@ -75,8 +76,7 @@ class App extends Component{
                  <TopAlbums/>
                </Route>
                <Route exact path="/dashboard">
-                 <Sidebar/>
-                 <NavBar/>
+                 <Sidebar userInfo={userInfo}/>
                  <Dash/>
                </Route>
             </Switch>

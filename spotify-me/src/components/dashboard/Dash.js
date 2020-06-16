@@ -5,7 +5,7 @@ import {FetchDashTracks} from './FetchDashTracks';
 
 class Dash extends React.Component {
     render(){
-        return(
+        return(<div style={{ marginTop: `64px`, marginLeft: '84px'}}>
             <Grommet theme={grommet} full>
     <Distribution
       fill
@@ -24,7 +24,7 @@ class Dash extends React.Component {
         </Box>
       )}
     </Distribution>
-  </Grommet>
+  </Grommet></div>
         );
     }
 }
