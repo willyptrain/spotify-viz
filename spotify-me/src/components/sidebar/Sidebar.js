@@ -162,6 +162,7 @@ export default function MiniDrawer(userInfo) {
           </IconButton>
           <Typography variant="h6" noWrap>
           {userInfo.userInfo === `Not logged in` ? guestLinks : userLinks}
+          
           </Typography>
         </Toolbar>
       </AppBar>
