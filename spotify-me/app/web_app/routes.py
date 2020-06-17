@@ -112,17 +112,17 @@ def user_tracks(time_range, token, k=10):
     return jsonify(top_tracks=top_tracks)
 
 
-@app.route('/user_albums/<time_range>/<token>')
-def user_albums(time_range, token):
+@app.route('/user_albums/<time_range>/<token>/<k>/')
+def user_albums(time_range, token, k=10):
+    k = int(k)
     top_tracks = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
-    k = 50
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
-    results = sp.current_user_top_tracks(time_range=time_range, limit=k)
-    if len(results['items']) < k:
-        for i in range(0, k):
+    results = sp.current_user_top_tracks(time_range=time_range, limit=50)
+    if len(results['items']) < 50:
+        for i in range(0, 50):
             top_tracks.append({
                 'track_name':'Empty',
                 'album' : 'Empty',
@@ -156,8 +156,8 @@ def user_albums(time_range, token):
         for album in albums:
             if album['name'] == sort_albums[i][0]:
                 final_albums.append(album)
-    print(final_albums)
-    return jsonify(albums=final_albums)
+    print(k)
+    return jsonify(albums=final_albums[0:k])
 
 
 

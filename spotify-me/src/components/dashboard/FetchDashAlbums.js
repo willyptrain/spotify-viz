@@ -3,18 +3,18 @@ import cookie from 'js-cookie';
 import axios from 'axios';
 import { List, Image } from 'semantic-ui-react';
 
-export function FetchDashTracks(data) {
+export function FetchDashAlbums(data) {
     console.log(data.data)
-    const [tracks, setTracks] = useState([]);
+    const [albums, setAlbums] = useState([]);
     let token = cookie.get('access_token');
     useEffect(() => {
-        axios.get(`http://localhost:5000/user/${data.data}/${token}/5/`)
+        axios.get(`http://localhost:5000/user_albums/${data.data}/${token}/5/`)
         .then(res => {
-            console.log(res.data.top_tracks)
-            setTracks(res.data.top_tracks)
+            console.log(res.data)
+            setAlbums(res.data.albums)
         })
         .catch(err => {
-            console.log('yo')
+            console.log('error :(')
             console.log(err)
         })
     }, [data.data])
@@ -22,15 +22,15 @@ export function FetchDashTracks(data) {
         <div>
         <List size="mini">
             {
-                tracks.map(track =>
+                albums.map(album =>
         <List.Item>
-          <Image avatar  src={track.image} circular/>
+          <Image avatar  src={album.images[0].url} circular/>
           <List.Content>
-            <List.Header as='a'>{track.track_name}</List.Header>
+            <List.Header as='a'>{album.name}</List.Header>
             <List.Description>
               by{' '}
               <a>
-                <b>{track.artist}</b>
+                <b>{album.artists[0].name}</b>
               </a>{' '}
             </List.Description>
           </List.Content>

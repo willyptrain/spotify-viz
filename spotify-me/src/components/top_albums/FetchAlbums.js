@@ -20,7 +20,7 @@ export function FetchAlbums(data) {
     const [albums, setAlbums] = useState([]);
     let token = cookie.get('access_token');
     useEffect(() => {
-        axios.get(`http://localhost:5000/user_albums/${data.data}/${token}`)
+        axios.get(`http://localhost:5000/user_albums/${data.data}/${token}/10`)
         .then(res => {
             console.log(res.data)
             setAlbums(res.data.albums)
