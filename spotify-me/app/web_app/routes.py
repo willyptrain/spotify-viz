@@ -82,12 +82,13 @@ def user(name, time_range):
                     k=k, time_range=range_nicknames[time_range])
 '''
 
-@app.route('/user/<time_range>/<token>')
-def user_tracks(time_range, token):
+@app.route('/user/<time_range>/<token>/<k>')
+def user_tracks(time_range, token, k=10):
     top_tracks = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
+    print(sp.current_user())
     k = 10
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_tracks(time_range=time_range, limit=k)
@@ -235,9 +236,6 @@ def related_tracks(track, token):
         name = result['name']
         artists.append(artist)
         song_names.append(name)
-        print(artist, name)
-        print(json.dumps(result,indent=4))
-        print(result["album"]["images"][0]["url"])
         images.append(result["album"]["images"][0]["url"])
 
     return jsonify({

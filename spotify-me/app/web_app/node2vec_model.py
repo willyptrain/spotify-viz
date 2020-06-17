@@ -19,13 +19,12 @@ import time
 
 
 class Node2VecModel:
-    def __init__(self, path):
+    def __init__(self, path, token):
         self.wv = self.load_wv(path)
         self.lists = items()
         self.top_genres = self.lists.top_genres()
         self.big_list_genres = self.lists.get_genres()
-        client_credentials_manager = SpotifyClientCredentials()
-        self.sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+        self.sp = spotipy.Spotify(auth=token)
 
     def get_genre_mappings(self, token, k=100, range=None):
         if(self.wv == None):
@@ -170,8 +169,3 @@ class Node2VecModel:
     def load_wv(self, path):
         wv = KeyedVectors.load(path, mmap='r')
         return wv
-
-
-node2 = Node2VecModel("model_kv.kv")
-# print(json.dumps(node2.sp.album('2MbEjelAESGKIBDL54OYeY'),indent=4))
-print(json.dumps(node2.sp.categories(),indent=4))
