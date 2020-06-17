@@ -191,14 +191,49 @@ def artist_info(id, token):
         }
     })
 
+@app.route('/album/<album>/<token>')
+def album_info(album, token):
+    sp = spotipy.Spotify(auth=token)
+    feature_list = ['danceability', 'energy', 'instrumentalness', 'liveness', 'valence']
+    labels = ['Danceability', 'Energy', 'Instrumentalness', 'Liveness', 'Positivity']
+    scores = {'danceability': [], 'energy':[], 'instrumentalness':[], 'liveness':[], 'valence':[]}
+    names = []
+    dataset = {'danceability': [], 'energy':[], 'instrumentalness':[], 'liveness':[], 'valence':[]}
+
+
+    album_info = sp.album(album)
+
+    for result in album_info["tracks"]["items"]:
+        id = result['id']
+        name = result['name']
+        names.append(name)
+        features = sp.audio_features(id)
+        for feat in feature_list:
+            scores[feat].append(features[0][feat])
+            dataset[feat].append({
+                'name':name,
+                'score':features[0][feat]
+            })
+
+
+
+    return {
+        'album_info':album_info,
+        'scores':scores,
+        'labels':labels,
+        'names': names,
+        'dataset':dataset
+
+    }
+
 
 @app.route('/track/<track>/<token>')
 def track_info(track, token):
     sp = spotipy.Spotify(auth=token)
     popularity = sp.track(track)['popularity']
     features = sp.audio_features(track)
-    feature_list = ['danceability', 'energy', 'instrumentalness', 'liveness','loudness']
-    labels = ['Danceability', 'Energy', 'Instrumentalness', 'Liveness','Loudness']
+    feature_list = ['danceability', 'energy', 'instrumentalness', 'liveness','loudness', 'valence']
+    labels = ['Danceability', 'Energy', 'Instrumentalness', 'Liveness','Loudness', 'Positivity']
     scores = []
     colors = ['#f1a5ba', '#f5b565', '#fbd981', '#93dcdc', '#6cb8ee']
     for k,v in features[0].items():
