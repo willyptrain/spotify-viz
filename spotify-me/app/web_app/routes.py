@@ -195,7 +195,6 @@ def user_info(token):
     for i in range(0, 5):
         final_long_term_genres.append(sort_long_genres[i][0])
         
-    print(final_long_term_genres, final_short_term_genres)
     return jsonify([{
         'username' :username,
         'user_url' : user_url,
@@ -295,6 +294,18 @@ def user_artists(time_range, token, k=10):
     return jsonify(top_artists=top_artists)
 
 
+@app.route('/user/currently_playing/<token>/')
+def get_currently_playing(token):
+    sp = spotipy.Spotify(auth=token)
+    cur_track = sp.current_user_playing_track()
+    name = cur_track['item']['name']
+    artist = cur_track['item']['artists'][0]['name']
+    album = cur_track['item']['album']['name']
+    return jsonify([{
+        'name': name,
+        'artist': artist,
+        'album': album
+    }])
 
 
 @app.route('/graphs/<time_range>/<token>')

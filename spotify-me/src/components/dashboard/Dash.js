@@ -14,9 +14,12 @@ import Typography from '@material-ui/core/Typography';
 import './userinfo.css';
 
 class Dash extends React.Component {
+
   constructor(props) {
     super(props);
   }
+  
+
     render(){
       const user_info = this.props.userInfo;
         return(

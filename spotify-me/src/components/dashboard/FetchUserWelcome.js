@@ -9,6 +9,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import cookie from 'js-cookie';
 import './userinfo.css';
 import { Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
+import {FetchCurrentlyPlaying} from './FetchCurrentlyPlaying';
 
 
 
@@ -36,9 +38,12 @@ export default function FetchUserWelcome(data) {
             info.map( user_info =>
                 <div>
                     <Image src={user_info.image_url} size='medium' circular centered bordered/>
-                    <Typography>Recently you've been listening to {user_info.short_term_genres[0]}, {user_info.short_term_genres[1]}, and {user_info.short_term_genres[2]}.
+                    <Box m={3}>
+                    <Typography align="left"><b>Recently</b>, you've been listening to <b>{user_info.short_term_genres[0]}</b>, <b>{user_info.short_term_genres[1]}</b>, and <b>{user_info.short_term_genres[2]}</b>.
                     </Typography>
-                    <Typography>Typically, you listen to {user_info.long_term_genres[2]}, {user_info.long_term_genres[3]}, and {user_info.long_term_genres[4]}</Typography>
+                    <Typography align="left"><b>Typically</b>, you listen to <b>{user_info.long_term_genres[2]}</b>, <b>{user_info.long_term_genres[3]}</b>, and <b>{user_info.long_term_genres[4]}</b>.</Typography>
+                    <FetchCurrentlyPlaying/>
+                    </Box>
                 </div>
             )}
         </div>
