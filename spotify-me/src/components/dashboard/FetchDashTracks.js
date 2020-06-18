@@ -1,7 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import cookie from 'js-cookie';
 import axios from 'axios';
-import { List, Image } from 'semantic-ui-react';
+import { List, Image, Button } from 'semantic-ui-react';
+
+function tracks_page(e) {
+  e.preventDefault();
+  window.location = '/top_tracks';
+}
 
 export function FetchDashTracks(data) {
     console.log(data.data)
@@ -37,6 +42,7 @@ export function FetchDashTracks(data) {
         </List.Item>)
                 }
         </List>
+        <Button primary content="View more..." onClick={tracks_page} />
         </div>
     );
 }

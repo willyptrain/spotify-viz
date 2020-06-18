@@ -3,20 +3,20 @@ import cookie from 'js-cookie';
 import axios from 'axios';
 import { List, Image, Button } from 'semantic-ui-react';
 
-function albums_page(e) {
+function artists_page(e) {
     e.preventDefault();
-    window.location = '/top_albums';
+    window.location = '/top_artists';
   }
 
-export function FetchDashAlbums(data) {
+export function FetchDashArtists(data) {
     console.log(data.data)
-    const [albums, setAlbums] = useState([]);
+    const [artists, setArtists] = useState([]);
     let token = cookie.get('access_token');
     useEffect(() => {
-        axios.get(`http://localhost:5000/user_albums/${data.data}/${token}/5/`)
+        axios.get(`http://localhost:5000/user_artists/${data.data}/${token}/5/`)
         .then(res => {
             console.log(res.data)
-            setAlbums(res.data.albums)
+            setArtists(res.data.top_artists)
         })
         .catch(err => {
             console.log('error :(')
@@ -27,22 +27,18 @@ export function FetchDashAlbums(data) {
         <div>
         <List size="mini">
             {
-                albums.map(album =>
+                artists.map(artist =>
         <List.Item>
-          <Image avatar  src={album.images[0].url} circular/>
+          <Image avatar  src={artist.image} circular/>
           <List.Content>
-            <List.Header as='a'>{album.name}</List.Header>
+            <List.Header as='a'>{artist.artist_name}</List.Header>
             <List.Description>
-              by{' '}
-              <a>
-                <b>{album.artists[0].name}</b>
-              </a>{' '}
             </List.Description>
           </List.Content>
         </List.Item>)
                 }
         </List>
-        <Button primary content="View more..." onClick={albums_page} />
+        <Button primary content="View more..." onClick={artists_page} />
         </div>
     );
 }

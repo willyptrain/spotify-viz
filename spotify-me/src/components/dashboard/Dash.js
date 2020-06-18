@@ -4,6 +4,7 @@ import { Grommet, Distribution, Box, Text, grommet } from 'grommet';
 import {FetchDashTracks} from './FetchDashTracks';
 import FetchUserWelcome from './FetchUserWelcome';
 import {FetchDashAlbums} from './FetchDashAlbums';
+import {FetchDashArtists} from './FetchDashArtists';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -27,7 +28,7 @@ class Dash extends React.Component {
         { value: 50, color: "white", title: "Welcome, " + user_info.display_name + "!", data: <FetchUserWelcome data={user_info} /> },
         { value: 15, color: "white", title: "Your top tracks", data: <FetchDashTracks data="long_term" /> },
         { value: 15, color: "white", title: "Your top albums", data: <FetchDashAlbums data="long_term" /> },
-        { value: 15, color: "white", title: null, data:null },
+        { value: 15, color: "white", title: "Your top artists", data: <FetchDashArtists data="long_term"/> },
         { value: 15, color: "white", title: null, data:null },
       ]}
     >

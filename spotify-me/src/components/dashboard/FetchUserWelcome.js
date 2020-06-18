@@ -35,7 +35,7 @@ export default function FetchUserWelcome(data) {
             {
             info.map( user_info =>
                 <div>
-                    <Image src={user_info.image_url} size='medium' circular centered/>
+                    <Image src={user_info.image_url} size='medium' circular centered bordered/>
                     <Typography>Recently you've been listening to {user_info.short_term_genres[0]}, {user_info.short_term_genres[1]}, and {user_info.short_term_genres[2]}.
                     </Typography>
                     <Typography>Typically, you listen to {user_info.long_term_genres[2]}, {user_info.long_term_genres[3]}, and {user_info.long_term_genres[4]}</Typography>

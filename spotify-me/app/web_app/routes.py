@@ -260,13 +260,13 @@ def related_tracks(track, token):
 
 
 
-@app.route('/user_artists/<time_range>/<token>')
-def user_artists(time_range, token):
+@app.route('/user_artists/<time_range>/<token>/<k>/')
+def user_artists(time_range, token, k=10):
+    k = int(k)
     top_artists = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
-    k = 10
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_artists(time_range=time_range, limit=k)
     print(results['items'][0].keys())
