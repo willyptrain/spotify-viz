@@ -41,47 +41,6 @@ def spotify_login():
     except (TokenExpiredError) as e: #was getting weird TokenExpiredError
         return redirect(url_for('spotify.login'))
 
-'''
-@app.route('')
-def user(name, time_range):
-    token = spotify_blueprint.token["access_token"]
-    top_tracks = []
-    if(token):
-        #nickname = name
-        #nickname = session.get('nickname', None)
-        #image_url = session.get('user_img',None)
-        image_url = 'https://via.placeholder.com/150'
-        #print(type(image_url))
-        print(token)
-        sp = spotipy.Spotify(auth=token)
-        sp.trace = False
-        k = 5
-        range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
-        results = sp.current_user_top_tracks(time_range=time_range, limit=k)
-        if len(results['items']) < 5:
-            for i in range(0, 5):
-                top_tracks.append({
-                    'track_name':'Empty',
-                    'artist':'Empty',
-                    'uri':'Empty',
-                    'image':'Empty'
-                })
-
-        for i, result in enumerate(results['items']):
-            top_tracks.append({
-                'track_name':result['name'],
-                'artist':result['artists'][0]['name'],
-                'uri':result['uri'],
-                'image':result['album']['images'][0]['url']
-            })
-
-
-    return jsonify(username=name,
-                    user_img=image_url,
-                    top_tracks=top_tracks,
-                    k=k, time_range=range_nicknames[time_range])
-'''
-
 @app.route('/user/<time_range>/<token>/<k>/')
 def user_tracks(time_range, token, k=10):
     k = int(k)
@@ -92,6 +51,7 @@ def user_tracks(time_range, token, k=10):
     print(sp.current_user())
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_tracks(time_range=time_range, limit=k)
+    print(results['items'][0])
     if len(results['items']) < k:
         for i in range(0, k):
             top_tracks.append({
@@ -156,7 +116,6 @@ def user_albums(time_range, token, k=10):
         for album in albums:
             if album['name'] == sort_albums[i][0]:
                 final_albums.append(album)
-    print(k)
     return jsonify(albums=final_albums[0:k])
 
 
@@ -201,12 +160,50 @@ def user_info(token):
     user_id = user_info['id']
     user_url = user_info['external_urls']['spotify']
     username = user_info['display_name']
+
+    top_recent_tracks = sp.current_user_top_tracks(time_range='short_term', limit=50)
+    top_all_tracks = sp.current_user_top_tracks(time_range='long_term', limit=50)
+    short_term_genres = {}
+    for i in range(0, len(top_recent_tracks['items'])):
+        result = top_recent_tracks['items'][i]
+        artist_id = result['artists'][0]['id']
+        artist_genres = sp.artist(artist_id)['genres']
+        cur_points = math.ceil((50 - i)/5)
+        for genre in artist_genres:
+            if genre not in short_term_genres.keys():
+                short_term_genres[genre] = cur_points
+            else:
+                short_term_genres[genre] += cur_points
+    sort_genres = sorted(short_term_genres.items(), key=lambda x: x[1], reverse=True)
+    final_short_term_genres = []
+    for i in range(0, 5):
+        final_short_term_genres.append(sort_genres[i][0])
+
+    long_term_genres = {}
+    for i in range(0, len(top_all_tracks['items'])):
+        result = top_all_tracks['items'][i]
+        artist_id = result['artists'][0]['id']
+        artist_genres = sp.artist(artist_id)['genres']
+        cur_points = math.ceil((50 - i)/5)
+        for genre in artist_genres:
+            if genre not in long_term_genres.keys():
+                long_term_genres[genre] = cur_points
+            else:
+                long_term_genres[genre] += cur_points
+    sort_long_genres = sorted(long_term_genres.items(), key=lambda x: x[1], reverse=True)
+    final_long_term_genres = []
+    for i in range(0, 5):
+        final_long_term_genres.append(sort_long_genres[i][0])
+        
+    print(final_long_term_genres, final_short_term_genres)
     return jsonify([{
         'username' :username,
         'user_url' : user_url,
         'user_id' : user_id,
         'subscription' : subscription,
         'image_url' : image_url,
+        'short_term_genres' : final_short_term_genres,
+        'long_term_genres' : final_long_term_genres,
     }])
 
 

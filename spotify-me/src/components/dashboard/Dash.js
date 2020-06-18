@@ -20,7 +20,7 @@ class Dash extends React.Component {
       const user_info = this.props.userInfo;
         return(
         <div style={{ marginTop: `64px`, marginLeft: '84px', marginRight: '84px'}}>
-            <Grommet style={{backgroundColor: "#D4D4D4"}} full>
+            <Grommet style={{backgroundColor: "#EBEBEB"}} full>
     <Distribution margin="xsmall" gap="none"
       fill
       values={[
