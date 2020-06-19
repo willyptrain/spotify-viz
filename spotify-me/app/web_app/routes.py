@@ -126,7 +126,7 @@ def artist_info(id, token):
         raise Exception("ID Error")
     sp = spotipy.Spotify(auth=token)
     get_artist = sp.artist(id)
-    n2v = Node2VecModel('model_kv.kv')
+    n2v = Node2VecModel('model_kv.kv', token=token)
     labels,scores,colors = n2v.get_mappings_for_genres(get_artist['genres'])
 
 
