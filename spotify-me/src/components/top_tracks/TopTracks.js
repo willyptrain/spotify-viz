@@ -68,7 +68,7 @@ class TopTracks extends React.Component{
 
         return(
 
-           <div style={{ marginTop: `64px`, marginLeft: '84px'}}>
+           <div style={{marginLeft: '84px'}}>
             <BrowserView>
                 <form onSubmit={this.handleSubmit}>
                     <label>

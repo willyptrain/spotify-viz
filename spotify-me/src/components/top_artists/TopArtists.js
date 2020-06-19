@@ -31,7 +31,7 @@ class TopArtists extends React.Component{
         const artist_list = <FetchArtists data={this.state.value}/>;
 
         return(
-            <div style={{ marginTop: `64px`, marginLeft: '84px'}}>
+            <div style={{marginLeft: '84px'}}>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                     <Tabs

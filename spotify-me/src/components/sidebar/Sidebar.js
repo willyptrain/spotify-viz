@@ -8,6 +8,7 @@ import List from '@material-ui/core/List';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -24,6 +25,9 @@ import PersonOutlineIcon from '@material-ui/icons/PersonOutline';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import Link from '@material-ui/core/Link';
 import {logout} from '../../util/auth.js';
+import './sidebar.css'
+import Grid from '@material-ui/core/Grid';
+
 
 const drawerWidth = 240;
 
@@ -87,6 +91,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
     justifyContent: 'flex-end',
     padding: theme.spacing(0, 1),
+    position: 'absolute',
+    right: '0px',
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
@@ -100,10 +106,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const userLinks = (
-  <Link href= "/logout" onClick={logout}>Logout</Link>
+  <form action="/logout">
+    <input variant="outlined" type="submit" class="logs-user" value="Logout" />
+</form>
+
 );
 const guestLinks = (
-  <Link href="/login">Login</Link>
+
+        <form action="/login">
+    <input variant="outlined" type="submit" class="logs-user" value="Login" />
+        </form>
+
 );
 
 
@@ -138,35 +151,12 @@ export default function MiniDrawer(userInfo) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  console.log(userInfo);
+  console.log(userInfo.userInfo);
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar style={{backgroundColor: '#343834', color: '#DFE0E3'}} className={classes.customizeToolbar} >
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, {
-              [classes.hide]: open,
-            })}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-          {userInfo.userInfo === `Not logged in` ? guestLinks : userLinks}
-          
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer 
+
+      <Drawer
         variant="permanent"
         className={clsx(classes.drawer, {
           [classes.drawerOpen]: open,
@@ -179,11 +169,32 @@ export default function MiniDrawer(userInfo) {
           }),
         }}
       >
-        <div className={classes.toolbar}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+      <Toolbar style={{backgroundColor: '#343834', color: '#DFE0E3'}} className={classes.customizeToolbar} >
+          {!open &&
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            className={clsx(classes.menuButton, {
+              [classes.hide]: open,
+            })}
+          >
+            <MenuIcon />
           </IconButton>
+          }
+
+
+
+
+        <div className={classes.toolbar}>
+          {open && <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>}
         </div>
+         </Toolbar>
+
+
         <Divider />
         <List>
           {icons.map((icon, index) => (
@@ -202,7 +213,15 @@ export default function MiniDrawer(userInfo) {
             </ListItem>
           ))}
         </List>
+
+
+
+              {open && ((userInfo.userInfo.status === `Not logged in` || userInfo.userInfo === null) ? guestLinks : userLinks)}
       </Drawer>
+
+
+
+
     </div>
   );
 }

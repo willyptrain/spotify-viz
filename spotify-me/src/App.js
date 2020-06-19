@@ -21,7 +21,7 @@ import Sidebar from './components/sidebar/Sidebar';
 
 class App extends Component{
   state = {
-    userInfo: {},
+    userInfo: {status: 'Not logged in'},
   }
 
   setUserInfo = (userInfo) => this.setState({ userInfo });
