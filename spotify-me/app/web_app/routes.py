@@ -9,6 +9,10 @@ import webbrowser
 from web_app import app, lists, user, node2vec_model
 from web_app.settings import spotify_id, spotify_secret
 import math
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/new_will
 # from settings import spotify_secret, spotify_id
 # import node2vec_model
 from web_app.node2vec_model import Node2VecModel
@@ -307,21 +311,43 @@ def get_currently_playing(token):
         'album': album
     }])
 
+@app.route('/related_tracks/<track>/<token>')
+def related_tracks(track, token):
+    sp = spotipy.Spotify(auth=token)
+    recommendations = sp.recommendations(seed_artists=[track])
+    artists = []
+    images = []
+    song_names = []
+    for result in recommendations["tracks"]:
+        artist = result['artists'][0]['name']
+        name = result['name']
+        artists.append(artist)
+        song_names.append(name)
+        print(artist, name)
+        print(json.dumps(result,indent=4))
+        print(result["album"]["images"][0]["url"])
+        images.append(result["album"]["images"][0]["url"])
+
+    return jsonify({
+        'artists':artists,
+        'song_names':song_names,
+        'images':images
+    })
+
 
 @app.route('/graphs/<time_range>/<token>')
 def user_graph(time_range, token):
     n2v = Node2VecModel('model_kv.kv', token=token)
-    labels = []
-    scores = []
-    colors = []
-    labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
-    print(labels, scores, colors)
-    return jsonify({
-        'labels':labels,
-        'scores':scores,
-        'colors':colors
-    })
+    if(time_range == 'all_term'):
+        genre_mappings = n2v.get_genre_mappings()
+    else:
 
+        labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
+        return jsonify({
+            'labels':labels,
+            'scores':scores,
+            'colors':colors
+        })
 
 @app.route('/album_graph/', methods=['GET', 'POST'])
 def album_graph():

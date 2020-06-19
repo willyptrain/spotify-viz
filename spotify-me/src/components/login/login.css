@@ -4,7 +4,12 @@
 
 }
 body {
+<<<<<<< HEAD
     background-color: 'black' !important;
+=======
+    background: #e2e3ec !important;
+
+>>>>>>> origin/new_will
 }
 
 .login-container {

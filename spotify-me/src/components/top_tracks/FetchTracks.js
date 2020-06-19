@@ -16,6 +16,12 @@ import Modal from '@material-ui/core/Modal';
 import ArtistPage from '../artist/ArtistPage.js'
 import TopTracks from './TopTracks.js';
 import PropTypes from 'prop-types'
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> origin/new_will
 
 
 export function FetchTracks(data) {
@@ -70,4 +76,8 @@ export function FetchTracks(data) {
               </div>
             );
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/new_will

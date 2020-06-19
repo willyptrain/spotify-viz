@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
 
 
 .album-carousel {
 
     height: 200px;
-    bottom: 100px;
+    bottom: 30px;
     border: 2px solid black;
 }
 div.slick-initialized.slick-slider {
@@ -13,7 +12,7 @@ div.slick-initialized.slick-slider {
 }
 .artist-card {
     background: red;
-    height: 50%;
+    height: 70%;
     width: 100%;
     border: 1px solid black;
 }
@@ -27,15 +26,16 @@ div.slick-initialized.slick-slider {
     height: 100%;
     position: relative;
     top: 25px;
-    left: 0px;
+    left: 30px;
 }
 .artist-img {
     border: 6px solid rgba(0,0,0,0.75);
     width: calc(100% - 50px);
-    height: calc(100% - 50px);
 }
 .genre-doughnut {
     height: 200px;
+    top: 40px;
+    position: relative;
 }
 .artist-top-container {
     height: 65%;
@@ -46,9 +46,18 @@ div.slick-initialized.slick-slider {
 .album-carousel-item {
     height: 15vh;
 }
-
-
-
-
+.exit-artist-modal {
+    color: gray;
+    float: right;
+    z-index: 2;
+}
+.exit-artist-modal:active {
+    outline: none;
+}
+.artist-name-container {
+    text-align: center;
+    position: relative;
+    top: 15px;
+}
 
 

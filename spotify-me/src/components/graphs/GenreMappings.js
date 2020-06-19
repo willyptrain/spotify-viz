@@ -1,7 +1,7 @@
 import React, {useEffect, useState, shouldComponentUpdate} from 'react';
 import cookie from 'js-cookie';
 import axios from 'axios';
-import { Doughnut, Radar } from 'react-chartjs-2';
+import { Doughnut, Radar, Polar } from 'react-chartjs-2';
 import { Bar } from 'react-chartjs-2';
 import Grid from '@material-ui/core/Grid';
 
@@ -72,7 +72,7 @@ class Mappings extends React.Component {
            </Grid>
            <Grid item xs={12} sm={6}>
               <div style={{ backgroundColor:'white' }}>
-                <Radar ref={this.chartReference}
+                <Polar ref={this.chartReference}
                 data={this.state.data[0]} />
               </div>
            </Grid>
