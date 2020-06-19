@@ -191,6 +191,25 @@ def artist_info(id, token):
         }
     })
 
+@app.route('/album_track_info/<album>/<token>')
+def album_track_info(album, token):
+    sp = spotipy.Spotify(auth=token)
+    album_info = sp.album(album)
+    track_names  = []
+    track_ratings = []
+    for track in album_info["tracks"]["items"]:
+        track_info = sp.track(track['id'])
+        track_names.append(track_info['name'])
+        track_ratings.append(track_info['popularity'])
+
+
+
+    return {
+        'album_name':album_info['name'],
+        'tracks_in_album':album_info["tracks"]["items"],
+        'popularities':track_ratings,
+        'track_names':track_names
+    }
 @app.route('/album/<album>/<token>')
 def album_info(album, token):
     sp = spotipy.Spotify(auth=token)
@@ -257,6 +276,29 @@ def track_info(track, token):
         'colors': colors
     })
 
+
+@app.route('/related_albums/<track>/<token>')
+def related_albums(albums, token):
+    sp = spotipy.Spotify(auth=token)
+    recommendations = sp.recommendations(seed_artists=[track])
+    artists = []
+    images = []
+    song_names = []
+    for result in recommendations["tracks"]:
+        artist = result['artists'][0]['name']
+        name = result['name']
+        artists.append(artist)
+        song_names.append(name)
+        print(artist, name)
+        print(json.dumps(result,indent=4))
+        print(result["album"]["images"][0]["url"])
+        images.append(result["album"]["images"][0]["url"])
+
+    return jsonify({
+        'artists':artists,
+        'song_names':song_names,
+        'images':images
+    })
 
 @app.route('/related_tracks/<track>/<token>')
 def related_tracks(track, token):

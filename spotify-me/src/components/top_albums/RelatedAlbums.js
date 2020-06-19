@@ -6,7 +6,7 @@ import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
+import CardHeader from '@material-ui/core/CardHeader';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -51,19 +51,21 @@ class RelatedAlbums extends React.Component {
 
     async componentDidMount() {
         let token = cookie.get('access_token');
-        axios.get(`http://localhost:5000/related_tracks/${this.props.artist.id}/${token}`)
+        axios.get(`http://localhost:5000/album_track_info/${this.props.artist.id}/${token}`)
         .then(res => {
             fetch = res.data;
             this.setState({
                 'clicked':true,
-                'artists':fetch.artists,
-                'track_names':fetch.song_names,
-                'images':fetch.images
+                'album_name':fetch.album_name,
+                'album_info':fetch.tracks_in_album,
+                'popularities':fetch.popularities,
+                'track_names':fetch.track_names
             })
 
 
-
+                    console.log(fetch);
         })
+
         .catch(err => {
             console.log('error :(')
             console.log(err)
@@ -78,31 +80,41 @@ class RelatedAlbums extends React.Component {
 
 
             render() {
+
+            if(this.state.album_info) {
             return(
 
         <div style={{backgroundColor: 'white', overflow: 'scroll'}}>
-
+        <Card>
+        <CardHeader title={this.state.album_name} subheader="Tracks in Album" />
+        <CardContent>
         <List>
             {this.state.clicked &&
-                this.state.artists.map((artist, index) =>
+                this.state.track_names.map((name, index) =>
+                    <div>
                     <ListItem>
-                        <ListItemAvatar>
-                            <Avatar alt="Image" src={this.state.images[index]} />
-                        </ListItemAvatar>
                         <ListItemText
-                            primary={this.state.track_names[index]}
-                            secondary={this.state.artists[index]}
+                            primary={name}
+
                          />
 
                     </ListItem>
+                    <Divider />
+                    </div>
                 )
             }
             </List>
+        </CardContent>
+            </Card>
               </div>
             );
 
             }
+            return (<div></div>);
+            }
+
 
 }
 
 export default RelatedAlbums;
+

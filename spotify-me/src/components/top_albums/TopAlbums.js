@@ -13,6 +13,7 @@ import {
   isBrowser,
   isMobile
 } from "react-device-detect";
+import PopularityChart from './PopularityChart.js';
 
 
 class TopAlbums extends React.Component{
@@ -88,7 +89,8 @@ class TopAlbums extends React.Component{
               values={[
                 { value: 50, className:"top-tracks", show: true, data: <FetchAlbums handleChange={this.handleChange} data={this.state.value} /> },
                 { value: 30, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <AlbumGraph {...this.state} artist={this.state.artist} /> },
-                { value: 30, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedAlbums {...this.state} artist={this.state.artist} /> }
+                { value: 20, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedAlbums {...this.state} artist={this.state.artist} /> },
+                { value: 10, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <PopularityChart {...this.state} artist={this.state.artist} /> }
               ]}
             >
               {value => (
