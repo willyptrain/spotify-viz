@@ -24,12 +24,7 @@ class Node2VecModel:
         self.lists = items()
         self.top_genres = self.lists.top_genres()
         self.big_list_genres = self.lists.get_genres()
-<<<<<<< HEAD
         self.sp = spotipy.Spotify(auth=token)
-=======
-        client_credentials_manager = SpotifyClientCredentials()
-        self.sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
->>>>>>> origin/new_will
 
     def get_genre_mappings(self, token, k=100, range=None):
         if(self.wv == None):
@@ -56,10 +51,6 @@ class Node2VecModel:
 
                     sorted_mappings[range] = sorted(genre_mappings[range].items(), key=(lambda x: x[1]), reverse=True)
                     total = float(sum( [i for i in genre_mappings[range].values()]  ))
-                    print(total)
-                    print(range.upper())
-                    for genre in sorted_mappings[range]:
-                        print(genre, float(genre[1]) / total)  # , int(genre[1]),int(minimum))
 
                 return genre_mappings
 
@@ -78,7 +69,6 @@ class Node2VecModel:
                 for genre in self.top_genres:
                     try:
                         similarity = self.wv.similarity(user_genre, genre)
-                        print(similarity)
                         if (genre in genre_mappings[range]):
                             genre_mappings[range][genre] += min(0, 0.5-similarity)
                         else:
@@ -144,14 +134,12 @@ class Node2VecModel:
             labels = []
             scores = []
             colors = []
-            print(artist_genres.items())
 
             for artist_genre in artist_genres.items():
                 labels.append(artist_genre[0])
                 if (st_dev != 0):
                     scores.append(abs(artist_genre[1]-avg_score)/st_dev)
                 else:
-                    print(artist_genre[1])
                     scores.append(artist_genre[1])
                 colors.append("rgba(0,0,"+str(random.randint(0, 255))+"," + str((random.uniform(0, 1)*0.8)+0.2) + ")")
 
@@ -161,8 +149,6 @@ class Node2VecModel:
             return [[],[],[]]
 
 
-<<<<<<< HEAD
-=======
 
     def get_mappings_for_artist(self, artist_id):
         artist_tracks = self.sp.artist_top_tracks(artist_id)["tracks"]
@@ -176,7 +162,6 @@ class Node2VecModel:
     def load_wv(self, path):
         wv = KeyedVectors.load(path, mmap='r')
         return wv
->>>>>>> origin/new_will
 
     def get_mappings_for_artist(self, artist_id):
         artist_tracks = self.sp.artist_top_tracks(artist_id)["tracks"]
@@ -184,15 +169,3 @@ class Node2VecModel:
             id = track["id"]
             features = self.sp.track(id)
             print(json.dumps(features,indent=4))
-
-<<<<<<< HEAD
-
-
-    def load_wv(self, path):
-        wv = KeyedVectors.load(path, mmap='r')
-        return wv
-=======
-node2 = Node2VecModel("model_kv.kv")
-# print(json.dumps(node2.sp.album('2MbEjelAESGKIBDL54OYeY'),indent=4))
-print(json.dumps(node2.sp.categories(),indent=4))
->>>>>>> origin/new_will

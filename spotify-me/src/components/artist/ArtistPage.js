@@ -32,7 +32,7 @@ class ArtistPage extends React.Component{
         console.log(this.props);
         this.onClose = this.props.onClose;
         console.log(this.props.onClose);
-        this.artist_uri = this.props.id.id;
+        this.artist_uri = this.props.id.uri;
         this.token = cookie.get('access_token');
 
 

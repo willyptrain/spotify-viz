@@ -9,10 +9,6 @@ import webbrowser
 from web_app import app, lists, user, node2vec_model
 from web_app.settings import spotify_id, spotify_secret
 import math
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/new_will
 # from settings import spotify_secret, spotify_id
 # import node2vec_model
 from web_app.node2vec_model import Node2VecModel
@@ -241,26 +237,6 @@ def track_info(track, token):
     })
 
 
-@app.route('/related_tracks/<track>/<token>')
-def related_tracks(track, token):
-    sp = spotipy.Spotify(auth=token)
-    recommendations = sp.recommendations(seed_artists=[track])
-    artists = []
-    images = []
-    song_names = []
-    for result in recommendations["tracks"]:
-        artist = result['artists'][0]['name']
-        name = result['name']
-        artists.append(artist)
-        song_names.append(name)
-        images.append(result["album"]["images"][0]["url"])
-
-    return jsonify({
-        'artists':artists,
-        'song_names':song_names,
-        'images':images
-    })
-
 
 
 @app.route('/user_artists/<time_range>/<token>/<k>/')
@@ -272,7 +248,6 @@ def user_artists(time_range, token, k=10):
     sp.trace = False
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_artists(time_range=time_range, limit=k)
-    print(results['items'][0].keys())
 
     if len(results['items']) < k:
         for i in range(0, k):
@@ -323,9 +298,6 @@ def related_tracks(track, token):
         name = result['name']
         artists.append(artist)
         song_names.append(name)
-        print(artist, name)
-        print(json.dumps(result,indent=4))
-        print(result["album"]["images"][0]["url"])
         images.append(result["album"]["images"][0]["url"])
 
     return jsonify({

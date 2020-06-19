@@ -15,13 +15,7 @@ import { Link } from 'react-router-dom';
 import Modal from '@material-ui/core/Modal';
 import ArtistPage from '../artist/ArtistPage.js'
 import TopTracks from './TopTracks.js';
-import PropTypes from 'prop-types'
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> origin/new_will
+import PropTypes from 'prop-types';
 
 
 export function FetchTracks(data) {
@@ -76,8 +70,4 @@ export function FetchTracks(data) {
               </div>
             );
 
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> origin/new_will

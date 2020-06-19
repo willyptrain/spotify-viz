@@ -3,12 +3,9 @@ import { logout } from '../../util/auth';
 import NavBar from '../common/navbar/Navbar';
 import { Album } from 'react-spotify-api';
 import { SpotifyApiContext} from 'react-spotify-api';
-<<<<<<< HEAD
 import Sidebar from '../sidebar/Sidebar';
-=======
 import Login  from './../login/index.jsx';
 
->>>>>>> origin/new_will
 class Home extends React.Component{
 
 
@@ -38,13 +35,8 @@ class Home extends React.Component{
        console.log(this.props.userInfo);
         return(
             <div>
-<<<<<<< HEAD
             <Sidebar userInfo={this.props.userInfo}/>
             <h1>Hello!
-=======
-            <NavBar userInfo={this.props.userInfo} logout={this.logout}/>
-            <h1>Goodbye!
->>>>>>> origin/new_will
             </h1>
             </div>
         );

@@ -34,7 +34,7 @@ export function getSpotifyUser() {
       .get('/auth/user')
       .then(
         res => resolve(res.data),
-        err => reject(err)
+        err => reject(err),
       );
   });
 }
