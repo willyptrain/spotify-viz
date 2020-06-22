@@ -41,46 +41,7 @@ def spotify_login():
     except (TokenExpiredError) as e: #was getting weird TokenExpiredError
         return redirect(url_for('spotify.login'))
 
-'''
-@app.route('')
-def user(name, time_range):
-    token = spotify_blueprint.token["access_token"]
-    top_tracks = []
-    if(token):
-        #nickname = name
-        #nickname = session.get('nickname', None)
-        #image_url = session.get('user_img',None)
-        image_url = 'https://via.placeholder.com/150'
-        #print(type(image_url))
-        print(token)
-        sp = spotipy.Spotify(auth=token)
-        sp.trace = False
-        k = 5
-        range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
-        results = sp.current_user_top_tracks(time_range=time_range, limit=k)
-        if len(results['items']) < 5:
-            for i in range(0, 5):
-                top_tracks.append({
-                    'track_name':'Empty',
-                    'artist':'Empty',
-                    'uri':'Empty',
-                    'image':'Empty'
-                })
 
-        for i, result in enumerate(results['items']):
-            top_tracks.append({
-                'track_name':result['name'],
-                'artist':result['artists'][0]['name'],
-                'uri':result['uri'],
-                'image':result['album']['images'][0]['url']
-            })
-
-
-    return jsonify(username=name,
-                    user_img=image_url,
-                    top_tracks=top_tracks,
-                    k=k, time_range=range_nicknames[time_range])
-'''
 
 @app.route('/user/<time_range>/<token>')
 def user_tracks(time_range, token):
@@ -155,12 +116,18 @@ def user_albums(time_range, token):
         for album in albums:
             if album['name'] == sort_albums[i][0]:
                 final_albums.append(album)
-    print(final_albums)
     return jsonify(albums=final_albums)
 
 
 
+
 @app.route('/artist/<id>/<token>')
+def artist_page(id, token):
+    sp = spotipy.Spotify(auth=token)
+    return sp.artist(id)
+
+
+@app.route('/artist_graph/<id>/<token>')
 def artist_info(id, token):
     if(not id):
         raise Exception("ID Error")
@@ -289,9 +256,6 @@ def related_albums(albums, token):
         name = result['name']
         artists.append(artist)
         song_names.append(name)
-        print(artist, name)
-        print(json.dumps(result,indent=4))
-        print(result["album"]["images"][0]["url"])
         images.append(result["album"]["images"][0]["url"])
 
     return jsonify({
@@ -312,9 +276,6 @@ def related_tracks(track, token):
         name = result['name']
         artists.append(artist)
         song_names.append(name)
-        print(artist, name)
-        print(json.dumps(result,indent=4))
-        print(result["album"]["images"][0]["url"])
         images.append(result["album"]["images"][0]["url"])
 
     return jsonify({
@@ -334,7 +295,6 @@ def user_artists(time_range, token):
     k = 10
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_artists(time_range=time_range, limit=k)
-    print(results['items'][0].keys())
 
     if len(results['items']) < k:
         for i in range(0, k):
@@ -356,7 +316,6 @@ def user_artists(time_range, token):
                 'id':result['id'],
                 'image':result['images'][0]['url']
             })
-    print(top_artists)
     return jsonify(top_artists=top_artists)
 
 
@@ -369,7 +328,6 @@ def user_graph(time_range, token):
     scores = []
     colors = []
     labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
-    print(labels, scores, colors)
     return jsonify({
         'labels':labels,
         'scores':scores,

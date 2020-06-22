@@ -7,12 +7,7 @@ import './topalbums.css'
 import {Distribution, Box, Text} from 'grommet';
 import AlbumGraph from './AlbumGraph.js';
 import RelatedAlbums from './RelatedAlbums.js';
-import {
-  BrowserView,
-  MobileView,
-  isBrowser,
-  isMobile
-} from "react-device-detect";
+import { BrowserView,MobileView,isBrowser,isMobile} from "react-device-detect";
 import PopularityChart from './PopularityChart.js';
 
 

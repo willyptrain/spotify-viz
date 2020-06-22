@@ -64,23 +64,3 @@ export function FetchAlbums(data) {
       </div>
     );
 }
-//           <Grid container className="grid-container"
-//
-//  alignItems="center"
-//  justify="center" spacing={0}>
-//
-//         {
-//        albums.map((album,index) =>
-//            <Grid item xs={6} sm={3}>
-//                    <a href={`/artist/${album.artists[0].id}`}>
-//            <Card className="topalbums-card">
-//                    <CardMedia className="topalbums-img" image={album.images[0].url}></CardMedia>
-//                    <CardContent className="topalbums-info">
-//                        <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {album.name} by {album.artists[0].name}</Typography>
-//                    </CardContent>
-//            </Card>
-//            </a>
-//         </Grid>
-//        )}
-//
-//      </Grid>

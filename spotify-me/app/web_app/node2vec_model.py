@@ -172,6 +172,5 @@ class Node2VecModel:
         return wv
 
 
-node2 = Node2VecModel("model_kv.kv")
+# node2 = Node2VecModel("model_kv.kv")
 # print(json.dumps(node2.sp.album('2MbEjelAESGKIBDL54OYeY'),indent=4))
-print(json.dumps(node2.sp.categories(),indent=4))
