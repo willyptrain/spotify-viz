@@ -52,7 +52,8 @@ def user_tracks(time_range, token):
     k = 10
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_tracks(time_range=time_range, limit=k)
-    if len(results['items']) < k:
+
+    if len(results['items']) <= 2:
         for i in range(0, k):
             top_tracks.append({
                 'track_name':'Empty',

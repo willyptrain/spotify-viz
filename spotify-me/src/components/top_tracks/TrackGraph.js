@@ -17,7 +17,8 @@ import ArtistPage from '../artist/ArtistPage.js'
 import TopTracks from './TopTracks.js';
 import PropTypes from 'prop-types'
 import { Doughnut, Radar, HorizontalBar } from 'react-chartjs-2';
-
+import CardHeader from '@material-ui/core/CardHeader';
+import Avatar from '@material-ui/core/Avatar';
 
 
 
@@ -86,19 +87,45 @@ class TrackGraph extends React.Component {
             render() {
             return(
 
+        <div>
+
+
+
+
         <div style={{backgroundColor: 'white'}}>
+
         <Card>
-            {this.state.clicked && <HorizontalBar ref={this.chartReference}
+            {this.state.clicked &&
+            <Card class="track-chart-container">
+            <CardHeader
+                title={this.props.artist.track_name}
+                subheader={this.props.artist.artist}
+            ></CardHeader>
+            <CardContent>
+                <Radar ref={this.chartReference}
                                 data={this.state.data[0]} options={{
                                     legend: {
                                         display: false
+                                    },
+
+                                    scale: {
+                                       ticks: {
+                                            callback: function() {return ""},
+                                            backdropColor: "rgba(0, 0, 0, 0)"
+                                        }
                                     }
 
 
-                                }}  />}
+                                }}  />
+            </CardContent>
+
+            </Card>
+
+            }
 
              </Card>
               </div>
+             </div>
             );
 
             }

@@ -16,6 +16,7 @@ import Modal from '@material-ui/core/Modal';
 import PropTypes from 'prop-types'
 import { Doughnut } from 'react-chartjs-2';
 import 'react-circular-progressbar/dist/styles.css';
+import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 
 
 
@@ -80,11 +81,23 @@ class ArtistPage extends React.Component {
             <Card>
                 <CardContent>
                     <img style={{height:'250px',width:'250px'}} src={this.state.artist_info.images[0].url} />
-                    <h2>{this.state.artist_info.name.toUpperCase()}</h2>
-                    <div class="genre-container">
-                    <h3>Genres: </h3>
-                        {genres.map((genre) => <p>{genre[0].toUpperCase() + genre.substr(1)}, </p>)}
-                    </div>
+                    <h1>{this.state.artist_info.name.toUpperCase()}</h1>
+                    <Grid container>
+                        <Grid item sm={6}>
+                            <div class="genre-container">
+                            <h2>Genres: </h2>
+                                {genres.slice(0,Math.min(genres.length,4)).map((genre) => <p>{genre[0].toUpperCase() + genre.substr(1)}</p>)}
+                            </div>
+                        </Grid>
+                        <Grid item sm={6}>
+                             <div style={{backgroundColor: 'white'}}>
+                                <h2>Popularity</h2>
+                                <div style={{ height: '20vh', width: '20vh', position:'relative', left: 'calc(50% - 10vh)' }} class="artist-chart-container">
+                                    <CircularProgressbar style={{ height: '100%', width: '100%' }} value={this.state.artist_info.popularity} text={`${this.state.artist_info.popularity}`} strokeWidth={8} />;
+                                </div>
+                              </div>
+                        </Grid>
+                    </Grid>
                 </CardContent>
 
             </Card>

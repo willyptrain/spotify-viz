@@ -81,23 +81,25 @@ class RelatedTracks extends React.Component {
             return(
 
         <div style={{backgroundColor: 'white', overflow: 'scroll'}}>
-
-        <List>
-            {this.state.clicked &&
-                this.state.artists.map((artist, index) =>
-                    <ListItem>
-                        <ListItemAvatar>
-                            <Avatar alt="Image" src={this.state.images[index]} />
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={this.state.track_names[index]}
+        <Card>
+            <h2>Related Tracks</h2>
+            <List>
+                {this.state.clicked &&
+                    this.state.artists.map((artist, index) =>
+                        <ListItem>
+                            <ListItemAvatar>
+                                <Avatar alt="Image" src={this.state.images[index]} />
+                            </ListItemAvatar>
+                            <ListItemText
+                                primary={this.state.track_names[index]}
                             secondary={this.state.artists[index]}
-                         />
+                             />
 
-                    </ListItem>
-                )
-            }
+                        </ListItem>
+                    )
+                }
             </List>
+        </Card>
               </div>
             );
 

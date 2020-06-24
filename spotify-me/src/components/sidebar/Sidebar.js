@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-    background: '#343834',
+    background: 'rgba(21,21,21,1)',
     color: '#DFE0E3'
   },
   drawerClose: {
@@ -83,7 +83,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       width: theme.spacing(9) + 1,
     },
-    background: '#343834',
+    background: 'rgba(21,21,21,1)',
     color: '#DFE0E3'
   },
   toolbar: {
@@ -169,7 +169,7 @@ export default function MiniDrawer(userInfo) {
           }),
         }}
       >
-      <Toolbar style={{backgroundColor: '#343834', color: '#DFE0E3'}} className={classes.customizeToolbar} >
+      <Toolbar style={{backgroundColor: 'rgba(21,21,21,1)', color: '#DFE0E3'}} className={classes.customizeToolbar} >
           {!open &&
           <IconButton
             color="inherit"
@@ -189,7 +189,7 @@ export default function MiniDrawer(userInfo) {
 
         <div className={classes.toolbar}>
           {open && <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === 'rtl' ? <ChevronRightIcon style={{ color: "white" }} /> : <ChevronLeftIcon style={{ color: "white" }} />}
           </IconButton>}
         </div>
          </Toolbar>
