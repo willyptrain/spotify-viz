@@ -30,7 +30,6 @@ class RelatedTracks extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props);
 
             this.chartReference = React.createRef();
 
@@ -82,7 +81,7 @@ class RelatedTracks extends React.Component {
 
         <div style={{backgroundColor: 'white', overflow: 'scroll'}}>
         <Card>
-            <h2>Related Tracks</h2>
+            <h2 style={{float: 'left'}}>Related Tracks</h2>
             <List>
                 {this.state.clicked &&
                     this.state.artists.map((artist, index) =>

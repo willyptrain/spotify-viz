@@ -125,7 +125,11 @@ def user_albums(time_range, token):
 @app.route('/artist/<id>/<token>')
 def artist_page(id, token):
     sp = spotipy.Spotify(auth=token)
-    return sp.artist(id)
+
+    return jsonify({
+        'info':sp.artist(id),
+        'albums':sp.artist_albums(id)
+    })
 
 
 @app.route('/artist_graph/<id>/<token>')
@@ -293,7 +297,7 @@ def user_artists(time_range, token):
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
-    k = 10
+    k = 25
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_artists(time_range=time_range, limit=k)
 

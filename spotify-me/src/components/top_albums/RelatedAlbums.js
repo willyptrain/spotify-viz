@@ -61,9 +61,7 @@ class RelatedAlbums extends React.Component {
                 'popularities':fetch.popularities,
                 'track_names':fetch.track_names
             })
-
-
-                    console.log(fetch);
+            console.log(fetch);
         })
 
         .catch(err => {

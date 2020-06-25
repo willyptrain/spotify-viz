@@ -71,3 +71,10 @@ div .StyledBox-sc-13pk1d4-0 {
     border-right: none !important;
     outline: none !important;
 }
+.browser-container {
+    position: relative;
+    left: 6vh;
+    margin-right: 8vh;
+    marginTop: 64px;
+    marginLeft: 84px;
+}

@@ -11,7 +11,7 @@ import ArtistPage from './ArtistPage.js'
 class TopArtists extends React.Component{
     constructor(props){
         super(props);
-        this.state = {value: 'short_term'};
+        this.state = {value: 'short_term', artist_side: 100};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.value = 'short_term'
@@ -22,7 +22,8 @@ class TopArtists extends React.Component{
             this.setState(oldState => ({
                 value: oldState.value,
                 clicked: true,
-                artist: artist
+                artist: artist,
+                artist_side: 70
             }));
         }
         else {
@@ -36,8 +37,10 @@ class TopArtists extends React.Component{
 
       }
     handleSubmit = (event, new_value) => {
+        console.log(event);
+        console.log(new_value);
         event.preventDefault();
-        this.setState({value: new_value});
+        this.setState({value: new_value, clicked: false, artist_side: 100});
     }
 
 
@@ -50,14 +53,14 @@ class TopArtists extends React.Component{
         return(
         <div>
         <BrowserView>
-            <div style={{ marginTop: `64px`, marginLeft: '84px'}}>
+            <div  class="browser-container" style={{ marginTop: `64px`, marginLeft: '84px'}}>
                     <form onSubmit={this.handleSubmit}>
                         <label>
                         <Tabs
                             value={this.state["value"]}
                             indicatorColor="primary"
                             textColor="primary"
-                            onChange={this.handleChange}
+                            onChange={this.handleSubmit}
                             aria-label="disabled tabs example"
                           >
                                 <Tab className="track-tab" value="short_term" label="Week" />
@@ -70,8 +73,8 @@ class TopArtists extends React.Component{
 
                     <Distribution
                   values={[
-                    { value: 50, className:"top-tracks", show: true, data: <FetchArtists handleChange={this.handleChange} data={this.state.value} /> },
-                    { value: 50, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <ArtistPage handleChange={this.handleChange} data={this.state} /> }
+                    { value: this.state.artist_side, className:"top-tracks", show: true, data: <FetchArtists handleChange={this.handleChange} data={this.state.value} /> },
+                    { value: 100-this.state.artist_side, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <ArtistPage handleChange={this.handleChange} data={this.state} /> }
 
                   ]}
                 >

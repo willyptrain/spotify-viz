@@ -38,7 +38,7 @@ export function FetchAlbums(data) {
     return(
 
 <div>
-       <Card>
+
             <Grid container className="grid-container"
           alignItems="center"
           justify="center" spacing={0}>
@@ -59,7 +59,7 @@ export function FetchAlbums(data) {
                 )}
 
               </Grid>
-              </Card>
+
 
       </div>
     );
