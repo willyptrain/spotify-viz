@@ -16,8 +16,11 @@ import { Link } from 'react-router-dom';
 
 
 export function FetchAlbums(data) {
-    console.log(data.data)
+    console.log(data);
     const [albums, setAlbums] = useState([]);
+        const isCardFunction = (data.handleChange != null);
+
+
     let token = cookie.get('access_token');
     useEffect(() => {
         axios.get(`http://localhost:5000/user_albums/${data.data}/${token}/10`)
@@ -35,25 +38,29 @@ export function FetchAlbums(data) {
     return(
 
 <div>
-    <Grid container className="grid-container"
-  alignItems="center"
-  justify="center" spacing={0}>
 
-         {
-        albums.map((album,index) =>
-            <Grid item xs={6} sm={3}>
-                    <a href={`/artist/${album.artists[0].id}`}>
-            <Card className="topalbums-card">
-                    <CardMedia className="topalbums-img" image={album.images[0].url}></CardMedia>
-                    <CardContent className="topalbums-info">
-                        <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {album.name} by {album.artists[0].name}</Typography>
-                    </CardContent>
-            </Card>
-            </a>
-         </Grid>
-        )}
+            <Grid container className="grid-container"
+          alignItems="center"
+          justify="center" spacing={0}>
 
-      </Grid>
+                 {
+                albums.map((album,index) =>
+                    <Grid item xs={6} sm={2} md={2} lg={2}>
+                    {isCardFunction &&
+                        <Card onClick={() => data.handleChange(album)} className="track-card">
+                            <CardMedia className="topalbums-img" image={album.images[0].url}></CardMedia>
+                            <CardContent className="topalbums-info">
+                                <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {album.name} by {album.artists[0].name}</Typography>
+                            </CardContent>
+                    </Card>
+                    }
+
+                 </Grid>
+                )}
+
+              </Grid>
+
+
       </div>
     );
 }

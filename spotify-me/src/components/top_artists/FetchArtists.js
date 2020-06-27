@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom';
 export function FetchArtists(data) {
     console.log(data.data)
     const [artists, setArtists] = useState([]);
+    const isCardFunction = (data.handleChange != null);
     let token = cookie.get('access_token');
     useEffect(() => {
         axios.get(`http://localhost:5000/user_artists/${data.data}/${token}/10/`)
@@ -42,14 +43,14 @@ export function FetchArtists(data) {
          {
         artists.map((artist,index) =>
             <Grid item xs={6} sm={3}>
-                    <a href={`/artist/${artist.id}`}>
-            <Card className="topartists-card">
+            {isCardFunction &&
+            <Card onClick={() => data.handleChange(artist)} className="topartists-card">
                     <CardMedia className="topartists-img" image={artist.image}></CardMedia>
                     <CardContent className="topartists-info">
                         <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {artist.artist_name}</Typography>
                     </CardContent>
             </Card>
-        </a>
+            }
          </Grid>
         )}
 

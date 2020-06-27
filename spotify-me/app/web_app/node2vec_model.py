@@ -163,9 +163,15 @@ class Node2VecModel:
         wv = KeyedVectors.load(path, mmap='r')
         return wv
 
+<<<<<<< HEAD
     def get_mappings_for_artist(self, artist_id):
         artist_tracks = self.sp.artist_top_tracks(artist_id)["tracks"]
         for track in artist_tracks:
             id = track["id"]
             features = self.sp.track(id)
             print(json.dumps(features,indent=4))
+=======
+
+# node2 = Node2VecModel("model_kv.kv")
+# print(json.dumps(node2.sp.album('2MbEjelAESGKIBDL54OYeY'),indent=4))
+>>>>>>> origin/new_will2

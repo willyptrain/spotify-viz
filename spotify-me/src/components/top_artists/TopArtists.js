@@ -4,23 +4,43 @@ import {FetchArtists} from './FetchArtists.js';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import './artists.css'
-
+import {Distribution, Box, Text} from 'grommet';
+import { BrowserView,MobileView,isBrowser,isMobile} from "react-device-detect";
+import ArtistPage from './ArtistPage.js'
 
 class TopArtists extends React.Component{
     constructor(props){
         super(props);
-        this.state = {value: 'short_term'};
+        this.state = {value: 'short_term', artist_side: 100};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.value = 'short_term'
     }
-    handleChange = (event, new_value) => {
-        this.setState({value: new_value});
+    handleChange = (artist) => {
+        if(this.state.artist != artist) {
+                console.log(artist);
+            this.setState(oldState => ({
+                value: oldState.value,
+                clicked: true,
+                artist: artist,
+                artist_side: 70
+            }));
+        }
+        else {
+            this.setState(oldState => ({
+                value: oldState.value,
+                clicked: true,
+                artist: artist
+            }));
+        }
+
 
       }
     handleSubmit = (event, new_value) => {
+        console.log(event);
+        console.log(new_value);
         event.preventDefault();
-        this.setState({value: new_value});
+        this.setState({value: new_value, clicked: false, artist_side: 100});
     }
 
 
@@ -31,7 +51,49 @@ class TopArtists extends React.Component{
         const artist_list = <FetchArtists data={this.state.value}/>;
 
         return(
+<<<<<<< HEAD
             <div style={{marginLeft: '84px'}}>
+=======
+        <div>
+        <BrowserView>
+            <div class="browser-container" style={{ marginTop: `64px`, marginLeft: '84px'}}>
+                    <form onSubmit={this.handleSubmit}>
+                        <label>
+                        <Tabs
+                            value={this.state["value"]}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            onChange={this.handleSubmit}
+                            aria-label="disabled tabs example"
+                          >
+                                <Tab className="track-tab" value="short_term" label="Week" />
+                                <Tab className="track-tab" value="medium_term" label="Month" />
+                                <Tab className="track-tab" value="long_term" label="All Time" />
+                          </Tabs>
+                    </label>
+                    </form>
+
+
+                    <Distribution
+                  values={[
+                    { value: this.state.artist_side, className:"top-tracks", show: true, data: <FetchArtists handleChange={this.handleChange} data={this.state.value} /> },
+                    { value: 100-this.state.artist_side, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <ArtistPage handleChange={this.handleChange} data={this.state} /> }
+
+                  ]}
+                >
+                  {value => (
+                    <Box className={value.className} pad="small" fill>
+                      {value.show && value.data}
+                    </Box>
+                  )}
+                </Distribution>
+            </div>
+            </BrowserView>
+
+
+        <MobileView>
+            <div style={{ marginTop: `64px`, marginLeft: '84px'}}>
+>>>>>>> origin/new_will2
                 <form onSubmit={this.handleSubmit}>
                     <label>
                     <Tabs
@@ -47,7 +109,8 @@ class TopArtists extends React.Component{
                       </Tabs>
                 </label>
                 </form>
-                {artist_list}
+            </div>
+            </MobileView>
             </div>
         );
     }

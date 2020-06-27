@@ -21,7 +21,7 @@ import spotipy.util as util
 spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
                                            client_secret=spotify_secret,
                                            redirect_url='http://127.0.0.1:3000/callback',
-                                           scope=['user-top-read'])
+                                           scope=['user-library-modify', 'user-library-read', 'user-read-private', 'playlist-modify-private', 'user-follow-modify'])
 
 app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')
 
@@ -41,9 +41,16 @@ def spotify_login():
     except (TokenExpiredError) as e: #was getting weird TokenExpiredError
         return redirect(url_for('spotify.login'))
 
+<<<<<<< HEAD
 @app.route('/user/<time_range>/<token>/<k>/')
 def user_tracks(time_range, token, k=10):
     k = int(k)
+=======
+
+
+@app.route('/user/<time_range>/<token>')
+def user_tracks(time_range, token):
+>>>>>>> origin/new_will2
     top_tracks = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
@@ -51,8 +58,13 @@ def user_tracks(time_range, token, k=10):
     print(sp.current_user())
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_tracks(time_range=time_range, limit=k)
+<<<<<<< HEAD
     print(results['items'][0])
     if len(results['items']) < k:
+=======
+
+    if len(results['items']) <= 2:
+>>>>>>> origin/new_will2
         for i in range(0, k):
             top_tracks.append({
                 'track_name':'Empty',
@@ -116,11 +128,26 @@ def user_albums(time_range, token, k=10):
         for album in albums:
             if album['name'] == sort_albums[i][0]:
                 final_albums.append(album)
+<<<<<<< HEAD
     return jsonify(albums=final_albums[0:k])
+=======
+    return jsonify(albums=final_albums)
+>>>>>>> origin/new_will2
+
 
 
 
 @app.route('/artist/<id>/<token>')
+def artist_page(id, token):
+    sp = spotipy.Spotify(auth=token)
+
+    return jsonify({
+        'info':sp.artist(id),
+        'albums':sp.artist_albums(id)
+    })
+
+
+@app.route('/artist_graph/<id>/<token>')
 def artist_info(id, token):
     if(not id):
         raise Exception("ID Error")
@@ -151,6 +178,7 @@ def artist_info(id, token):
         }
     })
 
+<<<<<<< HEAD
 @app.route('/user_info/<token>/')
 def user_info(token):
     sp = spotipy.Spotify(auth=token)
@@ -204,6 +232,93 @@ def user_info(token):
         'short_term_genres' : final_short_term_genres,
         'long_term_genres' : final_long_term_genres,
     }])
+=======
+@app.route('/album_track_info/<album>/<token>')
+def album_track_info(album, token):
+    sp = spotipy.Spotify(auth=token)
+    album_info = sp.album(album)
+    track_names  = []
+    track_ratings = []
+    previews = []
+    for track in album_info["tracks"]["items"]:
+        track_info = sp.track(track['id'])
+        track_names.append(track_info['name'])
+        track_ratings.append(track_info['popularity'])
+        previews.append(track_info["preview_url"])
+
+
+    return {
+        'album_name':album_info['name'],
+        'tracks_in_album':album_info["tracks"]["items"],
+        'popularities':track_ratings,
+        'track_names':track_names,
+        'audio': previews
+    }
+
+
+@app.route('/track/save/<tracks>/<username>/<token>',  methods=['PUT'])
+def save_track(tracks, username,token):
+
+    new_token = spotipy.util.prompt_for_user_token(username,scope="user-library-modify",client_id=spotify_id,
+                                           client_secret=spotify_secret,
+                                           redirect_uri='http://localhost:3000/login')
+
+    sp = spotipy.Spotify(auth=new_token)
+
+    print(sp.current_user_saved_tracks_add([tracks]))
+    data = request.json
+    print("data is " + format(data))
+
+    return "added?"
+
+
+
+
+
+
+
+
+
+
+
+@app.route('/album/<album>/<token>')
+def album_info(album, token):
+    sp = spotipy.Spotify(auth=token)
+    feature_list = ['danceability', 'energy', 'instrumentalness', 'liveness', 'valence']
+    labels = ['Danceability', 'Energy', 'Instrumentalness', 'Liveness', 'Positivity']
+    scores = {'danceability': [], 'energy':[], 'instrumentalness':[], 'liveness':[], 'valence':[]}
+    names = []
+    dataset = {'danceability': [], 'energy':[], 'instrumentalness':[], 'liveness':[], 'valence':[]}
+
+
+    album_info = sp.album(album)
+    previews = []
+
+    for result in album_info["tracks"]["items"]:
+        id = result['id']
+        name = result['name']
+        names.append(name)
+        previews.append(sp.track(id)['preview_url'])
+        features = sp.audio_features(id)
+        for feat in feature_list:
+            scores[feat].append(features[0][feat])
+            dataset[feat].append({
+                'name':name,
+                'score':features[0][feat]
+            })
+
+
+
+    return {
+        'album_info':album_info,
+        'scores':scores,
+        'labels':labels,
+        'names': names,
+        'dataset':dataset,
+        'audio':previews
+
+    }
+>>>>>>> origin/new_will2
 
 
 @app.route('/track/<track>/<token>')
@@ -211,8 +326,8 @@ def track_info(track, token):
     sp = spotipy.Spotify(auth=token)
     popularity = sp.track(track)['popularity']
     features = sp.audio_features(track)
-    feature_list = ['danceability', 'energy', 'instrumentalness', 'liveness','loudness']
-    labels = ['Danceability', 'Energy', 'Instrumentalness', 'Liveness','Loudness']
+    feature_list = ['danceability', 'energy', 'instrumentalness','loudness', 'valence']
+    labels = ['Danceability', 'Energy', 'Instrumentalness','Loudness', 'Positivity']
     scores = []
     colors = ['#f1a5ba', '#f5b565', '#fbd981', '#93dcdc', '#6cb8ee']
     for k,v in features[0].items():
@@ -237,7 +352,53 @@ def track_info(track, token):
     })
 
 
+<<<<<<< HEAD
 
+=======
+@app.route('/related_albums/<track>/<token>')
+def related_albums(albums, token):
+    sp = spotipy.Spotify(auth=token)
+    recommendations = sp.recommendations(seed_artists=[track])
+    artists = []
+    images = []
+    song_names = []
+    for result in recommendations["tracks"]:
+        artist = result['artists'][0]['name']
+        name = result['name']
+        artists.append(artist)
+        song_names.append(name)
+        images.append(result["album"]["images"][0]["url"])
+
+    return jsonify({
+        'artists':artists,
+        'song_names':song_names,
+        'images':images
+    })
+
+@app.route('/related_tracks/<track>/<token>')
+def related_tracks(track, token):
+    sp = spotipy.Spotify(auth=token)
+    recommendations = sp.recommendations(seed_artists=[track])
+    artists = []
+    images = []
+    song_names = []
+    previews = []
+    for result in recommendations["tracks"]:
+        track = sp.track(result["id"])
+        previews.append(track["preview_url"])
+        artist = result['artists'][0]['name']
+        name = result['name']
+        artists.append(artist)
+        song_names.append(name)
+        images.append(result["album"]["images"][0]["url"])
+
+    return jsonify({
+        'artists':artists,
+        'song_names':song_names,
+        'images':images,
+        'audio':previews
+    })
+>>>>>>> origin/new_will2
 
 @app.route('/user_artists/<time_range>/<token>/<k>/')
 def user_artists(time_range, token, k=10):
@@ -246,6 +407,10 @@ def user_artists(time_range, token, k=10):
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
+<<<<<<< HEAD
+=======
+    k = 25
+>>>>>>> origin/new_will2
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_artists(time_range=time_range, limit=k)
 
@@ -269,7 +434,6 @@ def user_artists(time_range, token, k=10):
                 'id':result['id'],
                 'image':result['images'][0]['url']
             })
-    print(top_artists)
     return jsonify(top_artists=top_artists)
 
 
@@ -310,9 +474,21 @@ def related_tracks(track, token):
 @app.route('/graphs/<time_range>/<token>')
 def user_graph(time_range, token):
     n2v = Node2VecModel('model_kv.kv', token=token)
+<<<<<<< HEAD
     if(time_range == 'all_term'):
         genre_mappings = n2v.get_genre_mappings()
     else:
+=======
+    labels = []
+    scores = []
+    colors = []
+    labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
+    return jsonify({
+        'labels':labels,
+        'scores':scores,
+        'colors':colors
+    })
+>>>>>>> origin/new_will2
 
         labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
         return jsonify({
