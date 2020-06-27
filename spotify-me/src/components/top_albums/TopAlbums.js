@@ -86,10 +86,9 @@ class TopAlbums extends React.Component{
                 <div>
                 <Distribution
               values={[
-                { value: 1000, className:"top-tracks", show: true, data: <FetchAlbums handleChange={this.handleChange} data={this.state.value} /> },
+                { value: 100, className:"top-tracks", show: true, data: <FetchAlbums handleChange={this.handleChange} data={this.state.value} /> },
                 { value: (this.state['sidePane'] == 50) ? 30 : 0, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <AlbumGraph {...this.state} artist={this.state.artist} /> },
                 { value: (this.state['sidePane'] == 50) ? 20 : 0, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedAlbums {...this.state} artist={this.state.artist} /> },
-                { value: (this.state['sidePane'] == 50) ? 10 : 0, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <PopularityChart {...this.state} artist={this.state.artist} /> }
               ]}
             >
               {value => (

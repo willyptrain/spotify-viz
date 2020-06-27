@@ -21,6 +21,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 
 
 
@@ -59,7 +60,9 @@ class RelatedAlbums extends React.Component {
                 'album_name':fetch.album_name,
                 'album_info':fetch.tracks_in_album,
                 'popularities':fetch.popularities,
-                'track_names':fetch.track_names
+                'track_names':fetch.track_names,
+                'previews':fetch.audio,
+                'current':null
             })
             console.log(fetch);
         })
@@ -73,11 +76,73 @@ class RelatedAlbums extends React.Component {
     }
 
 
+    playTrack = (url, play) => {
+        if(url) {
+            if(url != this.state['current'] && this.state['current']) {
+                this.player.pause();
+                this.player.src = url;
+                this.setState(oldState => ({
+                    'clicked':true,
+                    'album_name':oldState.album_name,
+                    'album_info':oldState.album_info,
+                    'popularities':oldState.popularities,
+                    'track_names':oldState.track_names,
+                    'previews':oldState.previews,
+                    'play':true,
+                    'current':url
+                }));
+                this.player.play();
+            }
+            else {
+              this.player.src = url;
+              if(!play) {
+                  this.player.play()
+                   this.setState(oldState => ({
+                        'clicked':true,
+                        'album_name':oldState.album_name,
+                        'album_info':oldState.album_info,
+                        'popularities':oldState.popularities,
+                        'track_names':oldState.track_names,
+                        'previews':oldState.previews,
+                        'play':true,
+                        'current':url
+                    }));
 
+                }
+                else {
+                    this.player.pause();
+                    this.setState(oldState => ({
+                        'clicked':true,
+                        'album_name':oldState.album_name,
+                        'album_info':oldState.album_info,
+                        'popularities':oldState.popularities,
+                        'track_names':oldState.track_names,
+                        'previews':oldState.previews,
+                        'play': false,
+                        'current':url
+                    }));
+
+                }
+            }
+
+        }
+    }
+
+
+    saveTrack = (track) => {
+        console.log(track);
+        let token = cookie.get('access_token');
+        console.log(this.props);
+        console.log(this.userInfo);
+        axios.get(`http://localhost:5000/track/save/${track['id']}/${'screamywill'}/${token}`)
+
+    }
 
 
 
             render() {
+
+            var player_on = !this.state['play'] ? "Play" : "Stop"
 
             if(this.state.album_info) {
             return(
@@ -95,6 +160,13 @@ class RelatedAlbums extends React.Component {
                             primary={name}
 
                          />
+                         {this.state['previews'][index] &&
+                             <div>
+                             <Button onClick={() => this.playTrack(this.state['previews'][index], this.state['play'])}>
+                                    {(!(this.state['play'] && (this.state['current'] == this.state['previews'][index]))) ? "Play" : "Stop"}</Button>
+                             </div>
+                             }
+                             <Button onClick={() => this.saveTrack(this.state['album_info'][index])}>+</Button>
 
                     </ListItem>
                     <Divider />
@@ -104,6 +176,11 @@ class RelatedAlbums extends React.Component {
             </List>
         </CardContent>
             </Card>
+
+                    <>
+                        <audio ref={ref => this.player = ref} />
+                    </>
+
               </div>
             );
 

@@ -30,7 +30,7 @@ class AlbumGraph extends React.Component {
             this.chartReference = React.createRef();
 
             this.state = {value: 'short_term', clicked: false,
-                            data: [], artist:this.props.artist, feature:'valence'};
+                            data: [], artist:this.props.artist, feature:'valence', feature2:'danceability'};
 
 
 
@@ -65,7 +65,15 @@ class AlbumGraph extends React.Component {
                             fill: true,
                             backgroundColor: "rgba(75,192,192,0.2)",
                             borderColor: "rgba(75,192,192,1)"
-                        }]
+                        },{
+                            'data': fetch.scores[oldState.feature2],
+                            'labels': oldState.feature2,
+                            fill: true,
+                            backgroundColor: "rgba(192,250,75,0.2)",
+                            borderColor: "rgba(192,250,75,1)"
+                        }
+
+                        ]
                     }]
 
 
@@ -111,12 +119,20 @@ class AlbumGraph extends React.Component {
                                 data={this.state.data[0]} options={{
             title:{
               display:true,
-              text:`${this.state.feature} score by track`,
+              text:`Feature Scores by Track`,
               fontSize:20
             },
             legend:{
               display:false
             },
+            scales: {
+                yAxes: [{
+                  gridLines: {
+                    drawBorder: false,
+                  },
+                  display: false
+                }]
+              },
             plugins: {
             filler: {
                 propagate: true

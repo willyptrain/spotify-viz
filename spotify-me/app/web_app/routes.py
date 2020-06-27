@@ -21,7 +21,7 @@ import spotipy.util as util
 spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
                                            client_secret=spotify_secret,
                                            redirect_url='http://127.0.0.1:3000/callback',
-                                           scope=['user-top-read'])
+                                           scope=['user-library-modify', 'user-library-read', 'user-read-private', 'playlist-modify-private', 'user-follow-modify'])
 
 app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')
 
@@ -169,19 +169,48 @@ def album_track_info(album, token):
     album_info = sp.album(album)
     track_names  = []
     track_ratings = []
+    previews = []
     for track in album_info["tracks"]["items"]:
         track_info = sp.track(track['id'])
         track_names.append(track_info['name'])
         track_ratings.append(track_info['popularity'])
-
+        previews.append(track_info["preview_url"])
 
 
     return {
         'album_name':album_info['name'],
         'tracks_in_album':album_info["tracks"]["items"],
         'popularities':track_ratings,
-        'track_names':track_names
+        'track_names':track_names,
+        'audio': previews
     }
+
+
+@app.route('/track/save/<tracks>/<username>/<token>',  methods=['PUT'])
+def save_track(tracks, username,token):
+
+    new_token = spotipy.util.prompt_for_user_token(username,scope="user-library-modify",client_id=spotify_id,
+                                           client_secret=spotify_secret,
+                                           redirect_uri='http://localhost:3000/login')
+
+    sp = spotipy.Spotify(auth=new_token)
+
+    print(sp.current_user_saved_tracks_add([tracks]))
+    data = request.json
+    print("data is " + format(data))
+
+    return "added?"
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/album/<album>/<token>')
 def album_info(album, token):
     sp = spotipy.Spotify(auth=token)
@@ -193,11 +222,13 @@ def album_info(album, token):
 
 
     album_info = sp.album(album)
+    previews = []
 
     for result in album_info["tracks"]["items"]:
         id = result['id']
         name = result['name']
         names.append(name)
+        previews.append(sp.track(id)['preview_url'])
         features = sp.audio_features(id)
         for feat in feature_list:
             scores[feat].append(features[0][feat])
@@ -213,7 +244,8 @@ def album_info(album, token):
         'scores':scores,
         'labels':labels,
         'names': names,
-        'dataset':dataset
+        'dataset':dataset,
+        'audio':previews
 
     }
 
