@@ -41,16 +41,9 @@ def spotify_login():
     except (TokenExpiredError) as e: #was getting weird TokenExpiredError
         return redirect(url_for('spotify.login'))
 
-<<<<<<< HEAD
 @app.route('/user/<time_range>/<token>/<k>/')
 def user_tracks(time_range, token, k=10):
     k = int(k)
-=======
-
-
-@app.route('/user/<time_range>/<token>')
-def user_tracks(time_range, token):
->>>>>>> origin/new_will2
     top_tracks = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
@@ -58,13 +51,8 @@ def user_tracks(time_range, token):
     print(sp.current_user())
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_tracks(time_range=time_range, limit=k)
-<<<<<<< HEAD
     print(results['items'][0])
     if len(results['items']) < k:
-=======
-
-    if len(results['items']) <= 2:
->>>>>>> origin/new_will2
         for i in range(0, k):
             top_tracks.append({
                 'track_name':'Empty',
@@ -128,11 +116,7 @@ def user_albums(time_range, token, k=10):
         for album in albums:
             if album['name'] == sort_albums[i][0]:
                 final_albums.append(album)
-<<<<<<< HEAD
     return jsonify(albums=final_albums[0:k])
-=======
-    return jsonify(albums=final_albums)
->>>>>>> origin/new_will2
 
 
 
@@ -178,7 +162,6 @@ def artist_info(id, token):
         }
     })
 
-<<<<<<< HEAD
 @app.route('/user_info/<token>/')
 def user_info(token):
     sp = spotipy.Spotify(auth=token)
@@ -232,7 +215,6 @@ def user_info(token):
         'short_term_genres' : final_short_term_genres,
         'long_term_genres' : final_long_term_genres,
     }])
-=======
 @app.route('/album_track_info/<album>/<token>')
 def album_track_info(album, token):
     sp = spotipy.Spotify(auth=token)
@@ -318,7 +300,6 @@ def album_info(album, token):
         'audio':previews
 
     }
->>>>>>> origin/new_will2
 
 
 @app.route('/track/<track>/<token>')
@@ -352,9 +333,6 @@ def track_info(track, token):
     })
 
 
-<<<<<<< HEAD
-
-=======
 @app.route('/related_albums/<track>/<token>')
 def related_albums(albums, token):
     sp = spotipy.Spotify(auth=token)
@@ -398,7 +376,6 @@ def related_tracks(track, token):
         'images':images,
         'audio':previews
     })
->>>>>>> origin/new_will2
 
 @app.route('/user_artists/<time_range>/<token>/<k>/')
 def user_artists(time_range, token, k=10):
@@ -407,10 +384,6 @@ def user_artists(time_range, token, k=10):
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
-<<<<<<< HEAD
-=======
-    k = 25
->>>>>>> origin/new_will2
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_artists(time_range=time_range, limit=k)
 
@@ -474,11 +447,6 @@ def related_tracks(track, token):
 @app.route('/graphs/<time_range>/<token>')
 def user_graph(time_range, token):
     n2v = Node2VecModel('model_kv.kv', token=token)
-<<<<<<< HEAD
-    if(time_range == 'all_term'):
-        genre_mappings = n2v.get_genre_mappings()
-    else:
-=======
     labels = []
     scores = []
     colors = []
@@ -488,14 +456,6 @@ def user_graph(time_range, token):
         'scores':scores,
         'colors':colors
     })
->>>>>>> origin/new_will2
-
-        labels, scores,colors = n2v.get_mappings_by_range(token, time_range)
-        return jsonify({
-            'labels':labels,
-            'scores':scores,
-            'colors':colors
-        })
 
 @app.route('/album_graph/', methods=['GET', 'POST'])
 def album_graph():
