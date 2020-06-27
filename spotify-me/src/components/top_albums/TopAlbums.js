@@ -84,11 +84,12 @@ class TopAlbums extends React.Component{
                 </form>
 
                 <div>
-                <Distribution
+                <Distribution style={{maxHeight:'100vh'}} className="dist-box-albums"
               values={[
-                { value: 100, className:"top-tracks", show: true, data: <FetchAlbums handleChange={this.handleChange} data={this.state.value} /> },
-                { value: (this.state['sidePane'] == 50) ? 30 : 0, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <AlbumGraph {...this.state} artist={this.state.artist} /> },
-                { value: (this.state['sidePane'] == 50) ? 20 : 0, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedAlbums {...this.state} artist={this.state.artist} /> },
+                { value: 50, className:"top-albums", show: true, data: <FetchAlbums handleChange={this.handleChange} data={this.state.value} /> },
+                { value: 25, className:"album-graph", show: (this.state.clicked && (this.state.artist)), data: <AlbumGraph style={{maxHeight: '35vh'}} {...this.state} artist={this.state.artist} /> },
+                { value: 25, className:"related-albums", show: (this.state.clicked && (this.state.artist)), data: <RelatedAlbums style={{maxHeight: '35vh'}} {...this.state} artist={this.state.artist} /> }
+
               ]}
             >
               {value => (

@@ -48,7 +48,7 @@ class App extends Component{
               }/>
               <Route exact path="/" component={(props) =>
                 <div>
-                    <Home userInfo={userInfo} />
+                  <Home userInfo={userInfo} />
                 </div>
               }/>
               <Route exact path="/logout">
