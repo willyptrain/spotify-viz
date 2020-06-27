@@ -43,14 +43,14 @@ def spotify_login():
 
 @app.route('/user/<time_range>/<token>/<k>/')
 def user_tracks(time_range, token, k=10):
-    k = int(k)
+    k = 50
     top_tracks = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
     print(sp.current_user())
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
-    results = sp.current_user_top_tracks(time_range=time_range, limit=k)
+    results = sp.current_user_top_tracks(time_range=time_range, limit=50)
     print(results['items'][0])
     if len(results['items']) < k:
         for i in range(0, k):
@@ -74,7 +74,7 @@ def user_tracks(time_range, token, k=10):
 
 @app.route('/user_albums/<time_range>/<token>/<k>/')
 def user_albums(time_range, token, k=10):
-    k = int(k)
+    k = 50
     top_tracks = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
@@ -385,15 +385,19 @@ def related_tracks(track, token):
 
 @app.route('/user_artists/<time_range>/<token>/<k>/')
 def user_artists(time_range, token, k=10):
-    k = int(k)
+    k = 50
     top_artists = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
-    results = sp.current_user_top_artists(time_range=time_range, limit=k)
-
-    if len(results['items']) < k:
+    results = sp.current_user_top_artists(time_range=time_range, limit=50)
+    print()
+    print()
+    print(len(results))
+    print()
+    print()
+    if len(results['items']) <= 1:
         for i in range(0, k):
             top_artists.append({
                 'artist_name':'Empty',
