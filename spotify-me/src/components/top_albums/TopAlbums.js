@@ -14,7 +14,7 @@ import PopularityChart from './PopularityChart.js';
 class TopAlbums extends React.Component{
     constructor(props){
         super(props);
-        this.state = {value: 'short_term'};
+        this.state = {value: 'short_term', sidePane: 100};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.value = 'short_term'
@@ -26,14 +26,16 @@ class TopAlbums extends React.Component{
             this.setState(oldState => ({
                 value: oldState.value,
                 clicked: true,
-                artist: artist
+                artist: artist,
+                sidePane: 50
             }));
         }
         else {
             this.setState(oldState => ({
                 value: oldState.value,
                 clicked: true,
-                artist: artist
+                artist: artist,
+                sidePane: 50
             }));
         }
         this.graphTrack = <FetchAlbums data={this.state} />;
@@ -61,6 +63,7 @@ class TopAlbums extends React.Component{
     render(){
         const track_list = <FetchAlbums data={this.state.value}/>;
 
+
         return(
             <div class="browser-container">
                 <BrowserView>
@@ -80,12 +83,13 @@ class TopAlbums extends React.Component{
                 </label>
                 </form>
 
+                <div>
                 <Distribution
               values={[
-                { value: 50, className:"top-tracks", show: true, data: <FetchAlbums handleChange={this.handleChange} data={this.state.value} /> },
-                { value: 30, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <AlbumGraph {...this.state} artist={this.state.artist} /> },
-                { value: 20, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedAlbums {...this.state} artist={this.state.artist} /> },
-                { value: 10, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <PopularityChart {...this.state} artist={this.state.artist} /> }
+                { value: 1000, className:"top-tracks", show: true, data: <FetchAlbums handleChange={this.handleChange} data={this.state.value} /> },
+                { value: (this.state['sidePane'] == 50) ? 30 : 0, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <AlbumGraph {...this.state} artist={this.state.artist} /> },
+                { value: (this.state['sidePane'] == 50) ? 20 : 0, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedAlbums {...this.state} artist={this.state.artist} /> },
+                { value: (this.state['sidePane'] == 50) ? 10 : 0, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <PopularityChart {...this.state} artist={this.state.artist} /> }
               ]}
             >
               {value => (
@@ -94,6 +98,7 @@ class TopAlbums extends React.Component{
                 </Box>
               )}
             </Distribution>
+                </div>
             </BrowserView>
 
             <MobileView>

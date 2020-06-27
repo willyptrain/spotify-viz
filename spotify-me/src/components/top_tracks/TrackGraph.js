@@ -105,17 +105,10 @@ class TrackGraph extends React.Component {
                     subheader={this.props.artist.artist}
                 ></CardHeader>
                 <CardContent>
-                    <Radar ref={this.chartReference}
+                    <HorizontalBar ref={this.chartReference}
                                     data={this.state.data[0]} options={{
                                         legend: {
                                             display: false
-                                        },
-
-                                        scale: {
-                                           ticks: {
-                                                callback: function() {return ""},
-                                                backdropColor: "rgba(0, 0, 0, 0)"
-                                            }
                                         }
 
 

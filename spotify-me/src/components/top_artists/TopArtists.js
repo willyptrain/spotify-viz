@@ -53,7 +53,7 @@ class TopArtists extends React.Component{
         return(
         <div>
         <BrowserView>
-            <div  class="browser-container" style={{ marginTop: `64px`, marginLeft: '84px'}}>
+            <div class="browser-container" style={{ marginTop: `64px`, marginLeft: '84px'}}>
                     <form onSubmit={this.handleSubmit}>
                         <label>
                         <Tabs

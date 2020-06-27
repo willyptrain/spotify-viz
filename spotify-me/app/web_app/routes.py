@@ -223,8 +223,8 @@ def track_info(track, token):
     sp = spotipy.Spotify(auth=token)
     popularity = sp.track(track)['popularity']
     features = sp.audio_features(track)
-    feature_list = ['danceability', 'energy', 'instrumentalness', 'liveness','loudness', 'valence']
-    labels = ['Danceability', 'Energy', 'Instrumentalness', 'Liveness','Loudness', 'Positivity']
+    feature_list = ['danceability', 'energy', 'instrumentalness','loudness', 'valence']
+    labels = ['Danceability', 'Energy', 'Instrumentalness','Loudness', 'Positivity']
     scores = []
     colors = ['#f1a5ba', '#f5b565', '#fbd981', '#93dcdc', '#6cb8ee']
     for k,v in features[0].items():
@@ -276,7 +276,10 @@ def related_tracks(track, token):
     artists = []
     images = []
     song_names = []
+    previews = []
     for result in recommendations["tracks"]:
+        track = sp.track(result["id"])
+        previews.append(track["preview_url"])
         artist = result['artists'][0]['name']
         name = result['name']
         artists.append(artist)
@@ -286,7 +289,8 @@ def related_tracks(track, token):
     return jsonify({
         'artists':artists,
         'song_names':song_names,
-        'images':images
+        'images':images,
+        'audio':previews
     })
 
 

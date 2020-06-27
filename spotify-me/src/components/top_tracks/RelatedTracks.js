@@ -21,6 +21,7 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 
 
 
@@ -34,7 +35,7 @@ class RelatedTracks extends React.Component {
             this.chartReference = React.createRef();
 
             this.state = {value: 'short_term', clicked: false,
-                            data: null, artist:this.props.artist};
+                            data: null, artist:this.props.artist, play: false};
 
 
     }
@@ -57,8 +58,11 @@ class RelatedTracks extends React.Component {
                 'clicked':true,
                 'artists':fetch.artists,
                 'track_names':fetch.song_names,
-                'images':fetch.images
+                'images':fetch.images,
+                'previews':fetch.audio,
+                'current':null
             })
+            console.log(res.data);
 
 
 
@@ -71,7 +75,54 @@ class RelatedTracks extends React.Component {
 
     }
 
+     playTrack = (url, play) => {
+        if(url) {
+            if(url != this.state['current'] && this.state['current']) {
+                this.player.pause();
+                this.player.src = url;
+                this.setState(oldState => ({
+                    'clicked':oldState.clicked,
+                    'artists':oldState.artists,
+                    'track_names':oldState.track_names,
+                    'images':oldState.images,
+                    'previews':oldState.previews,
+                    'play':true,
+                    'current':url
+                }));
+                this.player.play();
+            }
+            else {
+              this.player.src = url;
+              if(!play) {
+                  this.player.play()
+                   this.setState(oldState => ({
+                        'clicked':oldState.clicked,
+                        'artists':oldState.artists,
+                        'track_names':oldState.track_names,
+                        'images':oldState.images,
+                        'previews':oldState.previews,
+                        'play':true,
+                        'current':url
+                    }));
 
+                }
+                else {
+                    this.player.pause();
+                    this.setState(oldState => ({
+                        'clicked':oldState.clicked,
+                        'artists':oldState.artists,
+                        'track_names':oldState.track_names,
+                        'images':oldState.images,
+                        'previews':oldState.previews,
+                        'play':false,
+                        'current':oldState.url
+                    }));
+
+                }
+            }
+
+        }
+    }
 
 
 
@@ -94,11 +145,21 @@ class RelatedTracks extends React.Component {
                             secondary={this.state.artists[index]}
                              />
 
+                             {this.state['previews'][index] &&
+                             <div>
+                             <Button onClick={() => this.playTrack(this.state['previews'][index], this.state['play'])}>Play</Button>
+                             </div>
+                             }
+
                         </ListItem>
+
                     )
                 }
             </List>
         </Card>
+        <>
+                        <audio ref={ref => this.player = ref} />
+                        </>
               </div>
             );
 

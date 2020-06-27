@@ -96,18 +96,16 @@ class ArtistPage extends React.Component {
                         <img style={{height:'250px',width:'250px', borderRadius: '100%', boxShadow:'2px 2px 5px 0.1px black'}} src={this.state.artist_info.images[0].url} />
                     <h1>{this.state.artist_info.name.toUpperCase()}</h1>
                     <Grid container>
-                        <Grid item sm={6}>
+                        <Grid item sm={12}>
                             <div class="genre-container">
-                            <h2>Genres: </h2>
-                                {genres.slice(0,Math.min(genres.length,4)).map((genre) => <p>{genre[0].toUpperCase() + genre.substr(1)}</p>)}
+                                <h4>Genres:</h4>
+                                <p>&nbsp;{genres.slice(0,Math.min(genres.length,4)).join(", ")}</p>
                             </div>
                         </Grid>
-                        <Grid item sm={6}>
-                             <div style={{backgroundColor: 'white'}}>
-                                <h2>Popularity</h2>
-                                <div style={{ height: '20vh', width: '20vh', position:'relative', left: 'calc(50% - 10vh)' }} class="artist-chart-container">
-                                    <CircularProgressbar style={{ height: '100%', width: '100%' }} value={this.state.artist_info.popularity} text={`${this.state.artist_info.popularity}`} strokeWidth={8} />;
-                                </div>
+                        <Grid item sm={12}>
+                             <div class="genre-container" style={{backgroundColor: 'white'}}>
+                                <h4>Popularity: </h4>
+                                <p>&nbsp;{this.state.artist_info.popularity}</p>
                               </div>
                         </Grid>
                     </Grid>
@@ -116,8 +114,10 @@ class ArtistPage extends React.Component {
                                     {
 
                                         this.state.albums.map((album) =>
+                                            <Card>
                                             <img className="album-carousel-item" src={album.images[0].url}
                                                   />
+                                            </Card>
 
                                         )
 
@@ -138,3 +138,5 @@ class ArtistPage extends React.Component {
 }
 
 export default ArtistPage;
+//                                {genres.slice(0,Math.min(genres.length,4)).map((genre) => {genre[0].toUpperCase() + genre.substr(1)})}
+//

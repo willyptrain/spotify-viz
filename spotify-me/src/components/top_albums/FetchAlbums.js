@@ -45,7 +45,7 @@ export function FetchAlbums(data) {
 
                  {
                 albums.map((album,index) =>
-                    <Grid item xs={6} sm={4} md={4} lg={4}>
+                    <Grid item xs={6} sm={2} md={2} lg={2}>
                     {isCardFunction &&
                         <Card onClick={() => data.handleChange(album)} className="track-card">
                             <CardMedia className="topalbums-img" image={album.images[0].url}></CardMedia>
