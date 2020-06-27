@@ -51,10 +51,7 @@ class TopArtists extends React.Component{
         const artist_list = <FetchArtists data={this.state.value}/>;
 
         return(
-<<<<<<< HEAD
-            <div style={{marginLeft: '84px'}}>
-=======
-        <div>
+        <div style={{marginLeft: '84px'}} >
         <BrowserView>
             <div class="browser-container" style={{ marginTop: `64px`, marginLeft: '84px'}}>
                     <form onSubmit={this.handleSubmit}>
@@ -93,7 +90,6 @@ class TopArtists extends React.Component{
 
         <MobileView>
             <div style={{ marginTop: `64px`, marginLeft: '84px'}}>
->>>>>>> origin/new_will2
                 <form onSubmit={this.handleSubmit}>
                     <label>
                     <Tabs

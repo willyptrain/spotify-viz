@@ -17,6 +17,7 @@
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.1",
     "react-chartjs-2": "^2.9.0",
+    "react-circular-progressbar": "^2.0.3",
     "react-device-detect": "^1.12.1",
     "react-dom": "^16.13.1",
     "react-items-carousel": "^2.8.0",

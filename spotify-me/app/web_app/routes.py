@@ -423,26 +423,6 @@ def get_currently_playing(token):
         'album': album
     }])
 
-@app.route('/related_tracks/<track>/<token>')
-def related_tracks(track, token):
-    sp = spotipy.Spotify(auth=token)
-    recommendations = sp.recommendations(seed_artists=[track])
-    artists = []
-    images = []
-    song_names = []
-    for result in recommendations["tracks"]:
-        artist = result['artists'][0]['name']
-        name = result['name']
-        artists.append(artist)
-        song_names.append(name)
-        images.append(result["album"]["images"][0]["url"])
-
-    return jsonify({
-        'artists':artists,
-        'song_names':song_names,
-        'images':images
-    })
-
 
 @app.route('/graphs/<time_range>/<token>')
 def user_graph(time_range, token):

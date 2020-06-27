@@ -169,7 +169,7 @@ export default function MiniDrawer(userInfo) {
           }),
         }}
       >
-      <Toolbar style={{backgroundColor: '#343834', color: '#DFE0E3'}} className={classes.customizeToolbar} >
+      <Toolbar style={{backgroundColor: 'rgba(21,21,21,1)', color: '#DFE0E3'}} className={classes.customizeToolbar} >
           {!open &&
           <IconButton
             color="inherit"
