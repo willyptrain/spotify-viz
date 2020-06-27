@@ -62,7 +62,8 @@ class RelatedAlbums extends React.Component {
                 'popularities':fetch.popularities,
                 'track_names':fetch.track_names,
                 'previews':fetch.audio,
-                'current':null
+                'current':null,
+                'username':fetch.username
             })
             console.log(fetch);
         })
@@ -89,7 +90,8 @@ class RelatedAlbums extends React.Component {
                     'track_names':oldState.track_names,
                     'previews':oldState.previews,
                     'play':true,
-                    'current':url
+                    'current':url,
+                    'username':oldState.username
                 }));
                 this.player.play();
             }
@@ -105,7 +107,8 @@ class RelatedAlbums extends React.Component {
                         'track_names':oldState.track_names,
                         'previews':oldState.previews,
                         'play':true,
-                        'current':url
+                        'current':url,
+                        'username':oldState.username
                     }));
 
                 }
@@ -119,7 +122,8 @@ class RelatedAlbums extends React.Component {
                         'track_names':oldState.track_names,
                         'previews':oldState.previews,
                         'play': false,
-                        'current':url
+                        'current':url,
+                        'username':oldState.username
                     }));
 
                 }
@@ -134,7 +138,8 @@ class RelatedAlbums extends React.Component {
         let token = cookie.get('access_token');
         console.log(this.props);
         console.log(this.userInfo);
-        axios.get(`http://localhost:5000/track/save/${track['id']}/${'screamywill'}/${token}`)
+//        lol check line below for screamywill
+        axios.get(`http://localhost:5000/track/save/${track['id']}/${this.state['username']}/${token}`)
 
     }
 
@@ -166,8 +171,10 @@ class RelatedAlbums extends React.Component {
                                     {(!(this.state['play'] && (this.state['current'] == this.state['previews'][index]))) ? "Play" : "Stop"}</Button>
                              </div>
                              }
+                             {
+                             this.state['username'] &&
                              <Button onClick={() => this.saveTrack(this.state['album_info'][index])}>+</Button>
-
+                               }
                     </ListItem>
                     <Divider />
                     </div>
@@ -185,7 +192,7 @@ class RelatedAlbums extends React.Component {
             );
 
             }
-            return (<div></div>);
+            return (<div>Loading...</div>);
             }
 
 

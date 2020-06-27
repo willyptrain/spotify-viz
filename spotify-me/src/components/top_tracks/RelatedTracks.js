@@ -131,8 +131,8 @@ class RelatedTracks extends React.Component {
             return(
 
         <div style={{backgroundColor: 'white', overflow: 'scroll'}}>
-        <Card>
-            <h2 style={{float: 'left'}}>Related Tracks</h2>
+
+            <h2 style={{fontWeight: '300', marginTop: '20px', marginBottom: '0px'}}>Related Tracks</h2>
             <List>
                 {this.state.clicked &&
                     this.state.artists.map((artist, index) =>
@@ -156,7 +156,7 @@ class RelatedTracks extends React.Component {
                     )
                 }
             </List>
-        </Card>
+
         <>
                         <audio ref={ref => this.player = ref} />
                         </>

@@ -6,14 +6,24 @@ usic-title {
     font-size: 1em !important;
     color: white;
 }
+
 .grid-container {
-    height: 100%;
+    height: auto !important;
     width: 100%;
     position: relative;
     top: 20px;
     overflow: hidden;
     left: 0.5vh;
 }
+.album-graph {
+max-height: 35vh;
+}
+.dist-box-albums {
+        position: relative;
+    left: 4vh;
+    margin-right: 2vh;
+}
+
 .topalbums-card {
     height: 28vh;
     margin-bottom: 2vh;

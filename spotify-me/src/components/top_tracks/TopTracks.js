@@ -13,11 +13,16 @@ import {
   isBrowser,
   isMobile
 } from "react-device-detect";
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
 
 class TopTracks extends React.Component{
     constructor(props){
         super(props);
-        this.state = {value: 'short_term', clicked: false };
+        this.state = {value: 'short_term', clicked: false};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.value = 'short_term'
@@ -86,10 +91,11 @@ class TopTracks extends React.Component{
                 </label>
                 </form>
 
-                <Distribution
+                <Distribution className="dist-box-tracks"
               values={[
                 { value: 50, className:"top-tracks", show: true, data: <FetchTracks handleChange={this.handleChange} data={this.state.value} /> },
-                { value: 50, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <TrackGraph {...this.state} artist={this.state.artist} /> }
+                { value: 30, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedTracks {...this.props} artist={this.state.artist} /> },
+                { value: 20, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <TrackGraph {...this.state} artist={this.state.artist} /> }
               ]}
             >
               {value => (

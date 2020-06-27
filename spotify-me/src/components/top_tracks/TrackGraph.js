@@ -100,30 +100,25 @@ class TrackGraph extends React.Component {
         <Card>
             {this.state.clicked &&
             <Card class="track-chart-container">
-                <CardHeader
-                    title={this.props.artist.track_name}
-                    subheader={this.props.artist.artist}
-                ></CardHeader>
-                <CardContent>
+
                     <HorizontalBar ref={this.chartReference}
                                     data={this.state.data[0]} options={{
                                         legend: {
                                             display: false
+                                        },
+                                        title: {
+                                            display: true,
+                                            text: 'Feature Scores',
+                                            fontFamily: 'Montserrat',
+                                            fontSize: '18'
                                         }
 
 
                                     }}  />
-                </CardContent>
-
             </Card>
             }
-            {this.state.clicked &&
-            <div>
-                <Card>
-                    <RelatedTracks {...this.props} artist={this.props.artist} />
-                </Card>
-            </div>
-            }
+
+
 
              </Card>
               </div>

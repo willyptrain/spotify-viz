@@ -46,7 +46,6 @@ export function FetchTracks(data) {
             return(
 
         <div>
-        <Card>
             <Grid container className="grid-container"
           alignItems="center"
           justify="center" spacing={0}>
@@ -67,7 +66,6 @@ export function FetchTracks(data) {
                 )}
 
               </Grid>
-              </Card>
               </div>
             );
 

@@ -182,11 +182,12 @@ def album_track_info(album, token):
         'tracks_in_album':album_info["tracks"]["items"],
         'popularities':track_ratings,
         'track_names':track_names,
-        'audio': previews
+        'audio': previews,
+        'username': sp.me()['display_name']
     }
 
 
-@app.route('/track/save/<tracks>/<username>/<token>',  methods=['PUT'])
+@app.route('/track/save/<tracks>/<username>/<token>')
 def save_track(tracks, username,token):
 
     new_token = spotipy.util.prompt_for_user_token(username,scope="user-library-modify",client_id=spotify_id,
@@ -194,7 +195,10 @@ def save_track(tracks, username,token):
                                            redirect_uri='http://localhost:3000/login')
 
     sp = spotipy.Spotify(auth=new_token)
-
+    print()
+    print()
+    print(sp.me())
+    print()
     print(sp.current_user_saved_tracks_add([tracks]))
     data = request.json
     print("data is " + format(data))
@@ -298,7 +302,8 @@ def related_albums(albums, token):
     return jsonify({
         'artists':artists,
         'song_names':song_names,
-        'images':images
+        'images':images,
+        'username':sp.me()['display_name']
     })
 
 @app.route('/related_tracks/<track>/<token>')
@@ -322,7 +327,8 @@ def related_tracks(track, token):
         'artists':artists,
         'song_names':song_names,
         'images':images,
-        'audio':previews
+        'audio':previews,
+        'username': sp.me()['display_name']
     })
 
 

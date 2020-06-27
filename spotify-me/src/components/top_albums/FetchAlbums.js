@@ -37,7 +37,7 @@ export function FetchAlbums(data) {
 
     return(
 
-<div>
+<div style={{overflow: 'scroll', height: 'auto'}}>
 
             <Grid container className="grid-container"
           alignItems="center"
@@ -45,7 +45,7 @@ export function FetchAlbums(data) {
 
                  {
                 albums.map((album,index) =>
-                    <Grid item xs={6} sm={2} md={2} lg={2}>
+                    <Grid item xs={6} sm={3} md={3} lg={3}>
                     {isCardFunction &&
                         <Card onClick={() => data.handleChange(album)} className="track-card">
                             <CardMedia className="topalbums-img" image={album.images[0].url}></CardMedia>
