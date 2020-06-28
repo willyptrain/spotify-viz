@@ -27,7 +27,7 @@ app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')
 
 @app.route('/')
 def index():
-    return app.send_static_file('index.html')
+    return render_template('index.html')
 
 @app.route('/user/<time_range>/<token>/<k>/')
 def user_tracks(time_range, token, k=10):
