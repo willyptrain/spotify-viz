@@ -7,8 +7,8 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from web_app.settings import spotify_id, spotify_secret
-from web_app.db import get_db
+from .settings import spotify_id, spotify_secret
+from .db import get_db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 

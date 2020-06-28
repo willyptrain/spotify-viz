@@ -1,5 +1,5 @@
 from flask import Flask
-#from web_app.settings import spotify_secret, spotify_id
+#from ..settings import spotify_secret, spotify_id
 from .settings import spotify_secret, spotify_id
 from flask_material import Material
 from flask import Flask
@@ -19,8 +19,8 @@ app.config.from_mapping(
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 
-from web_app import routes
-from web_app import db
+from . import routes
+from . import db
 db.init_app(app)
-from web_app import auth
+from . import auth
 app.register_blueprint(auth.bp)

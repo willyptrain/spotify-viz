@@ -1,4 +1,4 @@
-from web_app import app
+from . import app
 import os
 if __name__ == "__main__":
     app.config.from_object('configurations.DevelopmentConfig')
