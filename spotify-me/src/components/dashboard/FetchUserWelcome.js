@@ -37,12 +37,11 @@ export default function FetchUserWelcome(data) {
             {
             info.map( user_info =>
                 <div>
-                    <Image src={user_info.image_url} size='medium' circular centered bordered/>
+                    <Image style={{borderRadius: '6%'}}src={user_info.image_url} size='medium' centered bordered/>
                     <Box m={3}>
                     <Typography align="left"><b>Recently</b>, you've been listening to <b>{user_info.short_term_genres[0]}</b>, <b>{user_info.short_term_genres[1]}</b>, and <b>{user_info.short_term_genres[2]}</b>.
                     </Typography>
                     <Typography align="left"><b>Typically</b>, you listen to <b>{user_info.long_term_genres[0]}</b>, <b>{user_info.long_term_genres[1]}</b>, and <b>{user_info.long_term_genres[2]}</b>.</Typography>
-                    <FetchCurrentlyPlaying/>
                     </Box>
                 </div>
             )}

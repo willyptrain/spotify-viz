@@ -1,13 +1,17 @@
-
+body {
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
 .userinfo-card {
     height: 100%;
     margin-bottom: 2vh;
     width: 95% !important;
     max-width: 100%;
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2) !important;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
 .userinfo-img {
     height: 100%;
     width: 100%;
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
 }

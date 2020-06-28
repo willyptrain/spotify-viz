@@ -392,11 +392,6 @@ def user_artists(time_range, token, k=10):
     sp.trace = False
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_artists(time_range=time_range, limit=50)
-    print()
-    print()
-    print(len(results))
-    print()
-    print()
     if len(results['items']) <= 1:
         for i in range(0, k):
             top_artists.append({
@@ -420,10 +415,16 @@ def user_artists(time_range, token, k=10):
     return jsonify(top_artists=top_artists)
 
 
-@app.route('/user/currently_playing/<token>/')
+@app.route('/user_currently_playing/<token>/')
 def get_currently_playing(token):
     sp = spotipy.Spotify(auth=token)
     cur_track = sp.current_user_playing_track()
+    if(not cur_track):
+        return jsonify([{
+            'name': None,
+            'artist': None,
+            'album': None
+        }])
     name = cur_track['item']['name']
     artist = cur_track['item']['artists'][0]['name']
     album = cur_track['item']['album']['name']

@@ -23,25 +23,25 @@ class Dash extends React.Component {
     render(){
       const user_info = this.props.userInfo;
         return(
-        <div style={{ marginTop: `64px`, marginLeft: '84px', marginRight: '84px'}}>
-            <Grommet style={{backgroundColor: "#EBEBEB"}} full>
-    <Distribution margin="xsmall" gap="none"
-      fill
-      values={[
-        { value: 50, color: "white", title: "Welcome, " + user_info.display_name + "!", data: <FetchUserWelcome data={user_info} /> },
-        { value: 15, color: "white", title: "Your top tracks", data: <FetchDashTracks data="long_term" /> },
-        { value: 15, color: "white", title: "Your top albums", data: <FetchDashAlbums data="long_term" /> },
-        { value: 15, color: "white", title: "Your top artists", data: <FetchDashArtists data="long_term"/> },
-        { value: 15, color: "white", title: null, data:null },
-      ]}
-    >
-      {value => (
-          <Card width="100%" height="100%" style={{backgroundColor: "white"}} className="userinfo-card">
-                    <CardContent className="userinfo-info">
-                    <Typography><b>{value.title}</b></Typography>
-                    </CardContent>
-                    {value.data}
-            </Card>
+        <div style={{ overflow: 'hidden', marginTop: `2vh`, marginLeft: '84px', width: '92%'}}>
+            <Grommet style={{overflow: 'hidden', width: '100%',backgroundColor: "#EBEBEB"}} full>
+            <Distribution style={{overflow: 'hidden'}} margin="xsmall" gap="none"
+              fill
+              values={[
+                { value: 50, color: "white", title: "Welcome, " + user_info.display_name + "!", data: <FetchUserWelcome data={user_info} /> },
+                { value: 15, color: "white", title: "Your top tracks", data: <FetchDashTracks data="long_term" /> },
+                { value: 15, color: "white", title: "Your top albums", data: <FetchDashAlbums data="long_term" /> },
+                { value: 15, color: "white", title: "Your top artists", data: <FetchDashArtists data="long_term"/> },
+                { value: 15, color: "white", title: null, data:null },
+              ]}
+            >
+              {value => (
+                  <Card width="100%" height="100%" style={{backgroundColor: "white"}} className="userinfo-card">
+                            <CardContent className="userinfo-info">
+                            <Typography><b>{value.title}</b></Typography>
+                            </CardContent>
+                            {value.data}
+                    </Card>
       )}
     </Distribution>
   </Grommet></div>

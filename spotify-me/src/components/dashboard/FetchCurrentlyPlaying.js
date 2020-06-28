@@ -22,9 +22,9 @@ export function FetchCurrentlyPlaying() {
         <div>
         <List size="mini">
             {
-                curSong.map(song =>
-                    <Typography align="left"><b>Right now</b>, you're listening to <b>{song.name}</b> by <b>{song.artist}</b> from the album <b>{song.album}</b>. </Typography>
-                )
+                    curSong.map(song =>
+                        <Typography align="left"><b>Right now</b>, you're listening to <b>{song.name}</b> by <b>{song.artist}</b> from the album <b>{song.album}</b>. </Typography>
+                    )
                 }
         </List>
         </div>
