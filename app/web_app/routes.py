@@ -20,7 +20,7 @@ import spotipy.util as util
 
 spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
                                            client_secret=spotify_secret,
-                                           redirect_url='http://127.0.0.1:3000/callback',
+                                           redirect_url='http://spot-viz2.herokuapp.com/callback',
                                            scope=['user-library-modify', 'user-library-read', 'user-read-private', 'playlist-modify-private', 'user-follow-modify'])
 
 app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')
