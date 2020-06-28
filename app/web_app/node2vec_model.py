@@ -6,7 +6,8 @@ from numpy import linalg
 import random
 import math
 import os
-from gensim.models import KeyedVectors
+import gensim
+#from gensim.models import KeyedVectors
 from . import lists
 from web_app.lists import items
 import node2vec as n2v
@@ -160,7 +161,7 @@ class Node2VecModel:
 
 
     def load_wv(self, path):
-        wv = KeyedVectors.load(path, mmap='r')
+        wv = gensim.models.KeyedVectors.load(path, mmap='r')
         return wv
 
     def get_mappings_for_artist(self, artist_id):
