@@ -17,7 +17,9 @@ app.config.from_mapping(
     )
 
 
+
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+
 
 
 from . import routes
