@@ -9,9 +9,9 @@ import os
 #import gensim
 from gensim.models import KeyedVectors
 from . import lists
-from web_app.lists import items
+from .lists import items
 import node2vec as n2v
-from web_app.user import User
+from .user import User
 from flask import jsonify
 
 from urllib3.exceptions import ReadTimeoutError
