@@ -25,7 +25,7 @@ spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
 
 app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')
 
-@app.route('/')
+@app.route('/*')
 def index():
     return render_template('index.html')
 
