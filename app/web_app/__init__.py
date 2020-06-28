@@ -1,6 +1,6 @@
 from flask import Flask
 #from web_app.settings import spotify_secret, spotify_id
-from app.web_app.settings import spotify_secret, spotify_id
+from .settings import spotify_secret, spotify_id
 from flask_material import Material
 from flask import Flask
 import os
