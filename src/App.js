@@ -36,7 +36,7 @@ class App extends Component{
   render(){
     const { userInfo } = this.state;
     console.log(userInfo);
-    console.log("hello");
+    console.log("helloo");
     return (
       <div className="App">
         <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" />
