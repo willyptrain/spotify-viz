@@ -25,9 +25,13 @@ spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
 
 app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')
 
-@app.route('/*')
+@app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/favicon.ico', methods=["GET"])
+def favicon():
+    return app.send_static_file('favicon.ico')
 
 @app.route('/user/<time_range>/<token>/<k>/')
 def user_tracks(time_range, token, k=10):
@@ -429,21 +433,6 @@ def user_graph(time_range, token):
         'scores':scores,
         'colors':colors
     })
-
-@app.route('/album_graph/', methods=['GET', 'POST'])
-def album_graph():
-    form = AlbumForm()
-    if form.validate_on_submit():
-        albums = form.album_list.data
-        albums = albums.split(",")
-        nickname = session.get('nickname', None)
-        image_url = session.get('user_img',None)
-        g = viz.Graph()
-        g.construct_album_graph(albums=albums)
-        link = g.draw_graph()
-        embed_html = tls.get_embed(link)
-        return render_template('album_graph_view.html', graph=embed_html, username=nickname, user_img=image_url)
-    return render_template('album_graph.html', form=form)
 
 @app.route('/logout')
 def spotify_logout():
