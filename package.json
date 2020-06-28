@@ -33,7 +33,8 @@
     "styled-components": "^5.1.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "dev": "react-scripts start",
+    "start": "serve -s build",
     "start-flask-mac": "cd app/web_app && source new_venv/bin/activate && flask run",
     "start-flask-win": "cd app/web_app && new_env/Scripts/activate && flask run",
     "build": "react-scripts build",
