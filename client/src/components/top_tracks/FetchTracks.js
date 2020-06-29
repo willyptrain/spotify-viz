@@ -30,7 +30,7 @@ export function FetchTracks(data) {
 
     let token = cookie.get('access_token');
     useEffect(() => {
-        axios.get(`http://localhost:5000/user/${data.data}/${token}/10`)
+        axios.get(`http://localhost:5000/user/${data.data}/${token}/50`)
         .then(res => {
             setTracks(res.data.top_tracks)
         })

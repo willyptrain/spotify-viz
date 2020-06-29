@@ -26,15 +26,15 @@ spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
 app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')
 
 @app.route('/user/<time_range>/<token>/<k>/')
-def user_tracks(time_range, token, k=10):
-    k = 50
+def user_tracks(time_range, token, k=50):
+    k = int(k)
     top_tracks = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
     print(sp.current_user())
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
-    results = sp.current_user_top_tracks(time_range=time_range, limit=50)
+    results = sp.current_user_top_tracks(time_range=time_range, limit=k)
     print(results['items'][0])
     if len(results['items']) < k:
         for i in range(0, k):
@@ -57,8 +57,8 @@ def user_tracks(time_range, token, k=10):
 
 
 @app.route('/user_albums/<time_range>/<token>/<k>/')
-def user_albums(time_range, token, k=10):
-    k = 50
+def user_albums(time_range, token, k=50):
+    k = int(k)
     top_tracks = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
@@ -150,7 +150,10 @@ def artist_info(id, token):
 def user_info(token):
     sp = spotipy.Spotify(auth=token)
     user_info = sp.current_user()
-    image_url = user_info['images'][0]['url']
+    try:
+        image_url = user_info['images'][0]['url']
+    except:
+        image_url = "https://f0.pngfuel.com/png/981/645/default-profile-picture-png-clip-art.png"
     subscription = user_info['product']
     user_id = user_info['id']
     user_url = user_info['external_urls']['spotify']
@@ -173,7 +176,12 @@ def user_info(token):
     sort_genres = sorted(short_term_genres.items(), key=lambda x: x[1], reverse=True)
     final_short_term_genres = []
     short_genre_values = []
-    for i in range(0, 5):
+    
+    if len(sort_genres) < 5:
+        num_genres = len(sort_genres)
+    else:
+        num_genres = 5
+    for i in range(0, num_genres):
         final_short_term_genres.append(sort_genres[i][0])
         print(sort_genres[i][1])
         short_genre_values.append(sort_genres[i][1])
@@ -374,14 +382,14 @@ def related_tracks(track, token):
     })
 
 @app.route('/user_artists/<time_range>/<token>/<k>/')
-def user_artists(time_range, token, k=10):
-    k = 50
+def user_artists(time_range, token, k=50):
+    k = int(k)
     top_artists = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
-    results = sp.current_user_top_artists(time_range=time_range, limit=50)
+    results = sp.current_user_top_artists(time_range=time_range, limit=k)
     if len(results['items']) <= 1:
         for i in range(0, k):
             top_artists.append({

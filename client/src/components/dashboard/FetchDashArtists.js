@@ -17,7 +17,7 @@ export function FetchDashArtists(data) {
     const [artists, setArtists] = useState([]);
     let token = cookie.get('access_token');
     useEffect(() => {
-        axios.get(`http://localhost:5000/user_artists/${data.data}/${token}/5/`)
+        axios.get(`http://localhost:5000/user_artists/${data.data}/${token}/15/`)
         .then(res => {
             console.log(res.data)
             setArtists(res.data.top_artists)
