@@ -6,14 +6,14 @@ from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 import spotipy
 import json
 import webbrowser
-from api import app, lists, user, node2vec_model
-from api.settings import spotify_id, spotify_secret
+from . import app, lists, user, node2vec_model
+from .settings import spotify_id, spotify_secret
 import math
 # from settings import spotify_secret, spotify_id
 # import node2vec_model
-from api.node2vec_model import Node2VecModel
-from api.lists import items
-from api.user import User
+from .node2vec_model import Node2VecModel
+from .lists import items
+from .user import User
 from spotipy.exceptions import SpotifyException
 import spotipy.util as util
 
