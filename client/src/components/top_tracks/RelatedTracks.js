@@ -17,10 +17,10 @@ import ArtistPage from '../artist/ArtistPage.js'
 import TopTracks from './TopTracks.js';
 import PropTypes from 'prop-types'
 import ListItem from '@material-ui/core/ListItem';
+import Avatar from '@material-ui/core/Avatar';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 
 
@@ -31,6 +31,8 @@ class RelatedTracks extends React.Component {
 
     constructor(props) {
         super(props);
+        console.log(this.userInfo);
+
 
             this.chartReference = React.createRef();
 
@@ -60,7 +62,8 @@ class RelatedTracks extends React.Component {
                 'track_names':fetch.song_names,
                 'images':fetch.images,
                 'previews':fetch.audio,
-                'current':null
+                'current':null,
+                'username':fetch.username
             })
             console.log(res.data);
 
@@ -87,7 +90,9 @@ class RelatedTracks extends React.Component {
                     'images':oldState.images,
                     'previews':oldState.previews,
                     'play':true,
-                    'current':url
+                    'current':url,
+                    'username':oldState.username
+
                 }));
                 this.player.play();
             }
@@ -102,7 +107,8 @@ class RelatedTracks extends React.Component {
                         'images':oldState.images,
                         'previews':oldState.previews,
                         'play':true,
-                        'current':url
+                        'current':url,
+                        'username':oldState.username
                     }));
 
                 }
@@ -115,13 +121,29 @@ class RelatedTracks extends React.Component {
                         'images':oldState.images,
                         'previews':oldState.previews,
                         'play':false,
-                        'current':oldState.url
+                        'current':oldState.url,
+                        'username':oldState.username
                     }));
 
                 }
             }
 
         }
+    }
+
+        saveTrack = (track) => {
+        console.log(track);
+        let token = cookie.get('access_token');
+        console.log(this.props);
+        console.log(this.userInfo);
+        axios.get(`http://localhost:5000/track/save/${track['id']}/${this.state['username']}/${token}`)
+                .then(res => {
+                    console.log("yay!");
+                })
+                .catch(err => {
+                    console.log("no");
+                })
+
     }
 
 
@@ -147,9 +169,15 @@ class RelatedTracks extends React.Component {
 
                              {this.state['previews'][index] &&
                              <div>
-                             <Button onClick={() => this.playTrack(this.state['previews'][index], this.state['play'])}>Play</Button>
+                             <Button onClick={() => this.playTrack(this.state['previews'][index], this.state['play'])}>
+                             {(!(this.state['play'] && (this.state['current'] == this.state['previews'][index]))) ? "Play" : "Stop"}
+                             </Button>
                              </div>
                              }
+                             {
+                             this.state['username'] &&
+                             <Button onClick={() => this.saveTrack(this.state['album_info'][index])}>+</Button>
+                               }
 
                         </ListItem>
 

@@ -12,15 +12,12 @@
     color: white;
 }
 .grid-container {
-    height: 100%;
+    height: auto !important;
     width: 100%;
     position: relative;
     top: 20px;
     overflow: hidden;
     left: 0.5vh;
-    float: right;
-    justify-content: center;
-    align-items: center;
 }
 .dist-box-tracks {
         position: relative;
@@ -78,5 +75,4 @@
     left: 6vh;
     margin-right: 8vh;
     marginTop: 64px;
-    marginLeft: 84px;
 }

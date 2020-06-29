@@ -95,7 +95,7 @@ class ArtistPage extends React.Component {
 
                         <img style={{height:'250px',width:'250px', borderRadius: '100%', boxShadow:'2px 2px 5px 0.1px black'}} src={this.state.artist_info.images[0].url} />
                     <h1>{this.state.artist_info.name.toUpperCase()}</h1>
-                    <Grid container>
+                    <Grid container className="artist-grid-container">
                         <Grid item sm={12}>
                             <div class="genre-container">
                                 <h4>Genres:</h4>

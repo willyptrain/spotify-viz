@@ -155,6 +155,7 @@ def user_info(token):
     user_id = user_info['id']
     user_url = user_info['external_urls']['spotify']
     username = user_info['display_name']
+    followers = user_info['followers']
 
     top_recent_tracks = sp.current_user_top_tracks(time_range='short_term', limit=50)
     top_all_tracks = sp.current_user_top_tracks(time_range='long_term', limit=50)
@@ -171,10 +172,14 @@ def user_info(token):
                 short_term_genres[genre] += cur_points
     sort_genres = sorted(short_term_genres.items(), key=lambda x: x[1], reverse=True)
     final_short_term_genres = []
+    short_genre_values = []
     for i in range(0, 5):
         final_short_term_genres.append(sort_genres[i][0])
+        print(sort_genres[i][1])
+        short_genre_values.append(sort_genres[i][1])
 
     long_term_genres = {}
+    long_genre_values = []
     for i in range(0, len(top_all_tracks['items'])):
         result = top_all_tracks['items'][i]
         artist_id = result['artists'][0]['id']
@@ -188,15 +193,20 @@ def user_info(token):
     sort_long_genres = sorted(long_term_genres.items(), key=lambda x: x[1], reverse=True)
     final_long_term_genres = []
     for i in range(0, 5):
+        print(sort_long_genres[i][1])
         final_long_term_genres.append(sort_long_genres[i][0])
+        long_genre_values.append(sort_long_genres[i][1])
         
     return jsonify([{
         'username' :username,
+        'followers':followers,
         'user_url' : user_url,
         'user_id' : user_id,
         'subscription' : subscription,
         'image_url' : image_url,
         'short_term_genres' : final_short_term_genres,
+        'short_genre_scores': short_genre_values,
+        'long_genre_scores':long_genre_values,
         'long_term_genres' : final_long_term_genres,
     }])
 @app.route('/album_track_info/<album>/<token>')

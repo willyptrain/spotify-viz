@@ -2,6 +2,10 @@ import React, {useEffect, useState} from 'react';
 import cookie from 'js-cookie';
 import axios from 'axios';
 import { List, Image, Button } from 'semantic-ui-react';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItem from '@material-ui/core/ListItem';
+import Avatar from '@material-ui/core/Avatar';
 
 function artists_page(e) {
     e.preventDefault();
@@ -25,17 +29,19 @@ export function FetchDashArtists(data) {
     }, [data.data])
     return(
         <div>
+        <h2>Top Artists</h2>
         <List size="mini">
             {
                 artists.map(artist =>
-        <List.Item>
-          <Image avatar  src={artist.image} circular/>
-          <List.Content>
-            <List.Header as='a'>{artist.artist_name}</List.Header>
-            <List.Description>
-            </List.Description>
-          </List.Content>
-        </List.Item>)
+                    <ListItem>
+                       <ListItemAvatar>
+                           <Avatar alt="Image" src={artist.image}/>
+                      </ListItemAvatar>
+
+                        <ListItemText
+                                            primary={artist.artist_name}
+                                         />
+                    </ListItem>)
                 }
         </List>
         <Button primary content="View more..." onClick={artists_page} />

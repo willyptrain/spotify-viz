@@ -138,7 +138,6 @@ class RelatedAlbums extends React.Component {
         let token = cookie.get('access_token');
         console.log(this.props);
         console.log(this.userInfo);
-//        lol check line below for screamywill
         axios.get(`http://localhost:5000/track/save/${track['id']}/${this.state['username']}/${token}`)
 
     }

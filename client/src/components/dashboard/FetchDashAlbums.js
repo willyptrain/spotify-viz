@@ -2,6 +2,10 @@ import React, {useEffect, useState} from 'react';
 import cookie from 'js-cookie';
 import axios from 'axios';
 import { List, Image, Button } from 'semantic-ui-react';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItem from '@material-ui/core/ListItem';
+import Avatar from '@material-ui/core/Avatar';
 
 function albums_page(e) {
     e.preventDefault();

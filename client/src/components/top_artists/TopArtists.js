@@ -53,7 +53,7 @@ class TopArtists extends React.Component{
         return(
         <div style={{marginLeft: '84px'}} >
         <BrowserView>
-            <div class="browser-container" style={{ marginTop: `64px`, marginLeft: '84px'}}>
+            <div class="browser-container" style={{ marginLeft: '0px'}}>
                     <form onSubmit={this.handleSubmit}>
                         <label>
                         <Tabs
@@ -71,9 +71,9 @@ class TopArtists extends React.Component{
                     </form>
 
 
-                    <Distribution
+                    {this.state['clicked'] && <Distribution
                   values={[
-                    { value: this.state.artist_side, className:"top-tracks", show: true, data: <FetchArtists handleChange={this.handleChange} data={this.state.value} /> },
+                    { value: this.state.artist_side, className:"top-tracks", show: true, data: <FetchArtists clicked={this.state['clicked']} handleChange={this.handleChange} data={this.state.value} /> },
                     { value: 100-this.state.artist_side, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <ArtistPage handleChange={this.handleChange} data={this.state} /> }
 
                   ]}
@@ -83,7 +83,21 @@ class TopArtists extends React.Component{
                       {value.show && value.data}
                     </Box>
                   )}
-                </Distribution>
+                </Distribution>}
+
+                {!this.state['clicked'] && <Distribution
+                  values={[
+                    { value: 100, className:"top-tracks", show: true, data: <FetchArtists clicked={this.state['clicked']} handleChange={this.handleChange} data={this.state.value} /> },
+                  ]}
+                >
+                  {value => (
+                    <Box className={value.className} pad="small" fill>
+                      {value.show && value.data}
+                    </Box>
+                  )}
+                </Distribution>}
+
+
             </div>
             </BrowserView>
 

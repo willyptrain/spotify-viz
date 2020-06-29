@@ -149,28 +149,10 @@ class AlbumGraph extends React.Component {
 
             }
             var info = this.state.album_info;
-            return (<Card><CardContent><p>Cannot get graph for songs in {info.name}
-                    but I can get popularity: {info.popularity}</p></CardContent></Card>);
+            return (<Card><CardContent><p>Cannot construct graph for songs in {info.name}</p></CardContent></Card>);
             }
 
 }
 
 export default AlbumGraph;
 
-//<this.ResponsiveHistogram
-//        ariaLabel="My histogram of ..."
-//        orientation="vertical"
-//        cumulative={false}
-//        normalized={true}
-//        binCount={25}
-//        valueAccessor={datum => datum}
-//        binType="numeric"
-//
-//      >
-//        <BarSeries
-//          animated
-//          rawData={this.state.data.data /* or binnedData={...} */}
-//        />
-//        <XAxis />
-//        <YAxis />
-//      </this.ResponsiveHistogram>

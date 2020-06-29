@@ -19,6 +19,10 @@ export function FetchArtists(data) {
     console.log(data.data)
     const [artists, setArtists] = useState([]);
     const isCardFunction = (data.handleChange != null);
+        const spacer = data.clicked ? 3 : 2;
+
+
+
     let token = cookie.get('access_token');
     useEffect(() => {
         axios.get(`http://localhost:5000/user_artists/${data.data}/${token}/10/`)
@@ -42,7 +46,7 @@ export function FetchArtists(data) {
 
          {
         artists.map((artist,index) =>
-            <Grid item xs={6} sm={3}>
+            <Grid item xs={6} sm={spacer}>
             {isCardFunction &&
             <Card onClick={() => data.handleChange(artist)} className="topartists-card">
                     <CardMedia className="topartists-img" image={artist.image}></CardMedia>
