@@ -51,7 +51,7 @@ class TopArtists extends React.Component{
         const artist_list = <FetchArtists data={this.state.value}/>;
 
         return(
-        <div style={{marginLeft: '84px'}} >
+        <div style={{marginLeft: '30px'}} >
         <BrowserView>
             <div class="browser-container" style={{ marginLeft: '0px'}}>
                     <form onSubmit={this.handleSubmit}>
