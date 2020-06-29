@@ -25,6 +25,13 @@ spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
 
 app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')
 
+
+
+
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
+
 @app.route('/user/<time_range>/<token>/<k>/')
 def user_tracks(time_range, token, k=50):
     k = int(k)
