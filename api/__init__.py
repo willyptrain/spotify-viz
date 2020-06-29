@@ -1,10 +1,10 @@
 from flask import Flask
-from api.settings import spotify_secret, spotify_id
-from flask_material import Material
+from .settings import spotify_secret, spotify_id
 from flask import Flask
 import os
 from flask_cors import CORS
-app = Flask(__name__)
+
+app = Flask(__name__, static_folder='../client/build', static_url_path='/')
 # material = Material(app)
 app.config['SECRET_KEY'] = spotify_secret
 app.config['SPOTIFY_CLIENT_SECRET'] = spotify_secret
@@ -18,8 +18,8 @@ app.config.from_mapping(
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 
-from api import routes
-from api import db
+from . import routes
+from . import db
 db.init_app(app)
-from api import auth
+from . import auth
 app.register_blueprint(auth.bp)
