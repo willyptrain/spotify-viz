@@ -20,8 +20,8 @@ API_VERSION = "v1"
 SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
-REDIRECT_URI = "https://spot-viz.herokuapp.com/login"
-SCOPE = "streaming, user-top-read, user-read-private, user-read-currently-playing, user-library-read, user-read-recently-played, user-read-playback-position"
+REDIRECT_URI = "http://localhost:3000/login"
+SCOPE = "streaming, user-top-read, user-read-private, user-read-currently-playing, user-library-read, user-read-recently-played, user-read-playback-position, user-library-modify"
 STATE = ""
 SHOW_DIALOG_bool = True
 SHOW_DIALOG_str = str(SHOW_DIALOG_bool).lower()
