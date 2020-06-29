@@ -22,8 +22,22 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
 
+class Alert extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.props = props
+    }
+
+    render() {
+        return <MuiAlert elevation={6} variant="filled" {...this.props} />;
+
+    }
+ }
 
 
 
@@ -31,13 +45,12 @@ class RelatedTracks extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(this.userInfo);
 
-
+            this.added = {};
             this.chartReference = React.createRef();
 
             this.state = {value: 'short_term', clicked: false,
-                            data: null, artist:this.props.artist, play: false};
+                            data: null, artist:this.props.artist, play: false, notif: false};
 
 
     }
@@ -63,11 +76,11 @@ class RelatedTracks extends React.Component {
                 'images':fetch.images,
                 'previews':fetch.audio,
                 'current':null,
-                'username':fetch.username
+                'track_ids':fetch.ids,
+                'username':fetch.username,
+                'disabled':new Array(fetch.audio.length).fill(false),
+                'notif': false
             })
-            console.log(res.data);
-
-
 
         })
         .catch(err => {
@@ -91,7 +104,10 @@ class RelatedTracks extends React.Component {
                     'previews':oldState.previews,
                     'play':true,
                     'current':url,
-                    'username':oldState.username
+                    'track_ids':oldState.track_ids,
+                    'username':oldState.username,
+                    'disabled':oldState.disabled,
+                    'notif': false
 
                 }));
                 this.player.play();
@@ -108,7 +124,10 @@ class RelatedTracks extends React.Component {
                         'previews':oldState.previews,
                         'play':true,
                         'current':url,
-                        'username':oldState.username
+                        'track_ids':oldState.track_ids,
+                        'username':oldState.username,
+                        'disabled':oldState.disabled,
+                        'notif': false
                     }));
 
                 }
@@ -122,7 +141,9 @@ class RelatedTracks extends React.Component {
                         'previews':oldState.previews,
                         'play':false,
                         'current':oldState.url,
-                        'username':oldState.username
+                        'track_ids':oldState.track_ids,
+                        'username':oldState.username,
+                        'disabled':oldState.disabled
                     }));
 
                 }
@@ -131,25 +152,64 @@ class RelatedTracks extends React.Component {
         }
     }
 
-        saveTrack = (track) => {
-        console.log(track);
-        let token = cookie.get('access_token');
-        console.log(this.props);
-        console.log(this.userInfo);
-        axios.get(`http://localhost:5000/track/save/${track['id']}/${this.state['username']}/${token}`)
-                .then(res => {
-                    console.log("yay!");
-                })
-                .catch(err => {
-                    console.log("no");
-                })
+
+
+        saveTrack = (track, index) => {
+            let token = cookie.get('access_token');
+
+            axios.get(`http://localhost:5000/track/save/${track}/${this.state['username']}/${token}`)
+                    .then(res => {
+                        this.added[track] = true;
+                        var disabled_keys = this.state['disabled'];
+                        disabled_keys[index] = true
+                        this.setState(oldState => ({
+                        'clicked':oldState.clicked,
+                        'artists':oldState.artists,
+                        'track_names':oldState.track_names,
+                        'images':oldState.images,
+                        'previews':oldState.previews,
+                        'play':oldState.play,
+                        'current':oldState.url,
+                        'track_ids':oldState.track_ids,
+                        'username':oldState.username,
+                        'disabled':disabled_keys,
+                        'notif': true
+                    }));
+
+
+
+                    })
+                    .catch(err => {
+                        console.log("error :(");
+                    })
 
     }
+
+            handleClose = (event, reason) => {
+                 this.setState(oldState => ({
+                        'clicked':oldState.clicked,
+                        'artists':oldState.artists,
+                        'track_names':oldState.track_names,
+                        'images':oldState.images,
+                        'previews':oldState.previews,
+                        'play':false,
+                        'current':oldState.url,
+                        'track_ids':oldState.track_ids,
+                        'username':oldState.username,
+                        'disabled':oldState.disabled,
+                        'notif': false
+                  }));
+
+
+            };
 
 
 
 
             render() {
+
+
+
             return(
 
         <div style={{backgroundColor: 'white', overflow: 'scroll'}}>
@@ -175,8 +235,8 @@ class RelatedTracks extends React.Component {
                              </div>
                              }
                              {
-                             this.state['username'] &&
-                             <Button onClick={() => this.saveTrack(this.state['album_info'][index])}>+</Button>
+                             this.state['username']  && !this.state['disabled'][index] &&
+                             <Button onClick={() => this.saveTrack(this.state['track_ids'][index], index)}>+</Button>
                                }
 
                         </ListItem>
@@ -185,9 +245,17 @@ class RelatedTracks extends React.Component {
                 }
             </List>
 
-        <>
+                        <>
                         <audio ref={ref => this.player = ref} />
                         </>
+
+                <Snackbar open={this.state['notif']} autoHideDuration={2000} onClose={this.handleClose}>
+                    <Alert onClose={this.handleClose} severity="success">
+                      Track Added to library!
+                    </Alert>
+                  </Snackbar>
+
+
               </div>
             );
 
