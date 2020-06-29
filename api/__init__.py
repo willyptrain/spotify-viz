@@ -18,8 +18,8 @@ app.config.from_mapping(
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 
-from api import routes
-from api import db
+from . import routes
+from . import db
 db.init_app(app)
-from api import auth
+from . import auth
 app.register_blueprint(auth.bp)
