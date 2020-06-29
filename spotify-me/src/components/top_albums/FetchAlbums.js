@@ -19,6 +19,8 @@ export function FetchAlbums(data) {
     console.log(data);
     const [albums, setAlbums] = useState([]);
         const isCardFunction = (data.handleChange != null);
+    const scroll = data.scroll ? 'scroll' : 'hidden';
+    const spacer = data.scroll ? 3 : 2;
 
 
     let token = cookie.get('access_token');
@@ -37,7 +39,7 @@ export function FetchAlbums(data) {
 
     return(
 
-<div style={{overflow: 'scroll', height: 'auto'}}>
+<div style={{overflow: scroll, height: 'auto'}}>
 
             <Grid container className="grid-container"
           alignItems="center"
@@ -45,7 +47,7 @@ export function FetchAlbums(data) {
 
                  {
                 albums.map((album,index) =>
-                    <Grid item xs={6} sm={3} md={3} lg={3}>
+                    <Grid item xs={6} sm={spacer} md={spacer} lg={spacer}>
                     {isCardFunction &&
                         <Card onClick={() => data.handleChange(album)} className="track-card">
                             <CardMedia className="topalbums-img" image={album.images[0].url}></CardMedia>

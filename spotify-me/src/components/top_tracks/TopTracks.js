@@ -73,7 +73,7 @@ class TopTracks extends React.Component{
 
         return(
 
-            <div style={{marginLeft: '84px'}} class="browser-container">
+            <div style={{marginLeft: '30px'}} class="browser-container">
             <BrowserView>
                 <form onSubmit={this.handleSubmit}>
                     <label>
@@ -91,11 +91,11 @@ class TopTracks extends React.Component{
                 </label>
                 </form>
 
-                <Distribution className="dist-box-tracks"
+                {this.state['clicked'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
               values={[
-                { value: 50, className:"top-tracks", show: true, data: <FetchTracks handleChange={this.handleChange} data={this.state.value} /> },
-                { value: 20, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <TrackGraph {...this.state} artist={this.state.artist} /> },
-                { value: 30, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedTracks {...this.props} artist={this.state.artist} /> },
+                { value: 50, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} handleChange={this.handleChange} data={this.state.value} /> },
+                { value: 25, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedTracks {...this.state} artist={this.state.artist} /> },
+                { value: 25, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <TrackGraph {...this.state} artist={this.state.artist} /> }
               ]}
             >
               {value => (
@@ -104,6 +104,21 @@ class TopTracks extends React.Component{
                 </Box>
               )}
             </Distribution>
+            }
+            {!this.state['clicked'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
+              values={[
+                { value: 100, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} handleChange={this.handleChange} data={this.state.value} /> }
+              ]}
+            >
+              {value => (
+                <Box className={value.className} pad="small" fill>
+                  {value.show && value.data}
+                </Box>
+              )}
+            </Distribution>
+            }
+
+
             </BrowserView>
 
             <MobileView>

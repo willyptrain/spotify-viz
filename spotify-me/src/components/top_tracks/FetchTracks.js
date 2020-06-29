@@ -25,6 +25,8 @@ export function FetchTracks(data) {
     const [track, setTrack] = useState([]);
     const [artistId, setArtistId] = useState([]);
     const isCardFunction = (data.handleChange != null);
+    const spacer = data.clicked ? 4 : 2;
+    const scroll = data.clicked ? 'scroll' : 'hidden';
 
     let token = cookie.get('access_token');
     useEffect(() => {
@@ -45,14 +47,14 @@ export function FetchTracks(data) {
 
             return(
 
-        <div>
+        <div style={{height: 'auto', overflow: scroll}}>
             <Grid container className="grid-container"
           alignItems="center"
           justify="center" spacing={0}>
 
                  {
                 tracks.map((track,index) =>
-                    <Grid item xs={6} sm={4} md={4} lg={4}>
+                    <Grid item xs={6} sm={spacer} md={spacer} lg={spacer}>
                     {isCardFunction &&
                         <Card onClick={() => data.handleChange(track)} className="track-card">
                             <CardMedia className="track-img" image={track.image}></CardMedia>

@@ -2,6 +2,10 @@ import React, {useEffect, useState} from 'react';
 import cookie from 'js-cookie';
 import axios from 'axios';
 import { List, Image, Button } from 'semantic-ui-react';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItem from '@material-ui/core/ListItem';
+import Avatar from '@material-ui/core/Avatar';
 
 function tracks_page(e) {
   e.preventDefault();
@@ -25,24 +29,24 @@ export function FetchDashTracks(data) {
     }, [data.data])
     return(
         <div>
+        <h2>Top Tracks</h2>
         <List size="mini">
             {
                 tracks.map(track =>
-        <List.Item>
-          <Image avatar  src={track.image} circular/>
-          <List.Content>
-            <List.Header as='a'>{track.track_name}</List.Header>
-            <List.Description>
-              by{' '}
-              <a>
-                <b>{track.artist}</b>
-              </a>{' '}
-            </List.Description>
-          </List.Content>
-        </List.Item>)
+        <ListItem>
+           <ListItemAvatar>
+               <Avatar alt="Image" src={track.image}/>
+          </ListItemAvatar>
+
+            <ListItemText
+                                primary={track.track_name}
+                            secondary={track.artist}
+                             />
+        </ListItem>)
                 }
         </List>
         <Button primary content="View more..." onClick={tracks_page} />
         </div>
     );
 }
+

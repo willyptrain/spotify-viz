@@ -29,6 +29,7 @@ class TopAlbums extends React.Component{
                 artist: artist,
                 sidePane: 50
             }));
+            this.render();
         }
         else {
             this.setState(oldState => ({
@@ -65,7 +66,7 @@ class TopAlbums extends React.Component{
 
 
         return(
-            <div style={{marginLeft: '84px'}} class="browser-container">
+            <div style={{marginLeft: '30px'}} class="browser-container">
                 <BrowserView>
                 <form onSubmit={this.handleSubmit}>
                     <label>
@@ -84,20 +85,38 @@ class TopAlbums extends React.Component{
                 </form>
 
                 <div>
-                <Distribution style={{maxHeight:'100vh'}} className="dist-box-albums"
-              values={[
-                { value: 50, className:"top-albums", show: true, data: <FetchAlbums handleChange={this.handleChange} data={this.state.value} /> },
-                { value: 25, className:"album-graph", show: (this.state.clicked && (this.state.artist)), data: <AlbumGraph style={{maxHeight: '35vh'}} {...this.state} artist={this.state.artist} /> },
-                { value: 25, className:"related-albums", show: (this.state.clicked && (this.state.artist)), data: <RelatedAlbums style={{maxHeight: '35vh'}} {...this.state} artist={this.state.artist} /> }
 
-              ]}
-            >
-              {value => (
+                {this.state['sidePane'] != 100 &&
+                    <Distribution style={{maxHeight:'100vh'}} className="dist-box-albums"
+                  values={[
+                    { value: this.state['sidePane'], className:"top-albums", show: true, data: <FetchAlbums scroll={this.state['sidePane'] != 100} handleChange={this.handleChange} data={this.state.value} /> },
+                    { value: this.state['sidePane'] == 100 ? 0 : 25, className:"album-graph", show: (this.state.clicked && this.state['sidePane'] != 100 && this.state.artist), data: <AlbumGraph style={{maxHeight: '35vh'}} {...this.state} artist={this.state.artist} /> },
+                    { value: this.state['sidePane'] == 100 ? 0 : 25, className:"related-albums", show: (this.state.clicked && this.state['sidePane'] != 100 && (this.state.artist)), data: <RelatedAlbums style={{maxHeight: '35vh'}} {...this.state} artist={this.state.artist} /> }
+                  ]} >
+                  {value => (
                 <Box className={value.className} pad="small" fill>
-                  {value.show && value.data}
+                  {(value.show && value.show) && value.data}
                 </Box>
               )}
             </Distribution>
+              }
+
+                {this.state['sidePane'] == 100 &&
+                    <Distribution style={{maxHeight:'100vh'}} className="dist-box-albums"
+                  values={[
+                    { value: this.state['sidePane'], className:"top-albums", show: true, data: <FetchAlbums handleChange={this.handleChange} data={this.state.value} /> } ]}>
+                    {value => (
+                <Box className={value.className} pad="small" fill>
+                  {(value.show && value.show) && value.data}
+                </Box>
+              )}
+            </Distribution>
+                }
+
+
+
+
+
                 </div>
             </BrowserView>
 

@@ -28,6 +28,10 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2) !important;
 
 }
+.artist-grid-container {
+    text-align: center !important;
+}
+
 .topartists-info {
     line-height: 10%;
     overflow: hidden;
