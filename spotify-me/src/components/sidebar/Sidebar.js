@@ -205,14 +205,6 @@ export default function MiniDrawer(userInfo) {
           ))}
         </List>
         <Divider />
-        <List>
-          {['Graphs'].map((text, index) => (
-            <ListItem button component="a" href="/graphs" key={text}>
-              <ListItemIcon>{graph_icons[index]}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
 
 
 

@@ -1,7 +1,11 @@
 .logs-user {
     bottom: 0px;
     height: 6vh;
-    width: 85%;
+    position: absolute;
+    margin-bottom: 4%;
+    left: calc(5%);
+    width: 90%;
+
 }
 .log-btn-container {
     width:100%;

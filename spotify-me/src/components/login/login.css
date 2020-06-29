@@ -3,6 +3,37 @@
 body {
     background: '#f1f1f1' !important;
 }
+.landing-page-body {
+    height: 100vh;
+    width: 100%;
+    background: linear-gradient(0deg, #CCF3FF, #01C0FF);
+}
+.welcome-title {
+    font-family: 'Montserrat' !important;
+    color: white;
+    position: relative;
+    top: 20vh;
+    font-size: 18vh;
+    font-weight: 100;
+}
+.welcome-subtitle {
+    font-family: 'Montserrat' !important;
+    color: white;
+    position: relative;
+    top: 13vh;
+    font-weight: 100;
+    text-shadow: 0.3px 0.3px black;
+
+}
+.login-btn {
+    position: relative;
+    top: 16vh;
+    background: white !important;
+    height: 7vh;
+    border: 2px solid rgba(0,0,0,0.7);
+
+}
+
 
 .login-container {
     height: 60vh;

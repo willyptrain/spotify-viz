@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-
+import Button from '@material-ui/core/Button';
 import Redirect from '../common/Redirect';
 import { getUrlParams } from '../../util/url';
 import { getLoginRedirect, registerSpotify } from '../../util/auth';
-import './login.css'
+import './login.css';
+
 
 class Login extends Component {
   constructor(props) {
@@ -37,9 +38,14 @@ class Login extends Component {
     }
 
     return (
-        <div>
-            <button className="btn btn-secondary" onClick={this.redirectToSpotify}>Login with Spotify</button>
-          </div>
+        <div class="landing-page-body">
+
+            <h1 className="welcome-title">Welcome</h1>
+            <h1 className="welcome-subtitle">Spotify Dashboard</h1>
+
+
+            <Button className="login-btn" variant="contained" onClick={this.redirectToSpotify}>Login with Spotify</Button>
+        </div>
     );
   }
 }

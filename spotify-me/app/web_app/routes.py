@@ -376,8 +376,10 @@ def related_tracks(track, token):
     images = []
     song_names = []
     previews = []
+    ids = []
     for result in recommendations["tracks"]:
         track = sp.track(result["id"])
+        ids.append(result["id"])
         previews.append(track["preview_url"])
         artist = result['artists'][0]['name']
         name = result['name']
@@ -390,6 +392,7 @@ def related_tracks(track, token):
         'song_names':song_names,
         'images':images,
         'audio':previews,
+        'ids':ids,
         'username': sp.me()['display_name']
     })
 
