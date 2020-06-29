@@ -1,0 +1,59 @@
+{
+  "name": "spotify-me",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.10.2",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "axios": "^0.19.2",
+    "bootstrap": "^4.5.0",
+    "chart.js": "^2.9.3",
+    "grommet": "^2.13.0",
+    "js-cookie": "^2.2.1",
+    "mdbreact": "^4.27.0",
+    "polished": "^3.6.5",
+    "react": "^16.13.1",
+    "react-bootstrap": "^1.0.1",
+    "react-chartjs-2": "^2.9.0",
+    "react-circular-progressbar": "^2.0.3",
+    "react-device-detect": "^1.12.1",
+    "react-dom": "^16.13.1",
+    "react-items-carousel": "^2.8.0",
+    "react-material-ui-carousel": "^1.5.1",
+    "react-multi-carousel": "^2.5.5",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.1",
+    "react-slick": "^0.26.1",
+    "react-spotify-api": "^3.0.0",
+    "semantic-ui-react": "^0.88.2",
+    "slick-carousel": "^1.8.1",
+    "spotify-web-api-js": "^1.4.0",
+    "styled-components": "^5.1.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "start-flask-mac": "cd ../api && source new_venv/bin/activate && flask run",
+    "start-flask-win": "cd ../api && new_env/Scripts/activate && flask run",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://127.0.0.1:5000/"
+}
