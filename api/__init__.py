@@ -1,6 +1,5 @@
 from flask import Flask
 from .settings import spotify_secret, spotify_id
-from flask_material import Material
 from flask import Flask
 import os
 from flask_cors import CORS
