@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Component, setState } from 'react';
 import cookie from 'js-cookie';
-import {FetchTracks} from './FetchTracks.js';
+import FetchTracks from './FetchTracks.js';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import './tracks.css'
@@ -18,6 +18,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
+
 
 class TopTracks extends React.Component{
     constructor(props){

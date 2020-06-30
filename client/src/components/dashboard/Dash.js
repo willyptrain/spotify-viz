@@ -14,7 +14,9 @@ import Typography from '@material-ui/core/Typography';
 import './userinfo.css';
 import cookie from 'js-cookie';
 import axios from 'axios';
-import GenreChart from './GenreChart.js'
+import GenreChart from './GenreChart.js';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 class Dash extends React.Component {
 
@@ -66,8 +68,13 @@ class Dash extends React.Component {
 
               )}
             </Distribution>
-          </Grommet>
-            }
+          </Grommet>}
+          {!this.state['username'] &&
+          <div class="loading">
+            <CircularProgress/>
+          </div>
+          }
+
 
             </div>
         );

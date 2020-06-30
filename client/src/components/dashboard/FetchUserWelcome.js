@@ -22,7 +22,7 @@ export default function FetchUserWelcome(data) {
     console.log(user_info);
 
     return(
-                <div style={{height: '100%'}}>
+                <div class="list-title" style={{height: '100%'}}>
                     <CardMedia
                       component="img"
                       alt="ProfileImage"
@@ -32,11 +32,11 @@ export default function FetchUserWelcome(data) {
                       title={user_info.username}
                     />
                     <CardContent>
-                      <Typography gutterBottom variant="h5" component="h2">
+                      <Typography gutterBottom variant="h5" component="h2" class="list-title">
                         {user_info.username.slice(0,1).toUpperCase() + user_info.username.slice(1)}
                       </Typography>
 
-                      <Typography component="p">
+                      <Typography component="p" class="list-title">
                         Followers: {user_info['followers']['total']}
                       </Typography>
                     </CardContent>

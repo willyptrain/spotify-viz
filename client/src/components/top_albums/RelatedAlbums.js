@@ -22,7 +22,22 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
+
+class Alert extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.props = props
+    }
+
+    render() {
+        return <MuiAlert elevation={6} variant="filled" {...this.props} />;
+
+    }
+ }
 
 
 
@@ -55,7 +70,7 @@ class RelatedAlbums extends React.Component {
         axios.get(`http://localhost:5000/album_track_info/${this.props.artist.id}/${token}`)
         .then(res => {
             fetch = res.data;
-            this.setState({
+            this.setState(oldState => ({
                 'clicked':true,
                 'album_name':fetch.album_name,
                 'album_info':fetch.tracks_in_album,
@@ -63,8 +78,10 @@ class RelatedAlbums extends React.Component {
                 'track_names':fetch.track_names,
                 'previews':fetch.audio,
                 'current':null,
-                'username':fetch.username
-            })
+                'username':fetch.username,
+                'disabled':oldState.disabled,
+                'notif': false
+            }));
             console.log(fetch);
         })
 
@@ -91,7 +108,9 @@ class RelatedAlbums extends React.Component {
                     'previews':oldState.previews,
                     'play':true,
                     'current':url,
-                    'username':oldState.username
+                    'username':oldState.username,
+                    'disabled':oldState.disabled,
+                    'notif': false
                 }));
                 this.player.play();
             }
@@ -108,7 +127,9 @@ class RelatedAlbums extends React.Component {
                         'previews':oldState.previews,
                         'play':true,
                         'current':url,
-                        'username':oldState.username
+                        'username':oldState.username,
+                        'disabled':oldState.disabled,
+                        'notif': false
                     }));
 
                 }
@@ -123,7 +144,9 @@ class RelatedAlbums extends React.Component {
                         'previews':oldState.previews,
                         'play': false,
                         'current':url,
-                        'username':oldState.username
+                        'username':oldState.username,
+                        'disabled':oldState.disabled,
+                        'notif': false
                     }));
 
                 }
@@ -133,15 +156,55 @@ class RelatedAlbums extends React.Component {
     }
 
 
-    saveTrack = (track) => {
+    saveTrack = (track,index) => {
         console.log(track);
         let token = cookie.get('access_token');
-        console.log(this.props);
-        console.log(this.userInfo);
-        axios.get(`http://localhost:5000/track/save/${track['id']}/${this.state['username']}/${token}`)
 
+        axios.get(`http://localhost:5000/track/save/${track['id']}/${this.state['username']}/${token}`)
+                    .then(res => {
+
+                        var disabled_keys = this.state['disabled'];
+                        disabled_keys[index] = true
+                        this.setState(oldState => ({
+                            'clicked':true,
+                            'album_name':oldState.album_name,
+                            'album_info':oldState.album_info,
+                            'popularities':oldState.popularities,
+                            'track_names':oldState.track_names,
+                            'previews':oldState.previews,
+                            'play': oldState.play,
+                            'current':oldState.current,
+                            'username':oldState.username,
+                            'disabled': disabled_keys,
+                            'notif': true
+                        }));
+
+
+
+                    })
+                    .catch(err => {
+                        console.log("error :(");
+                    })
     }
 
+
+        handleClose = (event, reason) => {
+                 this.setState(oldState => ({
+                            'clicked':true,
+                            'album_name':oldState.album_name,
+                            'album_info':oldState.album_info,
+                            'popularities':oldState.popularities,
+                            'track_names':oldState.track_names,
+                            'previews':oldState.previews,
+                            'play': oldState.play,
+                            'current':oldState.current,
+                            'username':oldState.username,
+                            'disabled': oldState.disabled,
+                            'notif': false
+                  }));
+
+
+            };
 
 
             render() {
@@ -171,8 +234,8 @@ class RelatedAlbums extends React.Component {
                              </div>
                              }
                              {
-                             this.state['username'] &&
-                             <Button onClick={() => this.saveTrack(this.state['album_info'][index])}>+</Button>
+                             this.state['username']  && !this.state['disabled'][index] &&
+                                <Button onClick={() => this.saveTrack(this.state['track_ids'][index], index)}>+</Button>
                                }
                     </ListItem>
                     <Divider />
@@ -186,6 +249,14 @@ class RelatedAlbums extends React.Component {
                     <>
                         <audio ref={ref => this.player = ref} />
                     </>
+
+                 <Snackbar open={this.state['notif']} autoHideDuration={2000} onClose={this.handleClose}>
+                    <Alert onClose={this.handleClose} severity="success">
+                      Track Added to library!
+                    </Alert>
+                  </Snackbar>
+
+
 
               </div>
             );

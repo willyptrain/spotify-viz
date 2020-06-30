@@ -13,5 +13,11 @@ body {
 .userinfo-img {
     height: 100%;
     width: 100%;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    font-family: Montserrat, "Roboto", "Helvetica", "Arial", sans-serif;
+}
+.list-title {
+    font-family: Montserrat !important;
+}
+.loading {
+    margin-top: 40vh !important;
 }

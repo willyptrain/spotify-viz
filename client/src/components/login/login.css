@@ -2,6 +2,7 @@
 }
 body {
     background: '#f1f1f1' !important;
+    font-family: Montserrat !important;
 }
 .landing-page-body {
     height: 100vh;
@@ -13,8 +14,12 @@ body {
     color: white;
     position: relative;
     top: 20vh;
-    font-size: 18vh;
     font-weight: 100;
+    width: 100%;
+    max-width:100%;
+    font-size: 550%;
+    display: inline-table;
+    overflow-wrap: anywhere;
 }
 .welcome-subtitle {
     font-family: 'Montserrat' !important;
@@ -31,6 +36,7 @@ body {
     background: white !important;
     height: 7vh;
     border: 2px solid rgba(0,0,0,0.7);
+    font-family: Montserrat !important;
 
 }
 

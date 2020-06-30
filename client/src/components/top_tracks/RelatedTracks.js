@@ -143,7 +143,8 @@ class RelatedTracks extends React.Component {
                         'current':oldState.url,
                         'track_ids':oldState.track_ids,
                         'username':oldState.username,
-                        'disabled':oldState.disabled
+                        'disabled':oldState.disabled,
+                        'notif':false
                     }));
 
                 }

@@ -6,6 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItem from '@material-ui/core/ListItem';
 import Avatar from '@material-ui/core/Avatar';
+import './userinfo.css';
 
 function tracks_page(e) {
   e.preventDefault();
@@ -29,7 +30,7 @@ export function FetchDashTracks(data) {
     }, [data.data])
     return(
         <div>
-        <h2>Top Tracks</h2>
+        <h2 class="list-title" style={{marginTop: '10px'}}>Top Tracks</h2>
         <List size="mini">
             {
                 tracks.map(track =>
