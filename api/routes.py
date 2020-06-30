@@ -225,6 +225,7 @@ def album_track_info(album, token):
         'album_name':album_info['name'],
         'tracks_in_album':album_info["tracks"]["items"],
         'popularities':track_ratings,
+        'previews':previews,
         'track_names':track_names,
         'audio': previews,
         'username': sp.me()['display_name']

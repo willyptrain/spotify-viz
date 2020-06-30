@@ -18,22 +18,24 @@ import { Link } from 'react-router-dom';
 export function FetchAlbums(data) {
     console.log(data);
     const [albums, setAlbums] = useState([]);
-        const isCardFunction = (data.handleChange != null);
+    const isCardFunction = (data.handleChange != null);
     const scroll = data.scroll ? 'scroll' : 'hidden';
     const spacer = data.scroll ? 3 : 2;
 
 
     let token = cookie.get('access_token');
     useEffect(() => {
+        let isMounted = true;
         axios.get(`http://localhost:5000/user_albums/${data.data}/${token}/50`)
         .then(res => {
-            console.log(res.data)
-            setAlbums(res.data.albums)
+            if(isMounted) {
+                console.log(res.data)
+                setAlbums(res.data.albums)
+            }
+
         })
-        .catch(err => {
-            console.log('error :(')
-            console.log(err)
-        })
+
+        return () => { isMounted = false };
     }, [data.data])
 
 

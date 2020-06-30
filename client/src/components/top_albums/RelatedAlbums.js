@@ -210,6 +210,7 @@ class RelatedAlbums extends React.Component {
             render() {
 
             var player_on = !this.state['play'] ? "Play" : "Stop"
+            console.log(this.state['previews'])
 
             if(this.state.album_info) {
             return(
@@ -220,14 +221,14 @@ class RelatedAlbums extends React.Component {
         <CardContent>
         <List>
             {this.state.clicked &&
-                this.state.track_names.map((name, index) =>
+                this.state.previews.map((name, index) =>
                     <div>
                     <ListItem>
                         <ListItemText
-                            primary={name}
+                            primary={this.state.track_names[index]}
 
                          />
-                         {this.state['previews'][index] &&
+                         {index < (this.state['previews'].length) && this.state['previews'][index] &&
                              <div>
                              <Button onClick={() => this.playTrack(this.state['previews'][index], this.state['play'])}>
                                     {(!(this.state['play'] && (this.state['current'] == this.state['previews'][index]))) ? "Play" : "Stop"}</Button>

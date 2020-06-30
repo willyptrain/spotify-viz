@@ -49,50 +49,52 @@ class AlbumGraph extends React.Component {
 
     async componentDidMount() {
         let token = cookie.get('access_token');
+        let mounted = true;
         axios.get(`http://localhost:5000/album/${this.props.artist.uri}/${token}`)
         .then(res => {
-            fetch = res.data;
-            console.log(fetch);
-            if(fetch.scores[this.state.feature].length > 1) {
-                this.setState(oldState => ({
-                    'clicked': true,
-                    'album_info':fetch.album_info,
-                    'data': [{
-                        labels: fetch.names,
-                        'datasets': [{
-                            'data': fetch.scores[oldState.feature],
-                            'labels': oldState.feature,
-                            fill: true,
-                            backgroundColor: "rgba(75,192,192,0.2)",
-                            borderColor: "rgba(75,192,192,1)"
-                        },{
-                            'data': fetch.scores[oldState.feature2],
-                            'labels': oldState.feature2,
-                            fill: true,
-                            backgroundColor: "rgba(192,250,75,0.2)",
-                            borderColor: "rgba(192,250,75,1)"
-                        }
+            if(mounted){
+                fetch = res.data;
+                console.log(fetch);
+                if(fetch.scores[this.state.feature].length > 1) {
+                    this.setState(oldState => ({
+                        'clicked': true,
+                        'album_info':fetch.album_info,
+                        'data': [{
+                            labels: fetch.names,
+                            'datasets': [{
+                                'data': fetch.scores[oldState.feature],
+                                'labels': oldState.feature,
+                                fill: true,
+                                backgroundColor: "rgba(75,192,192,0.2)",
+                                borderColor: "rgba(75,192,192,1)"
+                            },{
+                                'data': fetch.scores[oldState.feature2],
+                                'labels': oldState.feature2,
+                                fill: true,
+                                backgroundColor: "rgba(192,250,75,0.2)",
+                                borderColor: "rgba(192,250,75,1)"
+                            }
 
-                        ]
-                    }]
-
-
-                }));
-            }
-            else {
-                this.setState(oldState => ({
-                    'clicked': true,
-                    'album_info':fetch.album_info,
-                    'data': null
+                            ]
+                        }]
 
 
+                    }));
+                }
+                else {
+                    this.setState(oldState => ({
+                        'clicked': true,
+                        'album_info':fetch.album_info,
+                        'data': null
 
-                }));
 
 
+                    }));
+                }
 
             }
             console.log(this.state);
+                    return () => { mounted = false };
 
 
 

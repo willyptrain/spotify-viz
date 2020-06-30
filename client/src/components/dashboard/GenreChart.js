@@ -59,9 +59,9 @@ export default function GenreChart(data) {
     var title = titles[range];
 
     return(
-                <div>
+                <div style={{height: '25vh'}}>
                 { chart == "doughnut" &&
-                    <Doughnut ref={chartReference}
+                    <Doughnut style={{height: '25vh'}} ref={chartReference}
                                     data={data[0]} options={{
                                         title: {
                                             display: true,
@@ -73,11 +73,14 @@ export default function GenreChart(data) {
                                             position: "bottom"
                                         },
 
+                                         responsive: false
+
+
                                     }} />
 
                 }
                 { chart == "radar" &&
-                     <Radar ref={chartReference}
+                     <Radar style={{height: '25vh'}} ref={chartReference}
                                     data={data[0]} options={{
                                     scale: {
                                         angleLines: {
@@ -99,6 +102,7 @@ export default function GenreChart(data) {
                                         position: "bottom",
                                         display: false
                                     },
+                                    responsive: false
                                     }
 
                                     } />

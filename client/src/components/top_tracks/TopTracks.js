@@ -23,10 +23,9 @@ import CardHeader from '@material-ui/core/CardHeader';
 class TopTracks extends React.Component{
     constructor(props){
         super(props);
-        this.state = {value: 'short_term', clicked: false};
+        this.state = {value: 'medium_term', clicked: false};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.value = 'short_term'
         this.onClick = this.props.onClick;
         this.showGraph = false;
         this.graphTrack =  null;
@@ -47,21 +46,20 @@ class TopTracks extends React.Component{
                 artist: artist
             }));
         }
-        this.graphTrack = <TrackGraph data={this.state} />;
 
 
       }
 
-    changeTab = (event, new_value) => {
-        event.preventDefault();
-        this.setState({value: new_value});
-    }
 
     handleSubmit = (event, new_value) => {
-        console.log(event);
+
         console.log(new_value);
-        event.preventDefault();
-        this.setState({value: new_value});
+        this.setState(oldState => ({
+                value: new_value,
+                clicked: oldState.clicked,
+                artist: oldState.artist
+            }));
+
     }
 
 
@@ -70,19 +68,18 @@ class TopTracks extends React.Component{
       }
 
     render(){
-        const track_list = <FetchTracks data={this.state.value}/>;
 
         return(
 
             <div style={{marginLeft: '30px'}} class="browser-container">
             <BrowserView>
-                <form onSubmit={this.handleSubmit}>
+                <form>
                     <label>
                     <Tabs
                         value={this.state["value"]}
                         indicatorColor="primary"
                         textColor="primary"
-                        onChange={this.changeTab}
+                        onChange={this.handleSubmit}
                         aria-label="disabled tabs example"
                       >
                             <Tab className="track-tab" value="short_term" label="Week" />
@@ -92,30 +89,30 @@ class TopTracks extends React.Component{
                 </label>
                 </form>
 
-                {this.state['clicked'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
+                {this.state['clicked'] && this.state['value'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
               values={[
-                { value: 50, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} handleChange={this.handleChange} data={this.state.value} /> },
+                { value: 50, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} {...this.state} handleChange={this.handleChange} data={this.state['value']} /> },
                 { value: 25, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedTracks {...this.state} artist={this.state.artist} /> },
                 { value: 25, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <TrackGraph {...this.state} artist={this.state.artist} /> }
               ]}
             >
-              {value => (
+              {value =>
                 <Box className={value.className} pad="small" fill>
                   {value.show && value.data}
                 </Box>
-              )}
+              }
             </Distribution>
             }
-            {!this.state['clicked'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
+            {!this.state['clicked'] && this.state['value'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
               values={[
-                { value: 100, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} handleChange={this.handleChange} data={this.state.value} /> }
+                { value: 100, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} handleChange={this.handleChange} {...this.state} data={this.state['value']}  /> }
               ]}
             >
-              {value => (
+              {value =>
                 <Box className={value.className} pad="small" fill>
                   {value.show && value.data}
                 </Box>
-              )}
+              }
             </Distribution>
             }
 
@@ -123,13 +120,13 @@ class TopTracks extends React.Component{
             </BrowserView>
 
             <MobileView>
-            <form onSubmit={this.handleSubmit}>
+            <form>
                     <label>
                     <Tabs
                         value={this.state["value"]}
                         indicatorColor="primary"
                         textColor="primary"
-                        onChange={this.changeTab}
+                        onChange={this.handleSubmit}
                         aria-label="disabled tabs example"
                       >
                             <Tab className="track-tab" value="short_term" label="Week" />
@@ -138,7 +135,7 @@ class TopTracks extends React.Component{
                       </Tabs>
                 </label>
                 </form>
-             <FetchTracks handleChange={this.handleChange} data={this.state.value} />
+             <FetchTracks handleChange={this.handleChange} {...this.state} data={this.state['value']}  />
             </MobileView>
 
             </div>

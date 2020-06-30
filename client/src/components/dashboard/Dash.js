@@ -16,7 +16,12 @@ import cookie from 'js-cookie';
 import axios from 'axios';
 import GenreChart from './GenreChart.js';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import {
+  BrowserView,
+  MobileView,
+  isBrowser,
+  isMobile
+} from "react-device-detect";
 
 class Dash extends React.Component {
 
@@ -47,6 +52,7 @@ class Dash extends React.Component {
       const user_info = this.props.userInfo;
         return(
         <div style={{ overflow: 'hidden', marginTop: `2vh`, marginLeft: '84px', width: '92%'}}>
+           <BrowserView>
             {this.state['username'] &&
             <Grommet style={{overflow: 'hidden', width: '100%',backgroundColor: "#EBEBEB"}} full>
             <Distribution style={{overflow: 'hidden'}} margin="xsmall" gap="none"
@@ -75,6 +81,25 @@ class Dash extends React.Component {
           </div>
           }
 
+           </BrowserView>
+           <MobileView>
+            {this.state['username'] &&
+               <div style={{width: '80%'}}>
+                    <Card style={{backgroundColor: "white"}} className="userinfo-card">
+                               <FetchUserWelcome data={this.state} />
+                    </Card>
+                    <Card height='25vh' style={{backgroundColor: "white", height: '25vh'}} className="userinfo-card">
+                                <GenreChart height='25vh' style={{height: '25vh'}} data={this.state} chart="doughnut" range="short" />
+                    </Card>
+                     <Card style={{backgroundColor: "white"}} className="userinfo-card">
+                                <GenreChart data={this.state} chart="radar" range="long" />
+                    </Card>
+
+
+               </div>
+             }
+
+           </MobileView>
 
             </div>
         );

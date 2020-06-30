@@ -39,7 +39,8 @@ class FetchTracks extends React.Component {
 //        const [track, setTrack] = useState([]);
 //        const [artistId, setArtistId] = useState([]);
         this.k = 50;
-         this.state = {value: 'short_term', clicked: this.props.clicked, hovering: new Array(this.k).fill(false)};
+        this.data = this.props.data;
+         this.state = {value: this.props.data, clicked: this.props.clicked, hovering: new Array(this.k).fill(false)};
         this.isCardFunction = (this.props.handleChange != null);
         this.spacer = this.props.clicked ? 4 : 2;
         this.scroll = this.props.clicked ? 'scroll' : 'hidden';
@@ -49,26 +50,48 @@ class FetchTracks extends React.Component {
 
     async componentDidMount() {
 
-    let token = cookie.get('access_token');
-        axios.get(`http://localhost:5000/user/${this.props.data}/${token}/${this.k}`)
-        .then(res => {
-            this.setState(oldState => ({
-                'tracks': res.data.top_tracks,
-                'hovering':oldState.hovering
-            }));
-        })
-        .catch(err => {
-            console.log('error :(')
-            console.log(err)
-        })
+        let token = cookie.get('access_token');
+            axios.get(`http://localhost:5000/user/${this.props.data}/${token}/${this.k}`)
+            .then(res => {
+                this.setState(oldState => ({
+                    'value':  this.state['value'],
+                    'tracks': res.data.top_tracks,
+                    'hovering':oldState.hovering
+                }));
+            })
+            .catch(err => {
+                console.log('error :(')
+                console.log(err)
+            })
     }
+    async componentDidUpdate(prev) {
+
+        if(prev.value != this.props['value']) {
+
+            let token = cookie.get('access_token');
+                axios.get(`http://localhost:5000/user/${this.props.data}/${token}/${this.k}`)
+                .then(res => {
+                    this.setState(oldState => ({
+                        'value':  oldState.value,
+                        'tracks': res.data.top_tracks,
+                        'hovering':oldState.hovering
+                    }));
+                })
+                .catch(err => {
+                    console.log('error :(')
+                    console.log(err)
+                })
+
+        }
+
+     }
 
 
         handleHover = (index, bool) => {
-            console.log(index);
             var temp = this.state['hovering'];
             temp[index] = bool;
             this.setState(oldState => ({
+                'value':  oldState.value,
                 'tracks': oldState.tracks,
                 'hovering':temp
             }));
@@ -76,7 +99,6 @@ class FetchTracks extends React.Component {
         }
         render() {
 
-            console.log(this.state);
             if('tracks' in this.state) {
                 return(
 
