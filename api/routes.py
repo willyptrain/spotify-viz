@@ -16,6 +16,7 @@ from .lists import items
 from .user import User
 from spotipy.exceptions import SpotifyException
 import spotipy.util as util
+import numpy as np
 
 
 spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
@@ -39,10 +40,8 @@ def user_tracks(time_range, token, k=50):
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
     sp.trace = False
-    print(sp.current_user())
     range_nicknames = {"short_term":"This Week", "medium_term":"This Year", "long_term":"All Time"}
     results = sp.current_user_top_tracks(time_range=time_range, limit=k)
-    print(results['items'][0])
     if len(results['items']) < k:
         for i in range(0, k):
             top_tracks.append({
@@ -167,50 +166,31 @@ def user_info(token):
     username = user_info['display_name']
     followers = user_info['followers']
 
-    top_recent_tracks = sp.current_user_top_tracks(time_range='short_term', limit=50)
-    top_all_tracks = sp.current_user_top_tracks(time_range='long_term', limit=50)
-    short_term_genres = {}
-    for i in range(0, len(top_recent_tracks['items'])):
-        result = top_recent_tracks['items'][i]
-        artist_id = result['artists'][0]['id']
-        artist_genres = sp.artist(artist_id)['genres']
-        cur_points = math.ceil((50 - i)/5)
-        for genre in artist_genres:
-            if genre not in short_term_genres.keys():
-                short_term_genres[genre] = cur_points
-            else:
-                short_term_genres[genre] += cur_points
-    sort_genres = sorted(short_term_genres.items(), key=lambda x: x[1], reverse=True)
-    final_short_term_genres = []
-    short_genre_values = []
-    
-    if len(sort_genres) < 5:
-        num_genres = len(sort_genres)
-    else:
-        num_genres = 5
-    for i in range(0, num_genres):
-        final_short_term_genres.append(sort_genres[i][0])
-        print(sort_genres[i][1])
-        short_genre_values.append(sort_genres[i][1])
 
-    long_term_genres = {}
-    long_genre_values = []
-    for i in range(0, len(top_all_tracks['items'])):
-        result = top_all_tracks['items'][i]
-        artist_id = result['artists'][0]['id']
-        artist_genres = sp.artist(artist_id)['genres']
-        cur_points = math.ceil((50 - i)/5)
-        for genre in artist_genres:
-            if genre not in long_term_genres.keys():
-                long_term_genres[genre] = cur_points
-            else:
-                long_term_genres[genre] += cur_points
-    sort_long_genres = sorted(long_term_genres.items(), key=lambda x: x[1], reverse=True)
-    final_long_term_genres = []
-    for i in range(0, 5):
-        print(sort_long_genres[i][1])
-        final_long_term_genres.append(sort_long_genres[i][0])
-        long_genre_values.append(sort_long_genres[i][1])
+    top_recent_artists = sp.current_user_top_artists(time_range="short_term", limit=50)
+    top_all_artists = sp.current_user_top_artists(time_range="long_term", limit=50)
+
+
+
+
+
+    all_artist_genres = [genre for result in top_all_artists['items'] for genre in result['genres']]
+    u, count = np.unique(all_artist_genres, return_counts=True)
+
+    long_arg_sort = np.argsort(-count)
+    long_term_genres = u[long_arg_sort]
+    long_genre_values = sorted(count,reverse=True, key=lambda x: int(x))
+
+
+
+    recent_artist_genres = [genre for result in top_recent_artists['items'] for genre in result['genres']]
+    u, count = np.unique(recent_artist_genres, return_counts=True)
+
+    short_genre_values = np.argsort(-count)
+    short_term_genres = u[short_genre_values]
+    short_genre_values = sorted(count,reverse=True, key=lambda x: int(x))
+
+
         
     return jsonify([{
         'username' :username,
@@ -219,11 +199,14 @@ def user_info(token):
         'user_id' : user_id,
         'subscription' : subscription,
         'image_url' : image_url,
-        'short_term_genres' : final_short_term_genres,
-        'short_genre_scores': short_genre_values,
-        'long_genre_scores':long_genre_values,
-        'long_term_genres' : final_long_term_genres,
+        'short_term_genres' : list(short_term_genres),
+        'short_genre_scores': list(map(int,short_genre_values)),
+        'long_genre_scores':list(map(int,long_genre_values)),
+        'long_term_genres' : list(long_term_genres),
     }])
+
+
+
 @app.route('/album_track_info/<album>/<token>')
 def album_track_info(album, token):
     sp = spotipy.Spotify(auth=token)
@@ -256,11 +239,9 @@ def save_track(tracks, username,token):
                                            redirect_uri='http://localhost:3000/login')
 
     sp = spotipy.Spotify(auth=new_token)
-    print(sp.current_user_saved_tracks_add([tracks]))
     data = request.json
-    print("data is " + format(data))
 
-    return "added?"
+    return "added"
 
 
 
@@ -393,7 +374,6 @@ def related_tracks(track, token):
 
 @app.route('/user_artists/<time_range>/<token>/<k>/')
 def user_artists(time_range, token, k=50):
-    k = int(k)
     top_artists = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)
