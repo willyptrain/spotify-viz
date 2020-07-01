@@ -27,10 +27,9 @@ class ArtistPage extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props);
 
         this.chartReference = React.createRef();
-
+        this.nextProps = this.props;
         this.state = {value: 'short_term', clicked: false,
                             data: [], artist:this.props.artist};
 
@@ -44,6 +43,7 @@ class ArtistPage extends React.Component {
             let token = cookie.get('access_token');
 
         if(this.props != nextProps) {
+            this.nextProps = nextProps;
             this.componentDidMount();
 
         }
@@ -51,10 +51,10 @@ class ArtistPage extends React.Component {
 
     async componentDidMount() {
         let token = cookie.get('access_token');
-        axios.get(`http://localhost:5000/artist/${this.props.data.artist.uri}/${token}`)
+        console.log(this.nextProps)
+        axios.get(`http://localhost:5000/artist/${this.nextProps.artist.uri}/${token}`)
         .then(res => {
             fetch = res.data;
-            console.log(fetch);
                 this.setState(oldState => ({
                     'clicked': true,
                     'artist_info':fetch.info,

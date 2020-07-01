@@ -48,7 +48,7 @@ class RelatedTracks extends React.Component {
 
             this.added = {};
             this.chartReference = React.createRef();
-
+            this.nextProps = this.props;
             this.state = {value: 'short_term', clicked: false,
                             data: null, artist:this.props.artist, play: false, notif: false};
 
@@ -59,6 +59,7 @@ class RelatedTracks extends React.Component {
             let token = cookie.get('access_token');
 
         if(this.props != nextProps) {
+            this.nextProps = nextProps
             this.componentDidMount();
 
         }
@@ -66,7 +67,7 @@ class RelatedTracks extends React.Component {
 
     async componentDidMount() {
         let token = cookie.get('access_token');
-        axios.get(`http://localhost:5000/related_tracks/${this.props.artist.id}/${token}`)
+        axios.get(`http://localhost:5000/related_tracks/${this.nextProps.artist.id}/${token}`)
         .then(res => {
             fetch = res.data;
             this.setState({

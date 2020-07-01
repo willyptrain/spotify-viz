@@ -23,7 +23,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 class TopTracks extends React.Component{
     constructor(props){
         super(props);
-        this.state = {value: 'medium_term', clicked: false};
+        this.state = {value: 'short_term', clicked: false};
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.onClick = this.props.onClick;
@@ -32,28 +32,20 @@ class TopTracks extends React.Component{
     }
     handleChange = (artist) => {
         if(this.state.artist != artist) {
-                console.log(artist);
             this.setState(oldState => ({
                 value: oldState.value,
                 clicked: true,
                 artist: artist
-            }));
+            }), () => console.log(this.state.artist.artist));
+
         }
-        else {
-            this.setState(oldState => ({
-                value: oldState.value,
-                clicked: true,
-                artist: artist
-            }));
-        }
+
 
 
       }
 
 
     handleSubmit = (event, new_value) => {
-
-        console.log(new_value);
         this.setState(oldState => ({
                 value: new_value,
                 clicked: oldState.clicked,

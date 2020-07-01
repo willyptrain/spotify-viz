@@ -27,8 +27,8 @@ class PopularityChart extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props);
 
+         this.nextProps = this.props;
             this.chartReference = React.createRef();
 
             this.state = {value: 'short_term', clicked: false,
@@ -43,7 +43,8 @@ class PopularityChart extends React.Component {
     componentWillReceiveProps(nextProps) {
             let token = cookie.get('access_token');
 
-        if(this.props != nextProps) {
+        if(this.props.artist.uri != nextProps.artist.uri) {
+            this.nextProps = nextProps;
             this.componentDidMount();
 
         }
@@ -51,7 +52,8 @@ class PopularityChart extends React.Component {
 
     async componentDidMount() {
         let token = cookie.get('access_token');
-        axios.get(`http://localhost:5000/album/${this.props.artist.uri}/${token}`)
+        console.log(this.nextProps.artist.artist)
+        axios.get(`http://localhost:5000/album/${this.nextProps.artist.uri}/${token}`)
         .then(res => {
             fetch = res.data;
             console.log(fetch);

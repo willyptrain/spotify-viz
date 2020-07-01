@@ -47,10 +47,10 @@ class App extends Component{
                 <Login {...props} setUserInfo={this.setUserInfo} userInfo={userInfo} />
               }/>
               <Route exact path="/" component={(props) =>
-                <div>
+                userInfo != 'Not logged in' ? <div>
                 <Sidebar userInfo={userInfo}/>
                  <Dash userInfo={userInfo}/>
-                 </div>
+                 </div> : <Login {...props} setUserInfo={this.setUserInfo} userInfo={userInfo} />
               }/>
               <Route exact path="/logout">
                 <Logout/>

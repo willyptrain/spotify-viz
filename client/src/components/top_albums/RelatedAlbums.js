@@ -47,7 +47,7 @@ class RelatedAlbums extends React.Component {
     constructor(props) {
         super(props);
         console.log(this.props);
-
+        this.nextProps = this.props;
         this.mounted = false;
         this.state = {value: 'short_term', clicked: false,
                             data: null, artist:this.props.artist};
@@ -60,9 +60,8 @@ class RelatedAlbums extends React.Component {
 
         let token = cookie.get('access_token');
 
-        console.log(nextProps);
-
         if(this.props != nextProps) {
+            this.nextProps = nextProps;
             this.componentDidMount();
 
         }
@@ -71,8 +70,8 @@ class RelatedAlbums extends React.Component {
     async componentDidMount() {
         let token = cookie.get('access_token');
         this.mounted = true;
-
-        axios.get(`http://localhost:5000/album_track_info/${this.props.artist.id}/${token}`)
+        console.log(this.nextProps.artist.artist)
+        axios.get(`http://localhost:5000/album_track_info/${this.nextProps.artist.id}/${token}`)
         .then(res => {
             fetch = res.data;
             if(this.mounted) {

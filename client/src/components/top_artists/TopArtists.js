@@ -17,8 +17,8 @@ class TopArtists extends React.Component{
         this.value = 'short_term'
     }
     handleChange = (artist) => {
+        console.log(artist)
         if(this.state.artist != artist) {
-                console.log(artist);
             this.setState(oldState => ({
                 value: oldState.value,
                 clicked: true,
@@ -26,20 +26,12 @@ class TopArtists extends React.Component{
                 artist_side: 70
             }));
         }
-        else {
-            this.setState(oldState => ({
-                value: oldState.value,
-                clicked: true,
-                artist: artist
-            }));
-        }
+
 
 
       }
     handleSubmit = (event, new_value) => {
-        console.log(event);
-        console.log(new_value);
-        event.preventDefault();
+
         this.setState({value: new_value, clicked: false, artist_side: 100});
     }
 
@@ -74,7 +66,7 @@ class TopArtists extends React.Component{
                     {this.state['clicked'] && <Distribution
                   values={[
                     { value: this.state.artist_side, className:"top-tracks", show: true, data: <FetchArtists clicked={this.state['clicked']} handleChange={this.handleChange} data={this.state.value} /> },
-                    { value: 100-this.state.artist_side, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <ArtistPage handleChange={this.handleChange} data={this.state} /> }
+                    { value: 100-this.state.artist_side, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <ArtistPage handleChange={this.handleChange} {...this.state} /> }
 
                   ]}
                 >

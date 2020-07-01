@@ -32,7 +32,7 @@ class TrackGraph extends React.Component {
         console.log(this.props);
 
             this.chartReference = React.createRef();
-
+            this.nextProps = this.props;
             this.state = {value: 'short_term', clicked: false,
                             data: null, artist:this.props.artist};
 
@@ -42,7 +42,11 @@ class TrackGraph extends React.Component {
     componentWillReceiveProps(nextProps) {
             let token = cookie.get('access_token');
 
+//        console.log(nextProps.artist);
+//        console.log(this.props.artist);
+
         if(this.props != nextProps) {
+            this.nextProps = nextProps
             this.componentDidMount();
 
         }
@@ -50,8 +54,8 @@ class TrackGraph extends React.Component {
 
     async componentDidMount() {
         let token = cookie.get('access_token');
-        console.log(this.props.artist);
-        axios.get(`http://localhost:5000/track/${this.props.artist.uri}/${token}`)
+        console.log(this.nextProps.artist.artist)
+        axios.get(`http://localhost:5000/track/${this.nextProps.artist.uri}/${token}`)
         .then(res => {
             fetch = res.data;
             console.log(fetch);
