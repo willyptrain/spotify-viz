@@ -20,15 +20,19 @@ import { Nav } from 'react-bootstrap';
 import Sidebar from './components/sidebar/Sidebar';
 
 class App extends Component{
-  state = {
-    userInfo: {status: 'Not logged in'},
+
+  constructor(props) {
+    super(props);
+
+    this.state = {status: 'Not logged in'};
   }
+
 
   setUserInfo = (userInfo) => this.setState({ userInfo });
 
   async componentDidMount() {
     const userInfo = await getSpotifyUser();
-
+    console.log(userInfo);
     if (userInfo) {
       this.setUserInfo(userInfo);
     }
@@ -36,7 +40,6 @@ class App extends Component{
   render(){
     const { userInfo } = this.state;
     console.log(userInfo);
-    console.log("hello");
     return (
       <div className="App">
         <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css" />
@@ -52,9 +55,10 @@ class App extends Component{
                  <Dash userInfo={userInfo}/>
                  </div> : <Login {...props} setUserInfo={this.setUserInfo} userInfo={userInfo} />
               }/>
-              <Route exact path="/logout">
-                <Logout/>
-              </Route>
+              <Route exact path="/logout" component={(props) =>
+                 <Logout userInfo={userInfo} />
+               }/>
+
               <Route exact path="/top_tracks">
                 <Sidebar userInfo={userInfo}/>
                 <TopTracks/>

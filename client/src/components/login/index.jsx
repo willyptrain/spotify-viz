@@ -22,7 +22,7 @@ class Login extends Component {
     const code = params.code || null;
     const { setUserInfo, history, userInfo } = this.props;
     console.log(code);
-    if (userInfo.id) {
+    if (userInfo && userInfo.id) {
       history.push('/');
       return;
     };
