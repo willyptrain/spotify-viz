@@ -240,9 +240,10 @@ def save_track(tracks, username,token):
                                            redirect_uri='http://localhost:3000/login')
 
     sp = spotipy.Spotify(auth=new_token)
-    data = request.json
+    add = sp.current_user_saved_tracks_add([tracks])
 
-    return "added"
+
+    return "successful"
 
 
 
