@@ -28,9 +28,9 @@ class AlbumGraph extends React.Component {
         console.log(this.props);
 
             this.chartReference = React.createRef();
-
+            this.mounted = false;
             this.state = {value: 'short_term', clicked: false,
-                            data: [], artist:this.props.artist, feature:'valence', feature2:'danceability'};
+                            data: [], artist:this.props.artist, feature:'valence'};
 
 
 
@@ -39,7 +39,8 @@ class AlbumGraph extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-            let token = cookie.get('access_token');
+
+        let token = cookie.get('access_token');
 
         if(this.props != nextProps) {
             this.componentDidMount();
@@ -47,14 +48,16 @@ class AlbumGraph extends React.Component {
         }
     }
 
+
+
     async componentDidMount() {
         let token = cookie.get('access_token');
-        let mounted = true;
+        this.mounted = true;
         axios.get(`http://localhost:5000/album/${this.props.artist.uri}/${token}`)
         .then(res => {
-            if(mounted){
+            if(this.mounted){
                 fetch = res.data;
-                console.log(fetch);
+                this.chartReference = React.createRef();
                 if(fetch.scores[this.state.feature].length > 1) {
                     this.setState(oldState => ({
                         'clicked': true,
@@ -67,14 +70,7 @@ class AlbumGraph extends React.Component {
                                 fill: true,
                                 backgroundColor: "rgba(75,192,192,0.2)",
                                 borderColor: "rgba(75,192,192,1)"
-                            },{
-                                'data': fetch.scores[oldState.feature2],
-                                'labels': oldState.feature2,
-                                fill: true,
-                                backgroundColor: "rgba(192,250,75,0.2)",
-                                borderColor: "rgba(192,250,75,1)"
                             }
-
                             ]
                         }]
 
@@ -94,7 +90,7 @@ class AlbumGraph extends React.Component {
 
             }
             console.log(this.state);
-                    return () => { mounted = false };
+                    return () => { this.mounted = false };
 
 
 
@@ -107,7 +103,10 @@ class AlbumGraph extends React.Component {
 
 
 
+    componentWillUnmount() {
+        this.mounted = false;
 
+    }
 
 
             render() {
@@ -121,8 +120,9 @@ class AlbumGraph extends React.Component {
                                 data={this.state.data[0]} options={{
             title:{
               display:true,
-              text:`Feature Scores by Track`,
-              fontSize:20
+              text:`Positivity Score by Track`,
+              fontSize:20,
+              fontFamily: 'Montserrat'
             },
             legend:{
               display:false

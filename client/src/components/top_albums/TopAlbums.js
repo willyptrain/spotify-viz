@@ -21,8 +21,9 @@ class TopAlbums extends React.Component{
     }
 
    handleChange = (artist) => {
-        if(this.state.artist != artist) {
-                console.log(artist);
+
+
+        if(!(this.state.artist) || this.state.artist.id != artist.id) {
             this.setState(oldState => ({
                 value: oldState.value,
                 clicked: true,
@@ -39,7 +40,6 @@ class TopAlbums extends React.Component{
                 sidePane: 50
             }));
         }
-        this.graphTrack = <FetchAlbums data={this.state} />;
 
 
       }
@@ -58,9 +58,6 @@ class TopAlbums extends React.Component{
 
 
 
-     async componentDidMount() {
-      }
-
     render(){
         const track_list = <FetchAlbums data={this.state.value}/>;
 
@@ -74,7 +71,7 @@ class TopAlbums extends React.Component{
                         value={this.state["value"]}
                         indicatorColor="primary"
                         textColor="primary"
-                        onChange={this.changeTab}
+                        onChange={this.handleSubmit}
                         aria-label="disabled tabs example"
                       >
                             <Tab className="track-tab" value="short_term" label="Week" />
@@ -91,11 +88,11 @@ class TopAlbums extends React.Component{
                   values={[
                     { value: 50, className:"top-albums", show: true, data: <FetchAlbums scroll={this.state['sidePane'] != 100} handleChange={this.handleChange} data={this.state.value} /> },
                     { value: 25, className:"album-graph", show: (this.state.clicked && this.state.artist), data: <AlbumGraph style={{maxHeight: '35vh'}} {...this.state} artist={this.state.artist} /> },
-                    { value: 25, className:"related-albums", show: (this.state.clicked && this.state['sidePane'] != 100 && (this.state.artist)), data: <RelatedAlbums style={{maxHeight: '35vh'}} {...this.state} artist={this.state.artist} /> }
+                    { value: 25, className:"related-albums", show: (this.state.clicked && (this.state.artist)), data: <RelatedAlbums style={{maxHeight: '35vh'}} {...this.state} /> }
                   ]} >
                   {value => (
                 <Box className={value.className} pad="small" fill>
-                  {(value.show && value.show) && value.data}
+                  {value.show && value.data}
                 </Box>
               )}
             </Distribution>
@@ -107,7 +104,7 @@ class TopAlbums extends React.Component{
                     { value: this.state['sidePane'], className:"top-albums", show: true, data: <FetchAlbums handleChange={this.handleChange} data={this.state.value} /> } ]}>
                     {value => (
                 <Box className={value.className} pad="small" fill>
-                  {(value.show && value.show) && value.data}
+                  {(value.show) && value.data}
                 </Box>
               )}
             </Distribution>
@@ -127,7 +124,7 @@ class TopAlbums extends React.Component{
                         value={this.state["value"]}
                         indicatorColor="primary"
                         textColor="primary"
-                        onChange={this.changeTab}
+                        onChange={this.handleSubmit}
                         aria-label="disabled tabs example"
                       >
                             <Tab className="track-tab" value="short_term" label="Week" />

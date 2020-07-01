@@ -16,7 +16,6 @@ import { Link } from 'react-router-dom';
 
 
 export function FetchAlbums(data) {
-    console.log(data);
     const [albums, setAlbums] = useState([]);
     const isCardFunction = (data.handleChange != null);
     const scroll = data.scroll ? 'scroll' : 'hidden';
@@ -37,6 +36,7 @@ export function FetchAlbums(data) {
 
         return () => { isMounted = false };
     }, [data.data])
+
 
 
     return(

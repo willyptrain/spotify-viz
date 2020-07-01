@@ -6,6 +6,9 @@ usic-title {
     font-size: 1em !important;
     color: white;
 }
+.related-albums-title {
+    font-family: 'Montserrat !important';
+}
 
 .grid-container {
     height: auto !important;

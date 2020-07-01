@@ -73,7 +73,7 @@ export default function GenreChart(data) {
                                             position: "bottom"
                                         },
 
-                                         responsive: false
+                                         responsive: data.mobile ? false : true
 
 
                                     }} />
@@ -102,7 +102,7 @@ export default function GenreChart(data) {
                                         position: "bottom",
                                         display: false
                                     },
-                                    responsive: false
+                                    responsive: data.mobile ? false : true
                                     }
 
                                     } />

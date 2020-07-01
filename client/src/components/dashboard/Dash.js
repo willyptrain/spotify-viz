@@ -59,8 +59,8 @@ class Dash extends React.Component {
               fill
               values={[
 
-                { value: 30, color: "white", overflow: false, title: "Short term genres", data: <GenreChart data={this.state} chart="doughnut" range="short" /> },
-                { value: 30, color: "white", overflow: false, title: "Long term genres", data: <GenreChart data={this.state} chart="radar" range="long" /> },
+                { value: 30, color: "white", overflow: false, title: "Short term genres", data: <GenreChart mobile={false} data={this.state} chart="doughnut" range="short" /> },
+                { value: 30, color: "white", overflow: false, title: "Long term genres", data: <GenreChart mobile={false} data={this.state} chart="radar" range="long" /> },
                 { value: 30, color: "white", overflow: false, title: "", data: <FetchUserWelcome data={this.state} /> },
                 { value: 25, color: "white", overflow: true, data: <FetchDashTracks data="long_term" /> },
                 { value: 25, color: "white", overflow: true, data: <FetchDashArtists data="long_term"/> }
@@ -89,10 +89,10 @@ class Dash extends React.Component {
                                <FetchUserWelcome data={this.state} />
                     </Card>
                     <Card height='25vh' style={{backgroundColor: "white", height: '25vh'}} className="userinfo-card">
-                                <GenreChart height='25vh' style={{height: '25vh'}} data={this.state} chart="doughnut" range="short" />
+                                <GenreChart height='25vh' mobile={true}  style={{height: '25vh'}} data={this.state} chart="doughnut" range="short" />
                     </Card>
                      <Card style={{backgroundColor: "white"}} className="userinfo-card">
-                                <GenreChart data={this.state} chart="radar" range="long" />
+                                <GenreChart data={this.state} mobile={true}  chart="radar" range="long" />
                     </Card>
 
 

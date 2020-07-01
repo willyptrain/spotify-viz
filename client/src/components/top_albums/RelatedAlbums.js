@@ -48,16 +48,19 @@ class RelatedAlbums extends React.Component {
         super(props);
         console.log(this.props);
 
-            this.chartReference = React.createRef();
-
-            this.state = {value: 'short_term', clicked: false,
+        this.mounted = false;
+        this.state = {value: 'short_term', clicked: false,
                             data: null, artist:this.props.artist};
 
 
     }
 
+
     componentWillReceiveProps(nextProps) {
-            let token = cookie.get('access_token');
+
+        let token = cookie.get('access_token');
+
+        console.log(nextProps);
 
         if(this.props != nextProps) {
             this.componentDidMount();
@@ -67,32 +70,40 @@ class RelatedAlbums extends React.Component {
 
     async componentDidMount() {
         let token = cookie.get('access_token');
+        this.mounted = true;
+
         axios.get(`http://localhost:5000/album_track_info/${this.props.artist.id}/${token}`)
         .then(res => {
             fetch = res.data;
-            this.setState(oldState => ({
-                'clicked':true,
-                'album_name':fetch.album_name,
-                'album_info':fetch.tracks_in_album,
-                'popularities':fetch.popularities,
-                'track_names':fetch.track_names,
-                'previews':fetch.audio,
-                'current':null,
-                'username':fetch.username,
-                'disabled':oldState.disabled,
-                'notif': false
-            }));
-            console.log(fetch);
+            if(this.mounted) {
+                this.setState(oldState => ({
+                    'clicked':true,
+                    'album_name':fetch.album_name,
+                    'album_info':fetch.tracks_in_album,
+                    'popularities':fetch.popularities,
+                    'track_names':fetch.track_names,
+                    'previews':fetch.audio,
+                    'current':null,
+                    'username':fetch.username,
+                    'disabled':oldState.disabled,
+                    'notif': false
+                 }));
+            }
+            return () => {this.mounted = false}
         })
+
 
         .catch(err => {
             console.log('error :(')
             console.log(err)
         })
 
-
     }
 
+     componentWillUnmount() {
+        this.mounted = false;
+
+    }
 
     playTrack = (url, play) => {
         if(url) {
@@ -156,6 +167,7 @@ class RelatedAlbums extends React.Component {
     }
 
 
+
     saveTrack = (track,index) => {
         console.log(track);
         let token = cookie.get('access_token');
@@ -210,14 +222,15 @@ class RelatedAlbums extends React.Component {
             render() {
 
             var player_on = !this.state['play'] ? "Play" : "Stop"
-            console.log(this.state['previews'])
 
             if(this.state.album_info) {
+
+
             return(
 
         <div style={{backgroundColor: 'white', overflow: 'scroll'}}>
         <Card>
-        <CardHeader title={this.state.album_name} subheader="Tracks in Album" />
+        <CardHeader style={{fontFamily: 'Montserrat !important'}} title={this.state.album_name} subheader="Tracks in Album" />
         <CardContent>
         <List>
             {this.state.clicked &&
@@ -228,16 +241,15 @@ class RelatedAlbums extends React.Component {
                             primary={this.state.track_names[index]}
 
                          />
-                         {index < (this.state['previews'].length) && this.state['previews'][index] &&
+                            {this.state['previews'][index] &&
                              <div>
                              <Button onClick={() => this.playTrack(this.state['previews'][index], this.state['play'])}>
                                     {(!(this.state['play'] && (this.state['current'] == this.state['previews'][index]))) ? "Play" : "Stop"}</Button>
                              </div>
                              }
-                             {
-                             this.state['username']  && !this.state['disabled'][index] &&
-                                <Button onClick={() => this.saveTrack(this.state['track_ids'][index], index)}>+</Button>
-                               }
+                             {this.state['username'] &&
+                                <Button onClick={() => this.saveTrack(this.state['album_info'][index], index)}>+</Button>
+                              }
                     </ListItem>
                     <Divider />
                     </div>
