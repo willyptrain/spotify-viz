@@ -14,6 +14,7 @@ body {
     color: white;
     position: relative;
     top: 20vh;
+     margin-top: 20%;
     font-weight: 100;
     width: 100%;
     max-width:100%;
@@ -25,16 +26,16 @@ body {
     font-family: 'Montserrat' !important;
     color: white;
     position: relative;
-    top: 13vh;
+    margin-top: 11%;
     font-weight: 100;
     text-shadow: 0.3px 0.3px black;
 
 }
 .login-btn {
     position: relative;
-    top: 16vh;
+    top: 2vh;
     background: white !important;
-    height: 7vh;
+    height: 45px;
     border: 2px solid rgba(0,0,0,0.7);
     font-family: Montserrat !important;
 
