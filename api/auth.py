@@ -49,13 +49,15 @@ def auth_payload(token):
         "client_secret": spotify_secret,
     }
 
+cur_id = None
+
 
 def get_user_profile(token):
     user_profile_api_endpoint = "{}/me".format(SPOTIFY_API_URL)
     profile_response = requests.get(
         user_profile_api_endpoint, headers=get_auth_header(token)
     )
-
+    
     return json.loads(profile_response.text)
 
 
@@ -69,6 +71,7 @@ def index():
 
 @bp.route('/user', methods=('GET', 'POST'))
 def get_user():
+    global cur_id
     access_token = ''
 
     if request.method == 'POST':
@@ -79,30 +82,34 @@ def get_user():
         response_data = json.loads(post_request.text)
         access_token = response_data["access_token"]
         refresh_token = response_data["refresh_token"]
-
-        session['access_token'] = access_token
-        session['refresh_token'] = refresh_token
-
-    elif 'access_token' in session:
-        access_token = session['access_token']
-
+    else:
+        access_token = get_access_token(cur_id)
     profile_data = get_user_profile(access_token)
 
     if 'error' in profile_data:
         return 'Not logged in'
 
-    session['user_id'] = profile_data['id']
+    cur_id = profile_data['id']
 
-    create_user(profile_data)
-
+    create_user(profile_data, access_token, refresh_token)
+    print(type(profile_data))
+    profile_data['access_token'] = access_token
     res = make_response(jsonify(profile_data), 200)
     res.set_cookie('access_token', access_token)
 
     return res
 
-
-def create_user(data):
+def get_access_token(user_id):
     db = get_db()
+    token = db.execute(
+            'SELECT access_token FROM users WHERE spotify_id = ?', (user_id,)
+    ).fetchone()
+    print(token)
+    return token
+
+def create_user(data, access_token, refresh_token=""):
+    db = get_db()
+    
 
     if db.execute(
             'SELECT spotify_id FROM users WHERE spotify_id = ?', (data['id'],)
@@ -110,12 +117,12 @@ def create_user(data):
         print(data['images'])
         if data['images'] != []:
             db.execute(
-                'INSERT INTO users (spotify_id, full_name, display_image) VALUES (?, ?, ?)',
-                (data['id'], data['display_name'], data['images'][0]['url'])
+                'INSERT INTO users (spotify_id, full_name, display_image, access_token, refresh_token) VALUES (?, ?, ?, ?, ?)',
+                (data['id'], data['display_name'], data['images'][0]['url'], access_token, refresh_token)
             )
         else:
             db.execute(
-                'INSERT INTO users (spotify_id, full_name, display_image) VALUES (?, ?, ?)',
+                'INSERT INTO users (spotify_id, full_name, display_image, access_token, refresh_token) VALUES (?, ?, ?, ?, ?)',
                 (data['id'], data['display_name'],
                  'https://f0.pngfuel.com/png/981/645/default-profile-picture-png-clip-art.png')
             )
@@ -124,24 +131,18 @@ def create_user(data):
 
 @bp.before_app_request
 def load_logged_in_user():
-    user_id = session.get('user_id')
-
-    if user_id is None:
+    global cur_id
+    if cur_id is None:
         g.user = None
     else:
         g.user = get_db().execute(
-            'SELECT * FROM users WHERE spotify_id = ?', (user_id,)
+            'SELECT * FROM users WHERE spotify_id = ?', (cur_id,)
         ).fetchone()
 
 
 @bp.route('/logout')
 def logout():
+    global cur_id
+    cur_id = None
     session.clear()
     return 'True'
-
-# <Route exact path="/graphs" component={(props) =>
-#                 <>
-#                 <NavBar/>
-#                 <GenreGraphs {...props} userInfo={userInfo}  />
-#                 </>
-# }/>

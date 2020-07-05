@@ -5,5 +5,7 @@ CREATE TABLE users (
   id INTEGER PRIMARY KEY,
   spotify_id INTEGER UNIQUE,
   full_name TEXT NOT NULL,
-  display_image TEXT
+  display_image TEXT,
+  access_token TEXT,
+  refresh_token TEXT
 );
