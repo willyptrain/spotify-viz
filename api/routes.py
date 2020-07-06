@@ -6,25 +6,18 @@ from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 import spotipy
 import json
 import webbrowser
-from . import app, lists, user, node2vec_model
-from .settings import spotify_id, spotify_secret
+import lists, user, node2vec_model
+from __init__ import app
+from settings import spotify_id, spotify_secret
 import math
 # from settings import spotify_secret, spotify_id
 # import node2vec_model
-from .node2vec_model import Node2VecModel
-from .lists import items
-from .user import User
+from node2vec_model import Node2VecModel
+from lists import items
+from user import User
 from spotipy.exceptions import SpotifyException
 import spotipy.util as util
 import numpy as np
-
-
-spotify_blueprint = make_spotify_blueprint(client_id=spotify_id,
-                                           client_secret=spotify_secret,
-                                           redirect_url='http://127.0.0.1:3000/callback',
-                                           scope=['user-library-modify', 'user-library-read', 'user-read-private', 'playlist-modify-private', 'user-follow-modify'])
-
-app.register_blueprint(spotify_blueprint, url_prefix='/spotify_login')
 
 
 

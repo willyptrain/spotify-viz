@@ -7,10 +7,10 @@ import random
 import math
 import os
 from gensim.models import KeyedVectors
-from . import lists
-from .lists import items
+import lists
+from lists import items
 import node2vec as n2v
-from .user import User
+from user import User
 from flask import jsonify
 
 from urllib3.exceptions import ReadTimeoutError
