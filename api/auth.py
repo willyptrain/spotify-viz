@@ -9,7 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from settings import spotify_id, spotify_secret
 from db import get_db
-
+import spotipy
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 # Spotify URLS
@@ -84,6 +84,9 @@ def get_user():
         refresh_token = response_data["refresh_token"]
     else:
         access_token = get_access_token(cur_id)
+        if access_token == None or access_token == '':
+            logout()
+
     profile_data = get_user_profile(access_token)
 
     if 'error' in profile_data:
@@ -126,6 +129,9 @@ def create_user(data, access_token, refresh_token=""):
                 (data['id'], data['display_name'],
                  'https://f0.pngfuel.com/png/981/645/default-profile-picture-png-clip-art.png')
             )
+        db.commit()
+    elif access_token != "" and access_token != None:
+        db.execute("UPDATE users SET access_token = '" + access_token + "' WHERE spotify_id = '" + data['id'] + "'")
         db.commit()
 
 
