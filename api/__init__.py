@@ -1,5 +1,5 @@
 from flask import Flask
-from .settings import spotify_secret, spotify_id
+from settings import spotify_secret, spotify_id
 from flask import Flask
 import os
 from flask_cors import CORS
@@ -18,8 +18,8 @@ app.config.from_mapping(
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 
-from . import routes
-from . import db
+import routes
+import db
 db.init_app(app)
-from . import auth
+import auth
 app.register_blueprint(auth.bp)

@@ -35,8 +35,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-flask-mac": "cd ../api && source new_venv/bin/activate && flask run",
-    "start-flask-win": "cd ../api && new_env/Scripts/activate && flask run",
+    "start-flask-mac": "cd ../api && source new_venv/bin/activate && python app.py",
+    "start-flask-win": "cd ../api && new_env/Scripts/activate && python app.py",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
