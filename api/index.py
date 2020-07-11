@@ -50,7 +50,7 @@ def create_app():
         return app.send_static_file('index.html')
 
     @app.route('/logout', methods=["GET"])
-    def top_artists():
+    def logout():
         return app.send_static_file('index.html')
 
 
