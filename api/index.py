@@ -5,7 +5,7 @@ import os
 from flask_cors import CORS
 
 def create_app():
-    app = Flask(__name__.split('.')[0], static_folder='../client/build/static', template_folder="../client/build")
+    app = Flask(__name__.split('.')[0], static_folder='../client/build', static_url_path="")
     app.config['SECRET_KEY'] = spotify_secret
     app.config['SPOTIFY_CLIENT_SECRET'] = spotify_secret
     cors = CORS(app)
