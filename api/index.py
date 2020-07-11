@@ -33,6 +33,22 @@ def create_app():
     def login():
         return app.send_static_file('index.html')
 
+    @app.route('/dashboard', methods=["GET"])
+    def dashboard():
+        return app.send_static_file('index.html')
+    
+    @app.route('/top_albums', methods=["GET"])
+    def top_albums():
+        return app.send_static_file('index.html')
+    
+    @app.route('/top_tracks', methods=["GET"])
+    def top_tracks():
+        return app.send_static_file('index.html')
+    
+    @app.route('/top_artists', methods=["GET"])
+    def top_artists():
+        return app.send_static_file('index.html')
+
 
     @app.route('/favicon.ico', methods=["GET"])
     def favicon():
