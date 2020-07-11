@@ -55,5 +55,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://spot-viz-api.herokuapp.com"
+  "proxy": "https://spot-viz-api.herokuapp.com",
+  "homepage": "."
 }
