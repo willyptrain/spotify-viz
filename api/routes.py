@@ -6,27 +6,26 @@ from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 import spotipy
 import json
 import webbrowser
-import lists, user, node2vec_model
-from __init__ import app
-from settings import spotify_id, spotify_secret
+from . import lists, user, node2vec_model
+from .settings import spotify_id, spotify_secret
 import math
 # from settings import spotify_secret, spotify_id
 # import node2vec_model
-from node2vec_model import Node2VecModel
-from lists import items
-from user import User
+from .node2vec_model import Node2VecModel
+from .lists import items
+from .user import User
 from spotipy.exceptions import SpotifyException
 import spotipy.util as util
 import numpy as np
 
+from flask import (
+    Blueprint, flash, g, redirect, render_template, request, session, json, jsonify, make_response
+)
 
 
+bp_api = Blueprint('api', __name__, url_prefix='/api')
 
-@app.route('/')
-def index():
-    return app.send_static_file('index.html')
-
-@app.route('/user/<time_range>/<token>/<k>/')
+@bp_api.route('/user/<time_range>/<token>/<k>/')
 def user_tracks(time_range, token, k=50):
     k = int(k)
     top_tracks = []
@@ -55,7 +54,7 @@ def user_tracks(time_range, token, k=50):
     return jsonify(top_tracks=top_tracks)
 
 
-@app.route('/user_albums/<time_range>/<token>/<k>/')
+@bp_api.route('/user_albums/<time_range>/<token>/<k>/')
 def user_albums(time_range, token, k=50):
     k = int(k)
     top_tracks = []
@@ -104,7 +103,7 @@ def user_albums(time_range, token, k=50):
 
 
 
-@app.route('/artist/<id>/<token>')
+@bp_api.route('/artist/<id>/<token>')
 def artist_page(id, token):
     sp = spotipy.Spotify(auth=token)
 
@@ -114,7 +113,7 @@ def artist_page(id, token):
     })
 
 
-@app.route('/artist_graph/<id>/<token>')
+@bp_api.route('/artist_graph/<id>/<token>')
 def artist_info(id, token):
     if(not id):
         raise Exception("ID Error")
@@ -145,7 +144,7 @@ def artist_info(id, token):
         }
     })
 
-@app.route('/user_info/<token>/')
+@bp_api.route('/user_info/<token>/')
 def user_info(token):
     sp = spotipy.Spotify(auth=token)
     user_info = sp.current_user()
@@ -200,7 +199,7 @@ def user_info(token):
 
 
 
-@app.route('/album_track_info/<album>/<token>')
+@bp_api.route('/album_track_info/<album>/<token>')
 def album_track_info(album, token):
     sp = spotipy.Spotify(auth=token)
     album_info = sp.album(album)
@@ -225,7 +224,7 @@ def album_track_info(album, token):
     }
 
 
-@app.route('/track/save/<tracks>/<username>/<token>')
+@bp_api.route('/track/save/<tracks>/<username>/<token>')
 def save_track(tracks, username,token):
 
     new_token = spotipy.util.prompt_for_user_token(username,scope="user-library-modify",client_id=spotify_id,
@@ -248,7 +247,7 @@ def save_track(tracks, username,token):
 
 
 
-@app.route('/album/<album>/<token>')
+@bp_api.route('/album/<album>/<token>')
 def album_info(album, token):
     sp = spotipy.Spotify(auth=token)
     feature_list = ['danceability', 'energy', 'instrumentalness', 'liveness', 'valence']
@@ -287,7 +286,7 @@ def album_info(album, token):
     }
 
 
-@app.route('/track/<track>/<token>')
+@bp_api.route('/track/<track>/<token>')
 def track_info(track, token):
     sp = spotipy.Spotify(auth=token)
     popularity = sp.track(track)['popularity']
@@ -318,7 +317,7 @@ def track_info(track, token):
     })
 
 
-@app.route('/related_albums/<track>/<token>')
+@bp_api.route('/related_albums/<track>/<token>')
 def related_albums(albums, token):
     sp = spotipy.Spotify(auth=token)
     recommendations = sp.recommendations(seed_artists=[track])
@@ -339,7 +338,7 @@ def related_albums(albums, token):
         'username':sp.me()['display_name']
     })
 
-@app.route('/related_tracks/<track>/<token>')
+@bp_api.route('/related_tracks/<track>/<token>')
 def related_tracks(track, token):
     sp = spotipy.Spotify(auth=token)
     recommendations = sp.recommendations(seed_artists=[track])
@@ -367,7 +366,7 @@ def related_tracks(track, token):
         'username': sp.me()['display_name']
     })
 
-@app.route('/user_artists/<time_range>/<token>/<k>/')
+@bp_api.route('/user_artists/<time_range>/<token>/<k>/')
 def user_artists(time_range, token, k=50):
     top_artists = []
     image_url = 'https://via.placeholder.com/150'
@@ -398,7 +397,7 @@ def user_artists(time_range, token, k=50):
     return jsonify(top_artists=top_artists)
 
 
-@app.route('/user_currently_playing/<token>/')
+@bp_api.route('/user_currently_playing/<token>/')
 def get_currently_playing(token):
     sp = spotipy.Spotify(auth=token)
     cur_track = sp.current_user_playing_track()
@@ -418,7 +417,7 @@ def get_currently_playing(token):
     }])
 
 
-@app.route('/graphs/<time_range>/<token>')
+@bp_api.route('/graphs/<time_range>/<token>')
 def user_graph(time_range, token):
     n2v = Node2VecModel('model_kv.kv', token=token)
     labels = []
@@ -431,7 +430,7 @@ def user_graph(time_range, token):
         'colors':colors
     })
 
-@app.route('/logout')
+@bp_api.route('/logout')
 def spotify_logout():
     for key in list(session.keys()):
         session.pop(key)
@@ -441,6 +440,6 @@ def spotify_logout():
 
 
 
-@app.route('/unprotected')
+@bp_api.route('/unprotected')
 def unprotected():
     return "You need some tokens!"

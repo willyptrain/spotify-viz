@@ -52,7 +52,7 @@ class ArtistPage extends React.Component {
     async componentDidMount() {
         let token = cookie.get('access_token');
         console.log(this.nextProps)
-        axios.get(`http://localhost:5000/artist/${this.nextProps.artist.uri}/${token}`)
+        axios.get(`/api/artist/${this.nextProps.artist.uri}/${token}`)
         .then(res => {
             fetch = res.data;
                 this.setState(oldState => ({

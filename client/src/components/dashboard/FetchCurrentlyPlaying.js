@@ -8,7 +8,7 @@ export function FetchCurrentlyPlaying() {
     const [curSong, setCurSong] = useState([]);
     let token = cookie.get('access_token');
     useEffect(() => {
-        axios.get(`http://localhost:5000/user/currently_playing/${token}/`)
+        axios.get(`/api/user/currently_playing/${token}/`)
         .then(res => {
             console.log(res.data)
             setCurSong(res.data)

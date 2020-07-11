@@ -58,7 +58,7 @@ class ArtistPage extends React.Component{
     }
 
     async componentDidMount()  {
-        axios.get(`http://localhost:5000/artist/${this.artist_uri}/${this.token}`)
+        axios.get(`/api/artist/${this.artist_uri}/${this.token}`)
         .then(res => {
             console.log(res.data);
             var artist_data = res.data.artist_info;

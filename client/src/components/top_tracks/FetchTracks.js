@@ -51,7 +51,7 @@ class FetchTracks extends React.Component {
     async componentDidMount() {
 
         let token = cookie.get('access_token');
-            axios.get(`http://localhost:5000/user/${this.props.data}/${token}/${this.k}`)
+            axios.get(`/api/user/${this.props.data}/${token}/${this.k}`)
             .then(res => {
                 this.setState(oldState => ({
                     'value':  this.state['value'],

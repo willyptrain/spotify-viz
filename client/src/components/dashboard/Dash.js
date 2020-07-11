@@ -35,7 +35,7 @@ class Dash extends React.Component {
 
     async componentDidMount() {
             let token = cookie.get('access_token');
-        axios.get(`http://localhost:5000/user_info/${token}/`)
+        axios.get(`/api/user_info/${token}/`)
         .then(res => {
             console.log(res.data);
             this.setState(res.data[0]);

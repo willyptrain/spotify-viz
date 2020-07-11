@@ -25,7 +25,7 @@ export function FetchArtists(data) {
 
     let token = cookie.get('access_token');
     useEffect(() => {
-        axios.get(`http://localhost:5000/user_artists/${data.data}/${token}/50/`)
+        axios.get(`/api/user_artists/${data.data}/${token}/50/`)
         .then(res => {
             console.log(res.data)
             setArtists(res.data.top_artists)

@@ -71,7 +71,7 @@ class RelatedAlbums extends React.Component {
         let token = cookie.get('access_token');
         this.mounted = true;
         console.log(this.nextProps.artist.artist)
-        axios.get(`http://localhost:5000/album_track_info/${this.nextProps.artist.id}/${token}`)
+        axios.get(`/api/album_track_info/${this.nextProps.artist.id}/${token}`)
         .then(res => {
             fetch = res.data;
             if(this.mounted) {

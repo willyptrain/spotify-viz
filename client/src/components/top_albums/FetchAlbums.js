@@ -25,7 +25,7 @@ export function FetchAlbums(data) {
     let token = cookie.get('access_token');
     useEffect(() => {
         let isMounted = true;
-        axios.get(`http://localhost:5000/user_albums/${data.data}/${token}/50`)
+        axios.get(`/api/user_albums/${data.data}/${token}/50`)
         .then(res => {
             if(isMounted) {
                 console.log(res.data)

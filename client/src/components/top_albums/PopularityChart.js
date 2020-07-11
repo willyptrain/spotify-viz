@@ -53,7 +53,7 @@ class PopularityChart extends React.Component {
     async componentDidMount() {
         let token = cookie.get('access_token');
         console.log(this.nextProps.artist.artist)
-        axios.get(`http://localhost:5000/album/${this.nextProps.artist.uri}/${token}`)
+        axios.get(`/api/album/${this.nextProps.artist.uri}/${token}`)
         .then(res => {
             fetch = res.data;
             console.log(fetch);

@@ -1,1 +1,1 @@
-web: gunicorn api.__init__:app
+web: gunicorn autoapp.py:app

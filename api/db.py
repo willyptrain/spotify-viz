@@ -21,7 +21,7 @@ def get_db():
             detect_types=sqlite3.PARSE_DECLTYPES
         )
         g.db.row_factory = dict_factory
-
+    print("yooo,", current_app.config['DATABASE'])
     return g.db
 
 def close_db(e=None):

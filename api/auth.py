@@ -7,8 +7,9 @@ from flask import (
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from settings import spotify_id, spotify_secret
-from db import get_db
+from .settings import spotify_id, spotify_secret
+from .db import get_db
+from flask_cors import CORS, cross_origin
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -20,7 +21,8 @@ API_VERSION = "v1"
 SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
-REDIRECT_URI = "http://localhost:3000/login"
+#REDIRECT_URI = "http://localhost:3000/login"
+REDIRECT_URI = "https://spot-viz-app2.herokuapp.com/login"
 SCOPE = "user-library-modify, streaming, user-top-read, user-read-private, user-read-currently-playing, user-library-read, user-read-recently-played, user-read-playback-position"
 STATE = ""
 SHOW_DIALOG_bool = True
@@ -70,6 +72,7 @@ def index():
 
 
 @bp.route('/user', methods=('GET', 'POST'))
+@cross_origin()
 def get_user():
     global cur_id
     access_token = ''
@@ -124,7 +127,7 @@ def create_user(data, access_token, refresh_token=""):
             db.execute(
                 'INSERT INTO users (spotify_id, full_name, display_image, access_token, refresh_token) VALUES (?, ?, ?, ?, ?)',
                 (data['id'], data['display_name'],
-                 'https://f0.pngfuel.com/png/981/645/default-profile-picture-png-clip-art.png')
+                 'https://f0.pngfuel.com/png/981/645/default-profile-picture-png-clip-art.png', access_token, refresh_token)
             )
         db.commit()
 
