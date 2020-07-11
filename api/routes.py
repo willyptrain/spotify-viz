@@ -368,6 +368,7 @@ def related_tracks(track, token):
 
 @bp_api.route('/user_artists/<time_range>/<token>/<k>/')
 def user_artists(time_range, token, k=50):
+    k = int(k)
     top_artists = []
     image_url = 'https://via.placeholder.com/150'
     sp = spotipy.Spotify(auth=token)

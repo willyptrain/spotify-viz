@@ -69,7 +69,7 @@ class FetchTracks extends React.Component {
         if(prev.value != this.props['value']) {
 
             let token = cookie.get('access_token');
-                axios.get(`http://localhost:5000/user/${this.props.data}/${token}/${this.k}`)
+                axios.get(`/api/user/${this.props.data}/${token}/${this.k}`)
                 .then(res => {
                     this.setState(oldState => ({
                         'value':  oldState.value,
