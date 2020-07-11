@@ -444,3 +444,6 @@ def spotify_logout():
 @bp_api.route('/unprotected')
 def unprotected():
     return "You need some tokens!"
+
+
+
