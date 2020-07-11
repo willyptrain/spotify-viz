@@ -31,7 +31,7 @@ def create_app():
 
     @app.route('/login', methods=["GET"])
     def index():
-        return app.send_static_file('index.html')
+        return app.send_static_file('index.html/login')
 
 
     @app.route('/favicon.ico', methods=["GET"])
