@@ -67,7 +67,7 @@ class RelatedTracks extends React.Component {
 
     async componentDidMount() {
         let token = cookie.get('access_token');
-        axios.get(`http://localhost:5000/related_tracks/${this.nextProps.artist.id}/${token}`)
+        axios.get(`/api/related_tracks/${this.nextProps.artist.id}/${token}`)
         .then(res => {
             fetch = res.data;
             this.setState({
