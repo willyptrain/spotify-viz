@@ -49,6 +49,10 @@ def create_app():
     def top_artists():
         return app.send_static_file('index.html')
 
+    @app.route('/logout', methods=["GET"])
+    def top_artists():
+        return app.send_static_file('index.html')
+
 
     @app.route('/favicon.ico', methods=["GET"])
     def favicon():
