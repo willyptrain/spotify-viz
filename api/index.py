@@ -29,6 +29,11 @@ def create_app():
     def index():
         return app.send_static_file('index.html')
 
+    @app.route('/login', methods=["GET"])
+    def index():
+        return app.send_static_file('index.html')
+
+
     @app.route('/favicon.ico', methods=["GET"])
     def favicon():
         return app.send_static_file('favicon.ico')
