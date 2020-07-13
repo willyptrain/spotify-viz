@@ -101,8 +101,8 @@ class RelatedAlbums extends React.Component {
 
      componentWillUnmount() {
         this.mounted = false;
-
     }
+
 
     playTrack = (url, play) => {
         if(url) {
@@ -141,7 +141,6 @@ class RelatedAlbums extends React.Component {
                         'disabled':oldState.disabled,
                         'notif': false
                     }));
-
                 }
                 else {
                     this.player.pause();
@@ -158,10 +157,8 @@ class RelatedAlbums extends React.Component {
                         'disabled':oldState.disabled,
                         'notif': false
                     }));
-
                 }
             }
-
         }
     }
 
