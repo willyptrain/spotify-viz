@@ -51,6 +51,7 @@ class RelatedAlbums extends React.Component {
         this.mounted = false;
         this.state = {value: 'short_term', clicked: false,
                             data: null, artist:this.props.artist};
+        console.log("WEEEEE2222E");
 
 
     }
@@ -84,7 +85,7 @@ class RelatedAlbums extends React.Component {
                     'previews':fetch.audio,
                     'current':null,
                     'username':fetch.username,
-                    'disabled':oldState.disabled,
+                    'disabled':new Array(fetch.audio.length).fill(false),
                     'notif': false
                  }));
             }
@@ -167,11 +168,11 @@ class RelatedAlbums extends React.Component {
     saveTrack = (track,index) => {
         console.log(track);
         let token = cookie.get('access_token');
-
         axios.get(`/api/track/save/${track['id']}/${this.state['username']}/${token}`)
                     .then(res => {
 
                         var disabled_keys = this.state['disabled'];
+                        console.log(disabled_keys)
                         disabled_keys[index] = true
                         this.setState(oldState => ({
                             'clicked':true,
@@ -191,6 +192,7 @@ class RelatedAlbums extends React.Component {
 
                     })
                     .catch(err => {
+                        console.log(err);
                         console.log("error :(");
                     })
     }
@@ -243,7 +245,8 @@ class RelatedAlbums extends React.Component {
                                     {(!(this.state['play'] && (this.state['current'] == this.state['previews'][index]))) ? "Play" : "Stop"}</Button>
                              </div>
                              }
-                             {this.state['username'] &&
+                             {
+                             this.state['username']  && !this.state['disabled'][index] &&
                                 <Button onClick={() => this.saveTrack(this.state['album_info'][index], index)}>+</Button>
                               }
                     </ListItem>

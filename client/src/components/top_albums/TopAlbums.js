@@ -18,6 +18,7 @@ class TopAlbums extends React.Component{
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.value = 'short_term'
+        console.log("YEEEEEE");
     }
 
    handleChange = (artist) => {

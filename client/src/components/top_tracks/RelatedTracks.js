@@ -45,7 +45,7 @@ class RelatedTracks extends React.Component {
 
     constructor(props) {
         super(props);
-
+        console.log("MEEEEEE");
             this.added = {};
             this.chartReference = React.createRef();
             this.nextProps = this.props;
@@ -182,6 +182,7 @@ class RelatedTracks extends React.Component {
 
                     })
                     .catch(err => {
+
                         console.log("error :(");
                     })
 

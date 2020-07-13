@@ -13,12 +13,11 @@ body {
     font-family: 'Montserrat' !important;
     color: white;
     position: relative;
-    top: 20vh;
-     margin-top: 20%;
     font-weight: 100;
+    font-size: 5em;
+    top: 20vh;
     width: 100%;
     max-width:100%;
-    font-size: 550%;
     display: inline-table;
     overflow-wrap: anywhere;
 }
@@ -26,9 +25,9 @@ body {
     font-family: 'Montserrat' !important;
     color: white;
     position: relative;
-    margin-top: 11%;
     font-weight: 100;
     text-shadow: 0.3px 0.3px black;
+    top: 98px;
 
 }
 .login-btn {
@@ -38,6 +37,8 @@ body {
     height: 45px;
     border: 2px solid rgba(0,0,0,0.7);
     font-family: Montserrat !important;
+    top: 25vh;
+    width: 47vh;
 
 }
 
