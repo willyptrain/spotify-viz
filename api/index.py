@@ -9,7 +9,7 @@ def create_app():
     app.config['SECRET_KEY'] = spotify_secret
     app.config['SPOTIFY_CLIENT_SECRET'] = spotify_secret
     cors = CORS(app)
-    app.config['CORS_HEADERS'] = 'Content-Type'
+    app.config['CORS_HEADERS'] = 'Content-Type, Access-Control-Allow-Origin'
     app.config.from_mapping(
             SECRET_KEY='dev',
             DATABASE='api/site.db',
