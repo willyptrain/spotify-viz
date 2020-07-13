@@ -171,7 +171,7 @@ class RelatedAlbums extends React.Component {
         console.log(track);
         let token = cookie.get('access_token');
 
-        axios.get(`http://localhost:5000/track/save/${track['id']}/${this.state['username']}/${token}`)
+        axios.get(`/api/track/save/${track['id']}/${this.state['username']}/${token}`)
                     .then(res => {
 
                         var disabled_keys = this.state['disabled'];

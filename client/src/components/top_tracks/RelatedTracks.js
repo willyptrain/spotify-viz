@@ -159,7 +159,7 @@ class RelatedTracks extends React.Component {
         saveTrack = (track, index) => {
             let token = cookie.get('access_token');
 
-            axios.get(`http://localhost:5000/track/save/${track}/${this.state['username']}/${token}`)
+            axios.get(`/api/track/save/${track}/${this.state['username']}/${token}`)
                     .then(res => {
                         this.added[track] = true;
                         var disabled_keys = this.state['disabled'];

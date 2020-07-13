@@ -21,7 +21,7 @@ API_VERSION = "v1"
 SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
-#REDIRECT_URI = "http://localhost:3000/login"
+# REDIRECT_URI = "http://0.0.0.0/login"
 REDIRECT_URI = "https://spot-viz.herokuapp.com/login"
 SCOPE = "user-library-modify, streaming, user-top-read, user-read-private, user-read-currently-playing, user-library-read, user-read-recently-played, user-read-playback-position"
 STATE = ""
