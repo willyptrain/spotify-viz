@@ -227,13 +227,15 @@ def album_track_info(album, token):
 @bp_api.route('/track/save/<tracks>/<username>/<token>')
 def save_track(tracks, username,token):
 
+    print("token")
     new_token = spotipy.util.prompt_for_user_token(username,scope="user-library-modify",client_id=spotify_id,
                                            client_secret=spotify_secret,
                                            redirect_uri='http://localhost:3000/login')
-
+    print("token2")
     sp = spotipy.Spotify(auth=new_token)
+    print("token3")
     add = sp.current_user_saved_tracks_add([tracks])
-
+    print("token4")
 
     return "successful"
 
