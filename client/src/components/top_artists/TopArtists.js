@@ -95,7 +95,7 @@ class TopArtists extends React.Component{
 
 
         <MobileView>
-            <div style={{ marginTop: `64px`, marginLeft: '30px'}}>
+            <div style={{ marginTop: `0px`, marginLeft: '30px'}}>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                     <Tabs
