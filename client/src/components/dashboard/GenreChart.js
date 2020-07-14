@@ -19,7 +19,7 @@ export default function GenreChart(data) {
     let range = data.range;
     let chart = data.chart;
     let chartReference = React.createRef();
-    console.log("chart");
+    let mobile = data.mobile;
 
 //    'data': [{
 //                    labels: fetch.labels,
@@ -71,11 +71,9 @@ export default function GenreChart(data) {
                                             fontSize: '18'
                                         },
                                         legend: {
-                                            display:  data.mobile ? false : true,
+                                            display:  mobile ? false : true,
                                         },
-                                         responsive:  data.mobile ? false : true,
-                                         maintainAspectRatio: data.mobile ? false : true,
-
+                                         responsive:  mobile ? false : true,
 
                                     }} />
 
@@ -103,7 +101,7 @@ export default function GenreChart(data) {
                                         position: "bottom",
                                         display: false
                                     },
-                                    responsive: data.mobile ? false : true
+                                    responsive: mobile ? false : true
                                     }
 
                                     } />

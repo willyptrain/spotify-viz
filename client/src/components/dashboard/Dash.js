@@ -58,7 +58,6 @@ class Dash extends React.Component {
             <Distribution style={{overflow: 'hidden'}} margin="xsmall" gap="none"
               fill
               values={[
-
                 { value: 30, color: "white", overflow: false, title: "Short term genres", data: <GenreChart mobile={false} data={this.state} chart="doughnut" range="short" /> },
                 { value: 30, color: "white", overflow: false, title: "Long term genres", data: <GenreChart mobile={false} data={this.state} chart="radar" range="long" /> },
                 { value: 30, color: "white", overflow: false, title: "", data: <FetchUserWelcome data={this.state} /> },
