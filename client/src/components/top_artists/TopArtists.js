@@ -95,7 +95,7 @@ class TopArtists extends React.Component{
 
 
         <MobileView>
-            <div style={{ marginTop: `64px`, marginLeft: '84px'}}>
+            <div style={{ marginTop: `64px`, marginLeft: '30px'}}>
                 <form onSubmit={this.handleSubmit}>
                     <label>
                     <Tabs
@@ -111,6 +111,19 @@ class TopArtists extends React.Component{
                       </Tabs>
                 </label>
                 </form>
+                <Distribution
+                  values={[
+                    { value: 100, className:"top-tracks", show: true, data: <FetchArtists clicked={this.state['clicked']} handleChange={this.handleChange} data={this.state.value} /> },
+                  ]}
+                >
+                  {value => (
+                    <Box className={value.className} pad="small" fill>
+                      {value.show && value.data}
+                    </Box>
+                  )}
+                </Distribution>
+
+
             </div>
             </MobileView>
             </div>

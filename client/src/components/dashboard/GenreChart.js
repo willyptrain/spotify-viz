@@ -71,9 +71,9 @@ export default function GenreChart(data) {
                                             fontSize: '18'
                                         },
                                         legend: {
-                                            display: false
+                                            display:  data.mobile ? false : true,
                                         },
-                                         responsive: false,
+                                         responsive:  data.mobile ? false : true,
                                          maintainAspectRatio: data.mobile ? false : true,
 
 
