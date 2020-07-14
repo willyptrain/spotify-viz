@@ -231,11 +231,11 @@ def save_track(tracks, username,token):
     print(spotify_id)
     print(spotify_secret)
 
-    new_token = spotipy.util.prompt_for_user_token(username,scope="user-library-modify",client_id=spotify_id,
-                                           client_secret=spotify_secret,
-                                           redirect_uri="https://spot-viz.herokuapp.com/login")
+    # new_token = spotipy.util.prompt_for_user_token(username,scope="user-library-modify",client_id=spotify_id,
+    #                                        client_secret=spotify_secret,
+    #                                        redirect_uri="https://spot-viz.herokuapp.com/login")
     print("token2")
-    sp = spotipy.Spotify(auth=new_token)
+    sp = spotipy.Spotify(auth=token)
     print("token3")
     add = sp.current_user_saved_tracks_add([tracks])
     print("token4")
