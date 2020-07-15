@@ -22,7 +22,7 @@ SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
 # REDIRECT_URI = "http://0.0.0.0/login"
-REDIRECT_URI = "https://spotipie.com/login"
+REDIRECT_URI = "https://www.spotipie.com/login"
 SCOPE = "user-library-modify, streaming, user-top-read, user-read-private, user-read-currently-playing, user-library-read, user-read-recently-played, user-read-playback-position"
 STATE = ""
 SHOW_DIALOG_bool = True
