@@ -27,6 +27,10 @@ import Link from '@material-ui/core/Link';
 import {logout} from '../../util/auth.js';
 import './sidebar.css'
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
+import Redirect from '../../components/common/Redirect.jsx'
 
 
 const drawerWidth = 240;
@@ -119,11 +123,35 @@ const guestLinks = (
 
 );
 
+const useStylesSearch = makeStyles((theme) => ({
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 400,
+    float: 'right',
+    marginRight: '3%'
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
+}));
+
 
 export default function MiniDrawer(userInfo) {
   const classes = useStyles();
+  const classesSearch = useStylesSearch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [searchValue, setSearchValue] = React.useState(false);
   const icons = [{
       text: "Home",
       image: <HomeIcon style={{color: '#DFE0E3'}} />,
@@ -142,7 +170,9 @@ export default function MiniDrawer(userInfo) {
       link: "/top_artists"
   }
     ]
-  
+
+
+
   const graph_icons = [<BarChartIcon style={{color: '#DFE0E3'}}/>]
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -151,9 +181,43 @@ export default function MiniDrawer(userInfo) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  console.log(userInfo.userInfo);
+
+  const getAllTracks = (event) => {
+    event.preventDefault();
+    console.log(searchValue);
+  }
+
+  const searchTracks = (event) => {
+    event.preventDefault();
+    console.log(searchValue);
+  }
+
+  const searchKeyPress = (event) => {
+
+    if(event.key.toLowerCase() == "enter") {
+        userInfo.searchFunc(searchValue)
+    } else {
+        setSearchValue(event.target.value+event.key);
+    }
+
+  }
+
+  const searchRedirect = () => {
+    if(userInfo.searchTerm) {
+        return (<Redirect url={`/search/${userInfo.searchTerm}`} />);
+    }
+  }
+
+
+
   return (
+
+
+
     <div className={classes.root}>
+        <div>
+            {searchRedirect()}
+        </div>
       <CssBaseline />
 
       <Drawer
@@ -207,9 +271,23 @@ export default function MiniDrawer(userInfo) {
         <Divider />
 
 
-
               {open && ((userInfo.userInfo.status === `Not logged in` || userInfo.userInfo === null) ? guestLinks : userLinks)}
       </Drawer>
+     <div class="search-bar">
+        <Paper component="form" onSubmit={searchTracks} className={classesSearch.root}>
+          <InputBase
+            className={classesSearch.input}
+            placeholder={userInfo.searchTerm ? userInfo.searchTerm : "Lookup Tracks"}
+            inputProps={{ 'aria-label': 'lookup tracks' }}
+            onKeyPress={searchKeyPress}
+          />
+          <Divider className={classesSearch.divider} orientation="vertical" />
+          <IconButton onClick={searchTracks} className={classesSearch.iconButton} aria-label="search">
+            <SearchIcon onClick={searchTracks} />
+          </IconButton>
+        </Paper>
+
+      </div>
 
 
 

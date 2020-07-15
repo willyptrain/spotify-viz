@@ -10,3 +10,8 @@
 .log-btn-container {
     width:100%;
 }
+.search-bar {
+    width: 100%;
+    position: relative;
+    top: 1vh;
+}
