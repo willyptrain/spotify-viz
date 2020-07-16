@@ -1,68 +1,21 @@
 .login-container {
+    background: linear-gradient(0deg, #383838, #151515);
 }
 body {
     background: '#f1f1f1' !important;
     font-family: Montserrat !important;
 }
-.landing-page-body {
+
+.login-card{
+    
+}
+
+#full-screen{
     height: 100vh;
-    width: 100%;
-    background: linear-gradient(0deg, #CCF3FF, #01C0FF);
-}
-.welcome-title {
-    font-family: 'Montserrat' !important;
-    color: white;
-    position: relative;
-    font-weight: 100;
-    font-size: 5em;
-    top: 20vh;
-    width: 100%;
-    max-width:100%;
-    display: inline-table;
-    overflow-wrap: anywhere;
-}
-.welcome-subtitle {
-    font-family: 'Montserrat' !important;
-    color: white;
-    position: relative;
-    font-weight: 100;
-    text-shadow: 0.3px 0.3px black;
-    top: 98px;
-
-}
-.login-btn {
-    position: relative;
-    top: 2vh;
-    background: white !important;
-    height: 45px;
-    border: 2px solid rgba(0,0,0,0.7);
+    background: #151515 !important;
     font-family: Montserrat !important;
-    top: 25vh;
-    width: 47vh;
-
+    background-size: 100% 100%;
 }
-
-
-.login-container {
-    height: 60vh;
-    width: 50vh;
-    box-shadow: none !important;
-    background: transparent !important;
+#login-button{
+    color: #2f2f2f !important;
 }
-.login-button {
-    background-color: white !important;
-    border: 4px solid #4F84DD !important;
-    bottom: -15vh;
-    position: absolute;
-    width: 40vh !important;
-    height: 7vh;
-}
-.login-title {
-    height: 50vh;
-}
-.spotify-title {
-    color: white;
-    text-shadow: 2px 2px #4F84DD;
-    font-weight: 600 !important;
-}
-

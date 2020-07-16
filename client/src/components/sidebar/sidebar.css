@@ -10,3 +10,18 @@
 .log-btn-container {
     width:100%;
 }
+.search-bar {
+    width: 100%;
+    position: relative;
+    top: 2vh;
+}
+.autocomplete {
+  width: 400px;
+  height: 50vh;
+  margin-right: 3%;
+  right: 0;
+  position: absolute;
+  z-index:3;
+  overflow: scroll;
+   background: white;
+}

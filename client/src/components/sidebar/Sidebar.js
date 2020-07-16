@@ -27,6 +27,17 @@ import Link from '@material-ui/core/Link';
 import {logout} from '../../util/auth.js';
 import './sidebar.css'
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
+import Redirect from '../../components/common/Redirect.jsx';
+import TextField from '@material-ui/core/TextField';
+import cookie from 'js-cookie';
+import axios from 'axios';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@material-ui/core/Avatar';
+
+
 
 
 const drawerWidth = 240;
@@ -119,11 +130,40 @@ const guestLinks = (
 
 );
 
+const useStylesSearch = makeStyles((theme) => ({
+  root: {
+    padding: '2px 4px',
+    display: 'flex',
+    alignItems: 'center',
+    width: 400,
+    float: 'right',
+    marginRight: '3%'
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    height: 28,
+    margin: 4,
+  },
+}));
+
 
 export default function MiniDrawer(userInfo) {
   const classes = useStyles();
+  const classesSearch = useStylesSearch();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  let searchVal = 'searchTerm' in userInfo ? userInfo.searchTerm : '';
+  const [searchValue, setSearchValue] = React.useState(searchVal);
+  const [hideDropdown, setHideDropdown] = React.useState(true);
+  const [dropdown, setDropdown] = React.useState([]);
+
+
   const icons = [{
       text: "Home",
       image: <HomeIcon style={{color: '#DFE0E3'}} />,
@@ -142,7 +182,9 @@ export default function MiniDrawer(userInfo) {
       link: "/top_artists"
   }
     ]
-  
+
+
+
   const graph_icons = [<BarChartIcon style={{color: '#DFE0E3'}}/>]
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -151,9 +193,96 @@ export default function MiniDrawer(userInfo) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  console.log(userInfo.userInfo);
+
+  const getAllTracks = (event) => {
+    event.preventDefault();
+    console.log(searchValue);
+  }
+
+  const searchTracks = (event) => {
+    event.preventDefault();
+  }
+
+  const searchDropdown = (keyword) => {
+    console.log(keyword);
+    let token = cookie.get('access_token');
+    axios.get(`/api/track/search/${keyword}/${token}`)
+        .then(res => {
+            console.log(res.data)
+            setDropdown(oldState => ({
+                tracks: res.data.search['tracks'].items,
+                artist_info: res.data.artist_info
+            }));
+        })
+        .catch(err => {
+            console.log("error :(")
+            console.log(err)
+        })
+
+
+
+
+  }
+
+
+
+  const searchKeyPress = (event) => {
+
+
+    if(event.key.toLowerCase() == "enter") {
+        setHideDropdown(true);
+        setSearchValue(event.target.value+event.key);
+        userInfo.searchFunc(searchValue)
+
+    } else if(event.key.toLowerCase() == "backspace") {
+        if(event.target.value.length <= 1) {
+            setHideDropdown(true);
+            setSearchValue('');
+        } else {
+            setHideDropdown(false);
+            searchDropdown(event.target.value)
+            setSearchValue(event.target.value);
+
+        }
+
+    }
+    else {
+        console.log(event.target.value)
+         if(event.target.value+event.key != '') {
+            searchDropdown(event.target.value+event.key)
+            setHideDropdown(false);
+         } else if(event.target.value == '') {
+            setHideDropdown(true);
+         } else {
+            searchDropdown(event.target.value+event.key)
+            setHideDropdown(false);
+         }
+
+         setSearchValue(event.target.value+event.key);
+    }
+
+  }
+
+  const searchRedirect = () => {
+    if(userInfo.searchTerm) {
+        return (<Redirect url={`/search/${userInfo.searchTerm}`} />);
+    }
+  }
+
+
+
+  const onChange = React.useCallback(e => setDropdown(e.value), []);
+
+
+
   return (
+
+
+
     <div className={classes.root}>
+        <div>
+            {searchRedirect()}
+        </div>
       <CssBaseline />
 
       <Drawer
@@ -207,9 +336,58 @@ export default function MiniDrawer(userInfo) {
         <Divider />
 
 
-
               {open && ((userInfo.userInfo.status === `Not logged in` || userInfo.userInfo === null) ? guestLinks : userLinks)}
       </Drawer>
+
+
+
+
+
+
+     <div class="search-bar">
+        <Paper autocomplete="off" component="form" onSubmit={searchTracks} className={classesSearch.root}>
+            <InputBase
+                className={classesSearch.input}
+                placeholder={searchValue}
+                onKeyDown={searchKeyPress}
+              />
+
+          <Divider className={classesSearch.divider} orientation="vertical" />
+          <IconButton onClick={searchTracks} className={classesSearch.iconButton} aria-label="search">
+            <SearchIcon onClick={searchTracks} />
+          </IconButton>
+        </Paper>
+       <div onChange={onChange} style={{width: '100%', float: 'right', display: (!hideDropdown ? 'block' : 'none')}}>
+
+        <div className="autocomplete" onChange={onChange}>
+
+            {'tracks' in dropdown && dropdown['tracks'].length > 0 &&
+                dropdown['tracks'].map((track, index) =>
+
+                    <Paper className="dropdown-container">
+                        <List>
+                        <ListItem>
+                            <ListItemAvatar>
+                              <Avatar
+                                alt="Album Image"
+                                src={track['album']['images'][0]['url']}
+                              />
+                            </ListItemAvatar>
+                            <ListItemText primary={track['name']} secondary={track['artists'][0].name} />
+
+                        </ListItem>
+                    </List>
+                    </Paper>
+
+                )
+
+
+            }
+
+        </div>
+       </div>
+
+      </div>
 
 
 

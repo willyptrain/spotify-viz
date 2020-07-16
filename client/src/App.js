@@ -14,10 +14,11 @@ import ArtistPage from './components/artist/ArtistPage';
 import Dash from './components/dashboard/Dash';
 import TopArtists from './components/top_artists/TopArtists';
 import TopAlbums from './components/top_albums/TopAlbums';
-
+import SearchTracks from './components/search/SearchTracks';
 import TopTracks from './components/top_tracks/TopTracks';
 import { Nav } from 'react-bootstrap';
 import Sidebar from './components/sidebar/Sidebar';
+import Redirect from './components/common/Redirect.jsx'
 
 class App extends Component{
 
@@ -25,6 +26,18 @@ class App extends Component{
     super(props);
     console.log(props);
     this.state =  {status: 'Not logged in'};
+  }
+
+  search = (term) => {
+    console.log(this.state)
+    let currStatus = ('status' in this.state ? this.state['status'] : null);
+    let currInfo = 'userInfo' in this.state ? this.state['userInfo'] : null;
+    this.setState({
+        status: currStatus,
+        userInfo: currInfo,
+        searchTerm: term
+    },console.log("EMEMEMEMEM"+currStatus+", "+currInfo));
+
   }
 
 
@@ -52,7 +65,7 @@ class App extends Component{
                 (userInfo == 'Not logged in') || !(userInfo) || ('status' in userInfo && userInfo['status'] == 'Not logged in') ?
                  <Login {...props} setUserInfo={this.setUserInfo} userInfo={userInfo} />
                  : <div>
-                <Sidebar userInfo={userInfo}/>
+                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                  <Dash userInfo={userInfo}/>
                  </div>
               }/>
@@ -61,29 +74,35 @@ class App extends Component{
                }/>
 
               <Route exact path="/top_tracks">
-                <Sidebar userInfo={userInfo}/>
+                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <TopTracks/>
               </Route>
               <Route exact path="/graphs">
-                <Sidebar userInfo={userInfo}/>
+                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <GenreGraphs />
               </Route>
               <Route exact path="/artist/:uri" render={(props) =>
                 <div style={{height:'100%'}}>
-                <Sidebar userInfo={userInfo}/>
+                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <ArtistPage style={{height:'100%'}} id={props.match.params} />
                 </div>
                } />
+               <Route exact path="/search/:term" render={(props) =>
+                <div style={{height:'100%'}}>
+                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
+                <SearchTracks style={{height:'100%'}} id={props.match.params} />
+                </div>
+               } />
                <Route exact path="/top_artists">
-               <Sidebar userInfo={userInfo}/>
+               <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <TopArtists/>
                </Route>
                <Route exact path="/top_albums">
-                 <Sidebar userInfo={userInfo}/>
+                 <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                  <TopAlbums/>
                </Route>
                <Route exact path="/dashboard">
-                 <Sidebar userInfo={userInfo}/>
+                 <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                  <Dash userInfo={userInfo}/>
                </Route>
             </Switch>

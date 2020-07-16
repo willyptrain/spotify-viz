@@ -227,24 +227,48 @@ def album_track_info(album, token):
 @bp_api.route('/track/save/<tracks>/<username>/<token>')
 def save_track(tracks, username,token):
 
-    print(username)
-    print(spotify_id)
-    print(spotify_secret)
-
     # new_token = spotipy.util.prompt_for_user_token(username,scope="user-library-modify",client_id=spotify_id,
     #                                        client_secret=spotify_secret,
     #                                        redirect_uri="https://spot-viz.herokuapp.com/login")
-    print("token2")
     sp = spotipy.Spotify(auth=token)
-    print("token3")
     add = sp.current_user_saved_tracks_add([tracks])
-    print("token4")
 
     return "successful"
 
 
 
+# """
+# def search(self, q, limit=10, offset=0, type="track", market=None):
+#         """ searches for an item
+#             Parameters:
+#                 - q - the search query (see how to write a query in the
+#                       official documentation https://developer.spotify.com/documentation/web-api/reference/search/search/)  # noqa
+#                 - limit  - the number of items to return (min = 1, default = 10, max = 50)
+#                 - offset - the index of the first item to return
+#                 - type - the type of item to return. One of 'artist', 'album',
+#                          'track', 'playlist', 'show', or 'episode'
+#                 - market - An ISO 3166-1 alpha-2 country code or the string
+#                            from_token.
+#         """
+#
+# """
 
+
+@bp_api.route('/track/search/<keyword>/<token>')
+def search_tracks(keyword, token):
+    sp = spotipy.Spotify(auth=token)
+    query = keyword.replace(" ", "%20")
+    limit = 10
+    type="track"
+    search = sp.search(q=query, limit=limit, type=type)
+    artist_info = []
+    for k in search['tracks']['items']:
+        artist = k['artists'][0]['id']
+        artist_info.append(sp.artist(artist))
+    return {
+        'search': search,
+        'artist_info':artist_info
+    }
 
 
 
