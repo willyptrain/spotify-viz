@@ -260,7 +260,15 @@ def search_tracks(keyword, token):
     query = keyword.replace(" ", "%20")
     limit = 10
     type="track"
-    return sp.search(q=query, limit=limit, type=type)
+    search = sp.search(q=query, limit=limit, type=type)
+    artist_info = []
+    for k in search['tracks']['items']:
+        artist = k['artists'][0]['id']
+        artist_info.append(sp.artist(artist))
+    return {
+        'search': search,
+        'artist_info':artist_info
+    }
 
 
 
