@@ -29,13 +29,14 @@ class App extends Component{
   }
 
   search = (term) => {
+    console.log(this.state)
     let currStatus = ('status' in this.state ? this.state['status'] : null);
     let currInfo = 'userInfo' in this.state ? this.state['userInfo'] : null;
     this.setState({
         status: currStatus,
         userInfo: currInfo,
         searchTerm: term
-    }, console.log(this.state['searchTerm']));
+    },console.log("EMEMEMEMEM"+currStatus+", "+currInfo));
 
   }
 
@@ -73,35 +74,35 @@ class App extends Component{
                }/>
 
               <Route exact path="/top_tracks">
-                <Sidebar searchFunc={this.search} userInfo={userInfo}/>
+                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <TopTracks/>
               </Route>
               <Route exact path="/graphs">
-                <Sidebar userInfo={userInfo}/>
+                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <GenreGraphs />
               </Route>
               <Route exact path="/artist/:uri" render={(props) =>
                 <div style={{height:'100%'}}>
-                <Sidebar searchFunc={this.search} userInfo={userInfo}/>
+                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <ArtistPage style={{height:'100%'}} id={props.match.params} />
                 </div>
                } />
                <Route exact path="/search/:term" render={(props) =>
                 <div style={{height:'100%'}}>
-                <Sidebar searchFunc={this.search} userInfo={userInfo}/>
+                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <SearchTracks style={{height:'100%'}} id={props.match.params} />
                 </div>
                } />
                <Route exact path="/top_artists">
-               <Sidebar searchFunc={this.search} userInfo={userInfo}/>
+               <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <TopArtists/>
                </Route>
                <Route exact path="/top_albums">
-                 <Sidebar searchFunc={this.search} userInfo={userInfo}/>
+                 <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                  <TopAlbums/>
                </Route>
                <Route exact path="/dashboard">
-                 <Sidebar searchFunc={this.search} userInfo={userInfo}/>
+                 <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                  <Dash userInfo={userInfo}/>
                </Route>
             </Switch>

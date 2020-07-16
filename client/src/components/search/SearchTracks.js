@@ -18,8 +18,8 @@ import axios from 'axios';
 import ListItem from '@material-ui/core/ListItem';
 import List from '@material-ui/core/List';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Checkbox from '@material-ui/core/Checkbox';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import './search.css';
 import Table from '@material-ui/core/Table';
@@ -36,7 +36,7 @@ class SearchTracks extends React.Component{
     constructor(props) {
         super(props);
         console.log(props.id.term);
-        this.state = {id: props.id.term, tracks: []};
+        this.state = {id: props.id.term, tracks: [], sort_by: 'track'};
     }
 
     async componentDidMount() {
@@ -44,10 +44,11 @@ class SearchTracks extends React.Component{
 
         axios.get(`/api/track/search/${this.state['id']}/${token}`)
         .then(res => {
-            console.log(res.data['tracks'].items)
+            console.log(res.data)
             this.setState(oldState => ({
                 id: oldState.id,
-                tracks: res.data['tracks'].items
+                tracks: res.data.search['tracks'].items,
+                artist_info: res.data.artist_info
             }));
         })
         .catch(err => {
@@ -61,7 +62,7 @@ class SearchTracks extends React.Component{
         return (
             <div style={{position: 'relative', marginLeft: '84px', width:'90%'}}>
                 <h1 className="search-header">Search Results</h1>
-                <TableContainer component={Paper}>
+                <TableContainer style={{marginLeft: '10px'}} component={Paper}>
                   <Table aria-label="simple table">
                     <TableHead>
                       <TableRow>
@@ -69,7 +70,7 @@ class SearchTracks extends React.Component{
                         <TableCell size="medium" className="table-header" classes="table-header" align="left">Artist</TableCell>
                         <TableCell size="medium" className="table-header" classes="table-header" align="right">Duration</TableCell>
                         <TableCell size="medium" className="table-header" classes="table-header" align="right">Popularity</TableCell>
-                        <TableCell size="medium" className="table-header" classes="table-header" align="right">Genre</TableCell>
+                        <TableCell size="medium" className="table-header" classes="table-header" align="center">Genre</TableCell>
                       </TableRow>
                     </TableHead>
 
@@ -77,13 +78,14 @@ class SearchTracks extends React.Component{
                         <TableRow key={track['name']}>
               <TableCell className="table-results" component="th" scope="row">
                 <div className="avatar-head">
-                    <Avatar className="table-avatar" src={track['album']['images'][0]['url']} /> <h6 className="track-name">{track.name}</h6>
+                    <Avatar className="table-avatar" src={track['album']['images'].length > 0 ? track['album']['images'][0]['url'] : ""} />&emsp; <h6 className="track-name">{track.name}</h6>
                 </div>
               </TableCell>
               <TableCell className="table-results" align="left">{track['artists'][0]['name']}</TableCell>
-              <TableCell className="table-results" align="right">{track['duration']/600000}</TableCell>
+              <TableCell className="table-results" align="right">{Math.trunc(track['duration_ms']/60000) + ":" +
+                        Math.trunc((track['duration_ms']/60000-Math.trunc(track['duration_ms']/60000))*60)}</TableCell>
               <TableCell className="table-results" align="right">{track['popularity']}</TableCell>
-              <TableCell className="table-results" align="right">genres</TableCell>
+              <TableCell className="table-results" align="center">{this.state['artist_info'][index]['genres'].join(", ")}</TableCell>
             </TableRow>
 
 
@@ -105,13 +107,3 @@ class SearchTracks extends React.Component{
 }
 
 export default SearchTracks;
-//<ListItem>
-//                            <ListItemAvatar>
-//                              <Avatar
-//                                alt="Album Image"
-//                                src={track['album']['images'][0]['url']}
-//                              />
-//                            </ListItemAvatar>
-//                            <ListItemText primary={track['name']} />
-//
-//                        </ListItem>
