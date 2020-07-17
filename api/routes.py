@@ -315,6 +315,22 @@ def album_info(album, token):
     }
 
 
+@bp_api.route('/trackPage/<track_id>/<token>')
+def track_page(track_id, token):
+    sp = spotipy.Spotify(auth=token)
+    track = sp.track(track_id)
+    artists = []
+    for t in track['artists']:
+        artists.append(sp.artist(t['id']))
+    return {
+        'track': track,
+        'recommendations': sp.recommendations(seed_tracks=[track_id]),
+        'album_tracks':sp.album_tracks(track['album']['id']),
+        'album':sp.album(track['album']['id']),
+        'artists':artists
+    }
+
+
 @bp_api.route('/track/<track>/<token>')
 def track_info(track, token):
     sp = spotipy.Spotify(auth=token)

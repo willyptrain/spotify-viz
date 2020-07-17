@@ -362,24 +362,32 @@ export default function MiniDrawer(userInfo) {
         <div className="autocomplete" onChange={onChange}>
 
             {'tracks' in dropdown && dropdown['tracks'].length > 0 &&
-                dropdown['tracks'].map((track, index) =>
 
-                    <Paper className="dropdown-container">
+               <Paper className="dropdown-container">
                         <List>
-                        <ListItem>
+                {dropdown['tracks'].map((track, index) =>
+
+
+                        <ListItem component="a" href={`/track/${track['id']}`}>
                             <ListItemAvatar>
                               <Avatar
                                 alt="Album Image"
                                 src={track['album']['images'][0]['url']}
                               />
                             </ListItemAvatar>
-                            <ListItemText primary={track['name']} secondary={track['artists'][0].name} />
+                          <ListItemText primary={track['name']} secondary={track['artists'][0].name} />
+                        <Divider />
+                         </ListItem>
 
-                        </ListItem>
-                    </List>
+
+
+
+
+                          )}
+                        }
+</List>
                     </Paper>
 
-                )
 
 
             }
