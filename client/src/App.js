@@ -19,6 +19,7 @@ import TopTracks from './components/top_tracks/TopTracks';
 import { Nav } from 'react-bootstrap';
 import Sidebar from './components/sidebar/Sidebar';
 import Redirect from './components/common/Redirect.jsx'
+import TrackPage from './components/track/TrackPage.js'
 
 class App extends Component{
 
@@ -93,6 +94,12 @@ class App extends Component{
                 <SearchTracks style={{height:'100%'}} id={props.match.params} />
                 </div>
                } />
+               <Route exact path="/track/:uri" render={(props) =>
+                <div style={{height:'100%'}}>
+                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
+                <TrackPage style={{height:'100%'}} id={props.match.params} />
+                </div>
+               } />
                <Route exact path="/top_artists">
                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <TopArtists/>
@@ -105,6 +112,7 @@ class App extends Component{
                  <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                  <Dash userInfo={userInfo}/>
                </Route>
+
             </Switch>
           </div>
         </Router>

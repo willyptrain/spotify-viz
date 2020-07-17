@@ -134,7 +134,7 @@ export function TabbedTracks(data) {
 
     return (
         <div>
-            <AppBar classes="track-navbar" style={{position: 'relative', background: 'none'}} className="track-navbar">
+            <AppBar classes="track-navbar" style={{position: 'relative', background: 'none', zIndex: '3'}} className="track-navbar">
                 <Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" aria-label="simple tabs example">
                   <Tab value={0} label="Album Tracks" />
                   <Tab value={1} label="Related Tracks" />
