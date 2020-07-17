@@ -145,7 +145,7 @@ export function TabbedTracks(data) {
 
             }
             {value == 1 &&
-                <RelatedTracks {...data} artist={data.artists[0]} />
+                <RelatedTracks {...data} tableHeader={true} header={false} artist={data.artists[0]} />
 
             }
 

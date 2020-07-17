@@ -24,6 +24,14 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import AutorenewIcon from '@material-ui/icons/Autorenew';
+import IconButton from '@material-ui/core/IconButton';
 
 
 class Alert extends React.Component {
@@ -91,6 +99,34 @@ class RelatedTracks extends React.Component {
 
 
     }
+
+    refresh_related() {
+        let token = cookie.get('access_token');
+        axios.get(`/api/related_tracks/${this.nextProps.artist.id}/${token}`)
+        .then(res => {
+            fetch = res.data;
+            this.setState({
+                'clicked':true,
+                'artists':fetch.artists,
+                'track_names':fetch.song_names,
+                'images':fetch.images,
+                'previews':fetch.audio,
+                'current':null,
+                'track_ids':fetch.ids,
+                'username':fetch.username,
+                'disabled':new Array(fetch.audio.length).fill(false),
+                'notif': false
+            })
+
+        })
+        .catch(err => {
+            console.log('error :(')
+            console.log(err)
+        })
+
+    }
+
+
 
      playTrack = (url, play) => {
         if(url) {
@@ -217,18 +253,31 @@ class RelatedTracks extends React.Component {
 
         <div style={{backgroundColor: 'white', overflow: 'scroll'}}>
 
-            <h2 style={{fontWeight: '300', marginTop: '20px', marginBottom: '0px'}}>Related Tracks</h2>
+            {'header' in this.props && this.props.header && <h2 style={{fontWeight: '300', marginTop: '20px', marginBottom: '0px'}}>Related Tracks</h2>}
+            {'tableHeader' in this.props && this.props.tableHeader &&
+            <div style={{width:'100%'}}>
+
+                       <h3 style={{float: 'left', marginTop: '2vh', marginLeft: '2vh', fontFamily: 'Montserrat'}}>Track Name
+                                         <IconButton onClick={() => {this.refresh_related()}} aria-label="refresh"><AutorenewIcon /></IconButton>
+                                                                                            </h3>
+
+                      <h3 style={{float: 'right', marginRight: '9vh', fontFamily: 'Montserrat'}}>Preview</h3>
+
+              </div>
+              }
             <List>
                 {this.state.clicked &&
                     this.state.artists.map((artist, index) =>
                         <ListItem>
-                            <ListItemAvatar>
-                                <Avatar alt="Image" src={this.state.images[index]} />
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={this.state.track_names[index]}
-                            secondary={this.state.artists[index]}
-                             />
+                            <a style={{position: 'relative', width: '100%', display: 'inline-flex'}} href={`/track/${this.state.track_ids[index]}`}>
+                                <ListItemAvatar>
+                                    <Avatar alt="Image" src={this.state.images[index]} />
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={this.state.track_names[index]}
+                                secondary={this.state.artists[index]}
+                                 />
+                            </a>
 
                              {this.state['previews'][index] &&
                              <div>

@@ -5,8 +5,10 @@ import { getUrlParams } from '../../util/url';
 import { getLoginRedirect, registerSpotify } from '../../util/auth';
 import './login.css';
 import Card from '@material-ui/core/Card';
+import Button from '@material-ui/core/Button';
+
 import { Header } from 'semantic-ui-react';
-import { Box, Grommet, Button, Text } from 'grommet';
+import { Box, Grommet, Text } from 'grommet';
 import { Analytics } from 'grommet-icons';
 import { Pie } from 'react-chartjs-2';
 import Particles from 'react-particles-js';
@@ -91,7 +93,7 @@ class Login extends Component {
             <Text size="100%" color="#DFE0E3">Explore your Spotify listening history and <br></br> gain insights about your habits by logging in below.</Text>
             
             <div id='login-button'>
-            <Button primary color="green" label="Login with Spotify" onClick={this.redirectToSpotify}></Button>
+                <Button className="login-btn-item" style={{background: '#6fd862'}} primary label="Login with Spotify" onClick={this.redirectToSpotify}>Login with Spotify</Button>
             </div>
             </Box>
             </Grommet>

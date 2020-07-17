@@ -84,7 +84,7 @@ class TopTracks extends React.Component{
                 {this.state['clicked'] && this.state['value'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
               values={[
                 { value: 50, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} {...this.state} handleChange={this.handleChange} data={this.state['value']} /> },
-                { value: 25, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedTracks {...this.state} artist={this.state.artist} /> },
+                { value: 25, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedTracks {...this.state} header={true} artist={this.state.artist} /> },
                 { value: 25, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <TrackGraph {...this.state} artist={this.state.artist} /> }
               ]}
             >
