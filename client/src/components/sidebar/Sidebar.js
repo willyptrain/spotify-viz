@@ -36,7 +36,8 @@ import cookie from 'js-cookie';
 import axios from 'axios';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
-
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { AudioPlayer } from 'mui-audio-player';
 
 
 
@@ -153,6 +154,7 @@ const useStylesSearch = makeStyles((theme) => ({
 }));
 
 
+
 export default function MiniDrawer(userInfo) {
   const classes = useStyles();
   const classesSearch = useStylesSearch();
@@ -162,6 +164,37 @@ export default function MiniDrawer(userInfo) {
   const [searchValue, setSearchValue] = React.useState(searchVal);
   const [hideDropdown, setHideDropdown] = React.useState(true);
   const [dropdown, setDropdown] = React.useState([]);
+
+  const [preview, setPreview] = React.useState(false);
+
+
+    const load_preview = (data) => {
+
+          let id = data.uri;
+          let token = cookie.get('access_token');
+          axios.get(`/api/trackPage/${id}/${token}/`)
+            .then(res => {
+                console.log(res.data);
+                setPreview(res.data.track['preview_url']);
+                console.log(res.data.track['preview_url']);
+            })
+            .catch(err => {
+                console.log('yo')
+                console.log(err)
+            })
+
+
+    }
+
+
+
+
+  if(userInfo.id && userInfo.playback) {
+      load_preview(userInfo.id);
+
+  }
+
+
 
 
   const icons = [{
@@ -268,8 +301,16 @@ export default function MiniDrawer(userInfo) {
         return (<Redirect url={`/search/${userInfo.searchTerm}`} />);
     }
   }
+const muiTheme = createMuiTheme({});
 
+    const usePlaybackStyles = makeStyles((theme) => {
+        return {
+            root: {
 
+             }
+
+        }
+    });
 
   const onChange = React.useCallback(e => setDropdown(e.value), []);
 
@@ -341,10 +382,22 @@ export default function MiniDrawer(userInfo) {
 
 
 
+    {userInfo.playback && preview &&
+    <div className="playback">
+        <ThemeProvider>
 
+            <AudioPlayer
+          src={preview}
+          autoPlay={false}
+        />
+        </ThemeProvider>
+
+    </div>
+    }
 
 
      <div class="search-bar">
+
         <Paper autocomplete="off" component="form" onSubmit={searchTracks} className={classesSearch.root}>
             <InputBase
                 className={classesSearch.input}
@@ -378,11 +431,6 @@ export default function MiniDrawer(userInfo) {
                           <ListItemText primary={track['name']} secondary={track['artists'][0].name} />
                         <Divider />
                          </ListItem>
-
-
-
-
-
                           )}
                         }
 </List>

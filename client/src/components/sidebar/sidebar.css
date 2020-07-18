@@ -26,3 +26,18 @@
    background: white;
 
 }
+.playback {
+    margin-left: 90px;
+   position: absolute;
+   z-index: 4;
+   width: 450px;
+   height: 10vh;
+   top: 2vh;
+
+}
+.playback-player {
+   position: 'relative';
+   top: '1.5vh';
+   left: '12px';
+   height: '8vh'
+ }

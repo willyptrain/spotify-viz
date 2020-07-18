@@ -23,3 +23,8 @@
     position: relative;
     background: none;
 }
+
+.albumList .Mui-selected {
+    background: rgba(186,249,176, 0.92) !important;
+
+}

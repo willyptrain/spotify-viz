@@ -35,13 +35,29 @@ import './trackPage.css';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import ScrollIntoView from 'react-scroll-into-view';
 
 export function AlbumList(data) {
 
+    console.log(data);
+    let track_id = data.track_id;
+//    const classes = theme => ({
+//      tableRow: {
+//        "&$selected, &$selected:hover": {
+//          backgroundColor: "purple"
+//        }
+//      },
+//      selected: {}
+//    });
+    let selected_id = React.createRef();
+     useEffect(() => {
+        selected_id.current.scrollIntoView();
+    })
+
 
     return (
-        <div>
-             <TableContainer style={{marginLeft: '10px'}} >
+        <div className="albumList" style={{height: '81vh'}}>
+             <TableContainer style={{background: 'white', height: '100%'}} >
                 <Table>
                     <TableHead>
                       <TableRow>
@@ -51,7 +67,8 @@ export function AlbumList(data) {
                       </TableRow>
                     </TableHead>
                     { data.album && data.album.map((track,index) =>
-                    <TableRow key={track['name']}>
+                    <TableRow ref={selected_id} id={track['id']} selected={(track['id'] == track_id)}  key={track['name']}>
+
                         <TableCell className="table-results" component="th" scope="row">
                             <h6 className="track-name">{track.name}</h6>
                           </TableCell>
@@ -134,18 +151,18 @@ export function TabbedTracks(data) {
 
     return (
         <div>
-            <AppBar classes="track-navbar" style={{position: 'relative', background: 'none', zIndex: '3'}} className="track-navbar">
+            <AppBar classes="track-navbar" style={{position: 'relative', background: 'white', zIndex: '3'}} className="track-navbar">
                 <Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary" aria-label="simple tabs example">
                   <Tab value={0} label="Album Tracks" />
                   <Tab value={1} label="Related Tracks" />
                 </Tabs>
               </AppBar>
             {value == 0 &&
-                <AlbumList {...data} album={data['album_track']} />
+                <AlbumList style={{height: '81vh'}}  {...data} album={data['album_track']} />
 
             }
             {value == 1 &&
-                <RelatedTracks {...data} tableHeader={true} header={false} artist={data.artists[0]} />
+                <RelatedTracks style={{background: 'white'}} {...data} tableHeader={true} header={false} artist={data.artists[0]} />
 
             }
 
@@ -234,26 +251,16 @@ class TrackPage extends React.Component{
 
     render() {
         return (
-            <div style={{ overflow: 'hidden', marginTop: `3vh`, marginLeft: '84px', width: '94%'}}>
+            <div style={{ overflow: 'hidden', marginTop: `3vh`, marginLeft: '84px', width: '100%'}}>
                 <BrowserView>
-                    <Grommet style={{overflow: 'hidden', width: '100%',backgroundColor: "#EBEBEB"}} full>
-                        {'artists' in this.state &&
-                        <Distribution style={{overflow: 'hidden'}} margin="xsmall" gap="none"
-                          fill
-                          values={[
-                            { value: 25, color: "white", flexBasis: '40%', overflow: false, title: "Artist Image", data: <TrackPlayback {...this.state} /> },
-                            { value: 25, color: "white", flexBasis: '40%', overflow: false, title: "Artist Image", data: <ArtistChart chart="doughnut" {...this.state}  /> },
-                            { value: 50, color: "white", flexBasis: '60%', overflow: true, title: "Track Preview", data: <TabbedTracks {...this.state} album={this.state['album_track']} artist={this.state.artists[0]} /> },
-                       ]} >
-                          {value => (
+                    {'artists' in this.state &&
+                        <Grid style={{width: 'calc(97% - 84px)'}} container className="grid-container" alignItems="center" justify="center" spacing={0}>
+                            <Grid item xs={12}>
+                                <TabbedTracks {...this.state} album={this.state['album_track']} artist={this.state.artists[0]} />
+                            </Grid>
+                        </Grid>
 
-                                <Card width="100%" height="100%" style={{backgroundColor: "white", overflow: value.overflow ? 'scroll': 'hidden'}} className="userinfo-card">
-                                    {value.data}
-                                </Card>
-
-                          )}
-                        </Distribution>}
-                      </Grommet>
+                    }
                 </BrowserView>
 
             </div>
@@ -275,6 +282,24 @@ export default TrackPage;
 //                            { value: 25, color: "white", overflow: true, title: "Album Tracks", data: <AlbumList album={this.state['album_track']} /> }
  //]}
 //                        >
+//                          {value => (
+//
+//                                <Card width="100%" height="100%" style={{backgroundColor: "white", overflow: value.overflow ? 'scroll': 'hidden'}} className="userinfo-card">
+//                                    {value.data}
+//                                </Card>
+//
+//                          )}
+//                        </Distribution>}
+//                      </Grommet>
+//<Grommet style={{overflow: 'hidden', width: '100%',backgroundColor: "#EBEBEB"}} full>
+//                        {'artists' in this.state &&
+//                        <Distribution style={{overflow: 'hidden'}} margin="xsmall" gap="none"
+//                          fill
+//                          values={[
+//                            { value: 25, color: "white", flexBasis: '40%', overflow: false, title: "Artist Image", data: <TrackPlayback {...this.state} /> },
+//                            { value: 25, color: "white", flexBasis: '40%', overflow: false, title: "Artist Image", data: <ArtistChart chart="doughnut" {...this.state}  /> },
+//                            { value: 50, color: "white", flexBasis: '60%', overflow: true, title: "Track Preview", data: <TabbedTracks {...this.state} album={this.state['album_track']} artist={this.state.artists[0]} /> },
+//                       ]} >
 //                          {value => (
 //
 //                                <Card width="100%" height="100%" style={{backgroundColor: "white", overflow: value.overflow ? 'scroll': 'hidden'}} className="userinfo-card">
