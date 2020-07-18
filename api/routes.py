@@ -258,8 +258,9 @@ def save_track(tracks, username,token):
 def search_tracks(keyword, token):
     sp = spotipy.Spotify(auth=token)
     query = keyword.replace(" ", "%20")
-    limit = 10
-    type="track"
+    limit = 50
+    query = "track:"+keyword
+    type= ["track"]
     search = sp.search(q=query, limit=limit, type=type)
     artist_info = []
     for k in search['tracks']['items']:

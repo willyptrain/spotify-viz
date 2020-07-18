@@ -26,6 +26,21 @@
    background: white;
 
 }
+.loop-icon {
+    display: none !important;
+}
+.player-btn  {
+    fill: #69f0ae !important;
+    color: #69f0ae !important;
+    background: #69f0ae !important;
+
+}
+.text-audio {
+    position: relative;
+    top: 1.5vh;
+}
+
+
 .playback {
     margin-left: 90px;
    position: absolute;

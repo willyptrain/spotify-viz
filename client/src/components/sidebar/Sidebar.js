@@ -38,6 +38,9 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { AudioPlayer } from 'mui-audio-player';
+import createTheme from '@material-ui/core/styles/createMuiTheme';
+import green from '@material-ui/core/colors/green';
+
 
 
 
@@ -301,20 +304,16 @@ export default function MiniDrawer(userInfo) {
         return (<Redirect url={`/search/${userInfo.searchTerm}`} />);
     }
   }
-const muiTheme = createMuiTheme({});
-
-    const usePlaybackStyles = makeStyles((theme) => {
-        return {
-            root: {
-
-             }
-
-        }
-    });
 
   const onChange = React.useCallback(e => setDropdown(e.value), []);
 
-
+    const muiTheme = createTheme({
+      palette: {
+        type: 'light',
+        primary: green,
+        secondary: green,
+      },
+    });
 
   return (
 
@@ -384,11 +383,14 @@ const muiTheme = createMuiTheme({});
 
     {userInfo.playback && preview &&
     <div className="playback">
-        <ThemeProvider>
+        <ThemeProvider theme={muiTheme}>
 
             <AudioPlayer
           src={preview}
-          autoPlay={false}
+          autoPlay={false} classNames={{
+            loopIcon: 'loop-icon',
+            text: 'text-audio'
+          }}
         />
         </ThemeProvider>
 
@@ -432,7 +434,7 @@ const muiTheme = createMuiTheme({});
                         <Divider />
                          </ListItem>
                           )}
-                        }
+
 </List>
                     </Paper>
 
