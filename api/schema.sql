@@ -9,5 +9,6 @@ CREATE TABLE users (
   access_token TEXT,
   refresh_token TEXT,
   favorites_playlist TEXT,
-  fav_tracks TEXT
+  fav_tracks TEXT,
+  playlist_synced INTEGER,
 );

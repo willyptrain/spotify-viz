@@ -560,6 +560,42 @@ def delete_from_db(track_id, playlist_id, token):
     else:
         return jsonify(0)
 
+@bp_api.route('/fetch_fav_tracks/<token>')
+def fetch_fav_tracks(token):
+    sp = spotipy.Spotify(auth=token)
+    user_id = sp.me()['id']
+    the_db = db.get_db()
+    fav_tracks = the_db.execute(
+            'SELECT fav_tracks FROM users WHERE spotify_id = ?', (user_id,)
+    ).fetchone()
+    fav_tracks = fav_tracks['fav_tracks']
+    if fetch_fav_tracks == None:
+        fav_tracks = []
+        fav_tracks.append({
+                'track_name':'Empty',
+                'artist':'Empty',
+                'uri':'Empty',
+                'image':'Empty'
+            })
+        return jsonify(fav_tracks)
+    else:
+        all_tracks = fav_tracks.split()
+        
+        tracks = sp.tracks(tracks=all_tracks)['tracks']
+        print(tracks)
+        fav_tracks = []
+        for i, result in enumerate(tracks):
+                fav_tracks.append({
+                    'track_name':result['name'],
+                    'artist':result['artists'][0]['name'],
+                    'uri':result['uri'],
+                    'id':result['artists'][0]['id'],
+                    'image':result['album']['images'][0]['url']
+                })
+    print(fav_tracks)
+    return jsonify(fav_tracks=fav_tracks)
+
+
 def song_in_playlist(track_id, playlist_id, token):
     sp = spotipy.Spotify(auth=token)
     user_id = sp.me()['id']
