@@ -7,6 +7,7 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItem from '@material-ui/core/ListItem';
 import Avatar from '@material-ui/core/Avatar';
 import './userinfo.css';
+import StarIcon from '@material-ui/icons/Star';
 
 function tracks_page(e) {
   e.preventDefault();

@@ -15,13 +15,13 @@ def dict_factory(cursor, row):
 
 def get_db():
     if 'db' not in g:
-        print("yooo,", current_app.config['DATABASE'])
+        #print("yooo,", current_app.config['DATABASE'])
         g.db = sqlite3.connect(
             current_app.config['DATABASE'],
             detect_types=sqlite3.PARSE_DECLTYPES
         )
         g.db.row_factory = dict_factory
-    print("yooo,", current_app.config['DATABASE'])
+    #print("yooo,", current_app.config['DATABASE'])
     return g.db
 
 def close_db(e=None):

@@ -19,6 +19,7 @@ import TopTracks from './components/top_tracks/TopTracks';
 import { Nav } from 'react-bootstrap';
 import Sidebar from './components/sidebar/Sidebar';
 import Redirect from './components/common/Redirect.jsx'
+import UserFavorites from './components/favorites/UserFavorites';
 
 class App extends Component{
 
@@ -104,6 +105,10 @@ class App extends Component{
                <Route exact path="/dashboard">
                  <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                  <Dash userInfo={userInfo}/>
+               </Route>
+               <Route exact path="/favorites">
+               <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
+               <UserFavorites userInfo={userInfo}/>
                </Route>
             </Switch>
           </div>

@@ -24,6 +24,8 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 
 class Alert extends React.Component {
@@ -45,12 +47,12 @@ class RelatedTracks extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log("MEEEEEE");
+        console.log("mee");
             this.added = {};
             this.chartReference = React.createRef();
             this.nextProps = this.props;
             this.state = {value: 'short_term', clicked: false,
-                            data: null, artist:this.props.artist, play: false, notif: false};
+                            data: null, artist:this.props.artist, play: false, notif: false, favorited: {}};
 
 
     }
@@ -80,16 +82,15 @@ class RelatedTracks extends React.Component {
                 'track_ids':fetch.ids,
                 'username':fetch.username,
                 'disabled':new Array(fetch.audio.length).fill(false),
-                'notif': false
-            })
+                'notif': false,
+                'in_favorites': fetch.in_favorites,
+            });
 
         })
         .catch(err => {
             console.log('error :(')
             console.log(err)
         })
-
-
     }
 
      playTrack = (url, play) => {
@@ -108,7 +109,8 @@ class RelatedTracks extends React.Component {
                     'track_ids':oldState.track_ids,
                     'username':oldState.username,
                     'disabled':oldState.disabled,
-                    'notif': false
+                    'notif': false,
+                    'in_favorites': oldState.in_favorites,
 
                 }));
                 this.player.play();
@@ -128,6 +130,7 @@ class RelatedTracks extends React.Component {
                         'track_ids':oldState.track_ids,
                         'username':oldState.username,
                         'disabled':oldState.disabled,
+                        'in_favorites': oldState.in_favorites,
                         'notif': false
                     }));
 
@@ -145,6 +148,7 @@ class RelatedTracks extends React.Component {
                         'track_ids':oldState.track_ids,
                         'username':oldState.username,
                         'disabled':oldState.disabled,
+                        'in_favorites': oldState.in_favorites,
                         'notif':false
                     }));
 
@@ -163,7 +167,7 @@ class RelatedTracks extends React.Component {
                     .then(res => {
                         this.added[track] = true;
                         var disabled_keys = this.state['disabled'];
-                        disabled_keys[index] = true
+                        disabled_keys[index] = true;
                         this.setState(oldState => ({
                         'clicked':oldState.clicked,
                         'artists':oldState.artists,
@@ -175,6 +179,8 @@ class RelatedTracks extends React.Component {
                         'track_ids':oldState.track_ids,
                         'username':oldState.username,
                         'disabled':disabled_keys,
+                        'in_favorites': oldState.in_favorites,
+                        'favorited': this.state.favorited,
                         'notif': true
                     }));
 
@@ -188,6 +194,82 @@ class RelatedTracks extends React.Component {
 
     }
 
+    favoriteTrack = (track, index) => {
+        let token = cookie.get('access_token');
+
+        axios.get(`/api/save_to_playlist/${track}/${token}`)
+                .then(res => {
+                    this.added[track] = false;
+                    let favs = this.state['favorited'];
+                    favs[track] = true;
+                    var disabled_keys = this.state['disabled'];
+                    disabled_keys[index] = true;
+                    this.setState(oldState => ({
+                    'clicked':oldState.clicked,
+                    'artists':oldState.artists,
+                    'track_names':oldState.track_names,
+                    'images':oldState.images,
+                    'previews':oldState.previews,
+                    'play':oldState.play,
+                    'current':oldState.url,
+                    'track_ids':oldState.track_ids,
+                    'username':oldState.username,
+                    'disabled':disabled_keys,
+                    'in_favorites': this.in_favorites,
+                    'favorited': favs,
+                    'notif': false
+                }));
+
+                console.log(this.state.favorited);
+
+
+
+                })
+                .catch(err => {
+                    console.log(err);
+                    console.log("error :((");
+                })
+
+        }   
+
+
+        unfavoriteTrack = (track, index) => {
+            let token = cookie.get('access_token');
+    
+            axios.get(`/api/delete_from_playlist/${track}/favorites/${token}`)
+                    .then(res => {
+                        this.added[track] = false;
+                        this.state.favorited[track] = false;
+                        var disabled_keys = this.state['disabled'];
+                        disabled_keys[index] = true;
+                        this.setState(oldState => ({
+                        'clicked':oldState.clicked,
+                        'artists':oldState.artists,
+                        'track_names':oldState.track_names,
+                        'images':oldState.images,
+                        'previews':oldState.previews,
+                        'play':oldState.play,
+                        'current':oldState.url,
+                        'track_ids':oldState.track_ids,
+                        'username':oldState.username,
+                        'disabled':disabled_keys,
+                        'in_favorites': this.in_favorites,
+                        'notif': false
+                    }));
+    
+    
+    
+                    })
+                    .catch(err => {
+    
+                        console.log("error :(");
+                    })
+    
+            }
+
+
+
+
             handleClose = (event, reason) => {
                  this.setState(oldState => ({
                         'clicked':oldState.clicked,
@@ -200,6 +282,7 @@ class RelatedTracks extends React.Component {
                         'track_ids':oldState.track_ids,
                         'username':oldState.username,
                         'disabled':oldState.disabled,
+                        'in_favorites': oldState.in_favorites,
                         'notif': false
                   }));
 
@@ -229,6 +312,23 @@ class RelatedTracks extends React.Component {
                                 primary={this.state.track_names[index]}
                             secondary={this.state.artists[index]}
                              />
+
+                            {this.state.favorited[this.state['track_ids'][index]] &&
+                             <Button onClick={() => this.unfavoriteTrack(this.state['track_ids'][index], index)} > 
+                    
+                             <StarIcon/>
+                             
+                             
+                             </Button>
+                            }
+                            {!this.state.favorited[this.state['track_ids'][index]] &&
+                             <Button onClick={() => this.favoriteTrack(this.state['track_ids'][index], index)} > 
+                    
+                             <StarBorderIcon/>
+                             
+                             
+                             </Button>
+                            }
 
                              {this.state['previews'][index] &&
                              <div>

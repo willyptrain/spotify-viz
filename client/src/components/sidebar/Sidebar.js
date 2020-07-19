@@ -36,6 +36,7 @@ import cookie from 'js-cookie';
 import axios from 'axios';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
+import StarIcon from '@material-ui/icons/Star';
 
 
 
@@ -180,6 +181,11 @@ export default function MiniDrawer(userInfo) {
       text: "My Artists",
       image: <PersonOutlineIcon style={{color: '#DFE0E3'}}/>,
       link: "/top_artists"
+  },
+  {
+    text: "My Favorites",
+    image: <StarIcon style={{color: '#DFE0E3'}} />,
+    link: "/favorites",
   }
     ]
 

@@ -17,6 +17,7 @@ from .user import User
 from spotipy.exceptions import SpotifyException
 import spotipy.util as util
 import numpy as np
+from . import db
 
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, json, jsonify, make_response
@@ -370,12 +371,16 @@ def related_albums(albums, token):
 @bp_api.route('/related_tracks/<track>/<token>')
 def related_tracks(track, token):
     sp = spotipy.Spotify(auth=token)
+    user_id = sp.me()['id']
     recommendations = sp.recommendations(seed_artists=[track])
     artists = []
     images = []
     song_names = []
     previews = []
     ids = []
+    in_favorites = []
+    playlist_id = get_favorites_playlist_id(user_id)
+    print("playlist_id")
     for result in recommendations["tracks"]:
         track = sp.track(result["id"])
         ids.append(result["id"])
@@ -385,14 +390,20 @@ def related_tracks(track, token):
         artists.append(artist)
         song_names.append(name)
         images.append(result["album"]["images"][0]["url"])
-
+        if playlist_id != None:
+            track_in_favs = song_in_playlist(result['id'], playlist_id, token)
+            in_favorites.append(track_in_favs)
+        else:
+            in_favorites.append(False)
+    print(in_favorites)
     return jsonify({
         'artists':artists,
         'song_names':song_names,
         'images':images,
         'audio':previews,
         'ids':ids,
-        'username': sp.me()['display_name']
+        'username': sp.me()['display_name'],
+        'in_favorites': in_favorites,
     })
 
 @bp_api.route('/user_artists/<time_range>/<token>/<k>/')
@@ -460,6 +471,86 @@ def user_graph(time_range, token):
         'colors':colors
     })
 
+# gets  playlist id for favorites in db
+def get_favorites_playlist_id(user_id):
+    the_db = db.get_db()
+    playlist_id = the_db.execute(
+            'SELECT favorites_playlist FROM users WHERE spotify_id = ?', (user_id,)
+    ).fetchone()
+    the_db.commit()
+    return playlist_id['favorites_playlist']
+
+def save_favorites_playlist_id(user_id, playlist_id):
+    the_db = db.get_db()
+    the_db.execute(
+            '''UPDATE users SET favorites_playlist = ? WHERE spotify_id = ?''', (playlist_id, user_id)
+    )
+    the_db.commit()
+    return True
+
+def create_playlist(token, use="favorites", name="Spotipie Playlist",):
+    sp = spotipy.Spotify(auth=token)
+    user_id = sp.me()['id']
+    if use == "favorites":
+        playlist_id = get_favorites_playlist_id(user_id)
+        print("playlist id from db", playlist_id)
+        if playlist_id != None:
+            try:
+                sp.user_playlist(user=user_id, playlist_id=playlist_id)
+            except:
+                playlist_info = sp.user_playlist_create(user=user_id, name=name, public=True, description="My saved tracks from www.spotipie.com")
+                playlist_id = playlist_info['id']
+                save_favorites_playlist_id(user_id, playlist_id)
+            return playlist_id
+        else:
+            playlist_info = sp.user_playlist_create(user=user_id, name=name, public=True, description="My saved tracks from www.spotipie.com")
+            playlist_id = playlist_info['id']
+            save_favorites_playlist_id(user_id, playlist_id)
+            return playlist_id
+
+    else:
+        return 0
+
+@bp_api.route('/save_to_playlist/<track_id>/<token>')
+def save_to_playlist(track_id, token):
+    print("yooo", track_id)
+    sp = spotipy.Spotify(auth=token)
+    user_id = sp.me()['id']
+    playlist_id = create_playlist(use="favorites", name="Saved from Spotipie", token=token)
+    sp.user_playlist_add_tracks(user=user_id, playlist_id=playlist_id, tracks=[track_id])
+    return jsonify(0)
+
+def song_in_playlist(track_id, playlist_id, token):
+    sp = spotipy.Spotify(auth=token)
+    user_id = sp.me()['id']
+    if playlist_id == "favorites":
+        playlist_id = get_favorites_playlist_id(user_id)
+        if playlist_id != None:
+            track_list = sp.user_playlist_tracks(user=user_id)
+            track_info = sp.track(track_id)
+            print("Track info", track_info)
+            print("track list", track_list)
+            if track_info in track_list:
+                return True
+            else:
+                return False
+    else:
+        return False
+
+@bp_api.route('/delete_from_playlist/<track_id>/<playlist_id>/<token>')
+def delete_from_playlist(track_id, playlist_id, token):
+    sp = spotipy.Spotify(auth=token)
+    user_id = sp.me()['id']
+    if playlist_id == "favorites":
+        playlist_id = get_favorites_playlist_id(user_id)
+        if playlist_id != None:
+            sp.user_playlist_remove_all_occurrences_of_tracks(user=user_id, playlist_id=playlist_id, tracks=[track_id])
+            return jsonify('finished')
+        else:
+            return jsonify(0)
+    else:
+        return jsonify(0)
+
 @bp_api.route('/logout')
 def spotify_logout():
     for key in list(session.keys()):
@@ -473,6 +564,5 @@ def spotify_logout():
 @bp_api.route('/unprotected')
 def unprotected():
     return "You need some tokens!"
-
 
 

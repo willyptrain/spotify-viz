@@ -1,4 +1,7 @@
-from index import app
+from index import create_app
 import os
+
+app = create_app()
+
 if __name__ == "__main__":
     app.run()

@@ -21,9 +21,9 @@ API_VERSION = "v1"
 SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 
 # Server-side Parameters
-# REDIRECT_URI = "http://0.0.0.0/login"
-REDIRECT_URI = "http://www.spotipie.com/login"
-SCOPE = "user-library-modify, streaming, user-top-read, user-read-private, user-read-currently-playing, user-library-read, user-read-recently-played, user-read-playback-position"
+REDIRECT_URI = "http://localhost:3000/login"
+#REDIRECT_URI = "http://www.spotipie.com/login"
+SCOPE = "user-library-modify, streaming, user-top-read, user-read-private, user-read-currently-playing, user-library-read, user-read-recently-played, user-read-playback-position, playlist-modify-public, playlist-read-private"
 STATE = ""
 SHOW_DIALOG_bool = True
 SHOW_DIALOG_str = str(SHOW_DIALOG_bool).lower()
@@ -120,14 +120,14 @@ def create_user(data, access_token, refresh_token=""):
         print(data['images'])
         if data['images'] != []:
             db.execute(
-                'INSERT INTO users (spotify_id, full_name, display_image, access_token, refresh_token) VALUES (?, ?, ?, ?, ?)',
-                (data['id'], data['display_name'], data['images'][0]['url'], access_token, refresh_token)
+                'INSERT INTO users (spotify_id, full_name, display_image, access_token, refresh_token, favorites_playlist) VALUES (?, ?, ?, ?, ?, ?)',
+                (data['id'], data['display_name'], data['images'][0]['url'], access_token, refresh_token, 'None')
             )
         else:
             db.execute(
-                'INSERT INTO users (spotify_id, full_name, display_image, access_token, refresh_token) VALUES (?, ?, ?, ?, ?)',
+                'INSERT INTO users (spotify_id, full_name, display_image, access_token, refresh_token, favorites_playlist) VALUES (?, ?, ?, ?, ?, ?)',
                 (data['id'], data['display_name'],
-                 'https://f0.pngfuel.com/png/981/645/default-profile-picture-png-clip-art.png', access_token, refresh_token)
+                 'https://f0.pngfuel.com/png/981/645/default-profile-picture-png-clip-art.png', access_token, refresh_token, 'None')
             )
         db.commit()
 

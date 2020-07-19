@@ -7,5 +7,6 @@ CREATE TABLE users (
   full_name TEXT NOT NULL,
   display_image TEXT,
   access_token TEXT,
-  refresh_token TEXT
+  refresh_token TEXT,
+  favorites_playlist TEXT
 );
