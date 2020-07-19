@@ -520,6 +520,46 @@ def save_to_playlist(track_id, token):
     sp.user_playlist_add_tracks(user=user_id, playlist_id=playlist_id, tracks=[track_id])
     return jsonify(0)
 
+@bp_api.route('/save_to_db/<track_id>/<token>')
+def save_to_db(track_id, token):
+    print("yooo", track_id)
+    sp = spotipy.Spotify(auth=token)
+    user_id = sp.me()['id']
+    the_db = db.get_db()
+    fav_tracks = the_db.execute(
+            'SELECT fav_tracks FROM users WHERE spotify_id = ?', (user_id,)
+    ).fetchone()
+    fav_tracks = fav_tracks['fav_tracks']
+    if fav_tracks != None:
+        fav_tracks = str(fav_tracks)
+        fav_tracks += str(track_id) + " "
+    else:
+        fav_tracks = str(track_id) + " "
+    the_db.execute(
+            '''UPDATE users SET fav_tracks = ? WHERE spotify_id = ?''', (fav_tracks, user_id)
+    )
+    the_db.commit()
+    return jsonify(0)
+
+@bp_api.route('/delete_from_db/<track_id>/<playlist_id>/<token>')
+def delete_from_db(track_id, playlist_id, token):
+    sp = spotipy.Spotify(auth=token)
+    user_id = sp.me()['id']
+    the_db = db.get_db()
+    if playlist_id == "favorites":
+        fav_tracks = the_db.execute(
+            'SELECT fav_tracks FROM users WHERE spotify_id = ?', (user_id,)
+        ).fetchone()
+        fav_tracks = fav_tracks['fav_tracks']
+        fav_tracks = fav_tracks.replace(track_id + " ", "")
+        the_db.execute(
+            '''UPDATE users SET fav_tracks = ? WHERE spotify_id = ?''', (fav_tracks, user_id)
+        )
+        the_db.commit()
+        return jsonify('finished')
+    else:
+        return jsonify(0)
+
 def song_in_playlist(track_id, playlist_id, token):
     sp = spotipy.Spotify(auth=token)
     user_id = sp.me()['id']

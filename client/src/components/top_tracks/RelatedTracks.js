@@ -197,7 +197,7 @@ class RelatedTracks extends React.Component {
     favoriteTrack = (track, index) => {
         let token = cookie.get('access_token');
 
-        axios.get(`/api/save_to_playlist/${track}/${token}`)
+        axios.get(`/api/save_to_db/${track}/${token}`)
                 .then(res => {
                     this.added[track] = false;
                     let favs = this.state['favorited'];
@@ -236,7 +236,7 @@ class RelatedTracks extends React.Component {
         unfavoriteTrack = (track, index) => {
             let token = cookie.get('access_token');
     
-            axios.get(`/api/delete_from_playlist/${track}/favorites/${token}`)
+            axios.get(`/api/delete_from_db/${track}/favorites/${token}`)
                     .then(res => {
                         this.added[track] = false;
                         this.state.favorited[track] = false;

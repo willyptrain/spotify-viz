@@ -8,5 +8,6 @@ CREATE TABLE users (
   display_image TEXT,
   access_token TEXT,
   refresh_token TEXT,
-  favorites_playlist TEXT
+  favorites_playlist TEXT,
+  fav_tracks TEXT
 );
