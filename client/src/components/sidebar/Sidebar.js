@@ -40,7 +40,8 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { AudioPlayer } from 'mui-audio-player';
 import createTheme from '@material-ui/core/styles/createMuiTheme';
 import green from '@material-ui/core/colors/green';
-
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import { BrowserView,MobileView,isBrowser,isMobile} from "react-device-detect";
 
 
 
@@ -216,6 +217,11 @@ export default function MiniDrawer(userInfo) {
       text: "My Artists",
       image: <PersonOutlineIcon style={{color: '#DFE0E3'}}/>,
       link: "/top_artists"
+  },
+  {
+      text: "Recommended",
+      image: <TrendingUpIcon style={{color: '#DFE0E3'}}/>,
+      link: "/recommended"
   }
     ]
 
@@ -423,7 +429,7 @@ export default function MiniDrawer(userInfo) {
                 {dropdown['tracks'].map((track, index) =>
 
 
-                        <ListItem component="a" href={`/track/${track['id']}`}>
+                        <ListItem divider={true} component="a" href={`/track/${track['id']}`}>
                             <ListItemAvatar>
                               <Avatar
                                 alt="Album Image"

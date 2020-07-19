@@ -217,7 +217,7 @@ export function TrackPlayback(data) {
 }
 
 
-class TrackPage extends React.Component{
+class TrackPage extends React.Component {
     constructor(props) {
         super(props);
         console.log(props);

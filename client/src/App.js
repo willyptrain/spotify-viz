@@ -20,6 +20,7 @@ import { Nav } from 'react-bootstrap';
 import Sidebar from './components/sidebar/Sidebar';
 import Redirect from './components/common/Redirect.jsx'
 import TrackPage from './components/track/TrackPage.js'
+import RecommendedPage from './components/recommendations/RecommendedPage.js';
 
 class App extends Component{
 
@@ -111,6 +112,10 @@ class App extends Component{
                <Route exact path="/dashboard">
                  <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                  <Dash userInfo={userInfo}/>
+               </Route>
+               <Route exact path="/recommended">
+                 <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
+                 <RecommendedPage/>
                </Route>
 
             </Switch>

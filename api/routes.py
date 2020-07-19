@@ -144,6 +144,26 @@ def artist_info(id, token):
         }
     })
 
+
+@bp_api.route('/recommended_by_genre/<genre>/<token>/')
+def recommended_by_genre(genre, token):
+    sp = spotipy.Spotify(auth=token)
+    query = "genre:" + genre
+    type = ["track"]
+    limit = 50
+    search = sp.search(q=query, limit=limit, type=type)
+    artist_info = []
+    for k in search['tracks']['items']:
+        artist = k['artists'][0]['id']
+        artist_info.append(sp.artist(artist))
+    return {
+        'search': search,
+        'artist_info': artist_info
+    }
+
+
+
+
 @bp_api.route('/user_info/<token>/')
 def user_info(token):
     sp = spotipy.Spotify(auth=token)
