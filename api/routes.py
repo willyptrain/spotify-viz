@@ -148,10 +148,13 @@ def artist_info(id, token):
 @bp_api.route('/recommended_by_genre/<genre>/<token>/')
 def recommended_by_genre(genre, token):
     sp = spotipy.Spotify(auth=token)
+    print(genre)
     query = "genre:" + genre
     type = ["track"]
     limit = 50
     search = sp.search(q=query, limit=limit, type=type)
+    # recs = sp.recommendations(seed_genres=[genres][0:1], limit=20)
+    # print(json.dumps(search,indent=4))
     artist_info = []
     for k in search['tracks']['items']:
         artist = k['artists'][0]['id']
