@@ -55,8 +55,8 @@ class TopArtists extends React.Component{
                             onChange={this.handleSubmit}
                             aria-label="disabled tabs example"
                           >
-                                <Tab className="track-tab" value="short_term" label="Week" />
-                                <Tab className="track-tab" value="medium_term" label="Month" />
+                                <Tab className="track-tab" value="short_term" label="Month" />
+                                <Tab className="track-tab" value="medium_term" label="6 Months" />
                                 <Tab className="track-tab" value="long_term" label="All Time" />
                           </Tabs>
                     </label>

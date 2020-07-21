@@ -18,7 +18,6 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import StarIcon from '@material-ui/icons/Star';
 
 
 class TopTracks extends React.Component{
@@ -75,8 +74,8 @@ class TopTracks extends React.Component{
                         onChange={this.handleSubmit}
                         aria-label="disabled tabs example"
                       >
-                            <Tab className="track-tab" value="short_term" label="Week" />
-                            <Tab className="track-tab" value="medium_term" label="Month" />
+                            <Tab className="track-tab" value="short_term" label="Month" />
+                            <Tab className="track-tab" value="medium_term" label="6 Months" />
                             <Tab className="track-tab" value="long_term" label="All Time" />
                       </Tabs>
                 </label>

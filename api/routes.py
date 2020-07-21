@@ -533,6 +533,8 @@ def save_to_db(track_id, token):
     if fav_tracks != None:
         fav_tracks = str(fav_tracks)
         fav_tracks += str(track_id) + " "
+    elif track_id in fav_tracks:
+        return jsonify(0)
     else:
         fav_tracks = str(track_id) + " "
     the_db.execute(
@@ -582,18 +584,19 @@ def fetch_fav_tracks(token):
         all_tracks = fav_tracks.split()
         
         tracks = sp.tracks(tracks=all_tracks)['tracks']
-        print(tracks)
-        fav_tracks = []
+        artists = []
+        song_names = []
+        images = []
+        ids = []
+        previews = []
         for i, result in enumerate(tracks):
-                fav_tracks.append({
-                    'track_name':result['name'],
-                    'artist':result['artists'][0]['name'],
-                    'uri':result['uri'],
-                    'id':result['artists'][0]['id'],
-                    'image':result['album']['images'][0]['url']
-                })
-    print(fav_tracks)
-    return jsonify(fav_tracks=fav_tracks)
+                    song_names.append(result['name'])
+                    artists.append(result['artists'][0]['name'])
+                    images.append(result['album']['images'][0]['url'])
+                    ids.append(result['artists'][0]['id'])
+                    previews.append(result['preview_url'])
+    print(song_names)
+    return jsonify(song_names=song_names, artists=artists, images=images, ids=ids, previews=previews, username=sp.me()['display_name'])
 
 
 def song_in_playlist(track_id, playlist_id, token):
