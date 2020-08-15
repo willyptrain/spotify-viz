@@ -207,6 +207,7 @@ class FavTracks extends React.Component {
             .then(res => {
                 fetch = res.data;
                 console.log(res.data);
+                this.state.favorited = new Array(fetch.artists.length).fill(true);
                 this.setState({
                     'clicked':true,
                     'artists':fetch.artists,
@@ -228,6 +229,17 @@ class FavTracks extends React.Component {
         })
         }
 
+        handleDelete = (trackId, trackName, artistName, imageId, previewId) => {
+            const tracks = this.state.track_ids.filter(track => track !== trackId);
+            const names =  this.state.track_names.filter(track => track !== trackName);
+            const artists =  this.state.artists.filter(name => name !== artistName);
+            const images = this.state.images.filter(image => image !== imageId);
+            const previews = this.state.previews.filter(preview => preview !== previewId);
+
+            this.setState({ track_ids: tracks,
+                            track_names: names,
+                            artists: artists });
+        };
 
         unfavoriteTrack = (track, index) => {
             let token = cookie.get('access_token');
@@ -236,8 +248,11 @@ class FavTracks extends React.Component {
                     .then(res => {
                         this.added[track] = false;
                         this.state.favorited[track] = false;
+                        this.handleDelete(this.state.track_ids[index], this.state.track_names[index], this.state.artists[index], this.state.images[index], this.state.previews[index]);
                         var disabled_keys = this.state['disabled'];
                         disabled_keys[index] = true;
+                        //var new_artists = oldState.artists.splice((index-1), 1);
+                        
                         this.setState(oldState => ({
                         'clicked':oldState.clicked,
                         'artists':oldState.artists,
@@ -309,7 +324,7 @@ class FavTracks extends React.Component {
                             secondary={this.state.artists[index]}
                              />
 
-                            {this.state.favorited[this.state['track_ids'][index]] &&
+                            {!this.state.favorited[this.state['track_ids'][index]] &&
                              <Button onClick={() => this.unfavoriteTrack(this.state['track_ids'][index], index)} > 
                     
                              <StarIcon/>
@@ -317,7 +332,7 @@ class FavTracks extends React.Component {
                              
                              </Button>
                             }
-                            {!this.state.favorited[this.state['track_ids'][index]] &&
+                            {this.state.favorited[this.state['track_ids'][index]] &&
                              <Button onClick={() => this.favoriteTrack(this.state['track_ids'][index], index)} > 
                     
                              <StarBorderIcon/>

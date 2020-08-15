@@ -553,7 +553,10 @@ def delete_from_db(track_id, playlist_id, token):
             'SELECT fav_tracks FROM users WHERE spotify_id = ?', (user_id,)
         ).fetchone()
         fav_tracks = fav_tracks['fav_tracks']
-        fav_tracks = fav_tracks.replace(track_id + " ", "")
+        if str(track_id) + " " in fav_tracks:
+            print(True)
+        fav_tracks = fav_tracks.replace(str(track_id) + " ", "", 10)
+        print("Fav_tracks", fav_tracks)
         the_db.execute(
             '''UPDATE users SET fav_tracks = ? WHERE spotify_id = ?''', (fav_tracks, user_id)
         )
@@ -571,7 +574,7 @@ def fetch_fav_tracks(token):
             'SELECT fav_tracks FROM users WHERE spotify_id = ?', (user_id,)
     ).fetchone()
     fav_tracks = fav_tracks['fav_tracks']
-    if fetch_fav_tracks == None:
+    if fav_tracks == None:
         fav_tracks = []
         fav_tracks.append({
                 'track_name':'Empty',
@@ -582,7 +585,7 @@ def fetch_fav_tracks(token):
         return jsonify(fav_tracks)
     else:
         all_tracks = fav_tracks.split()
-        
+        print(all_tracks)
         tracks = sp.tracks(tracks=all_tracks)['tracks']
         artists = []
         song_names = []
@@ -590,11 +593,14 @@ def fetch_fav_tracks(token):
         ids = []
         previews = []
         for i, result in enumerate(tracks):
+            try:
                     song_names.append(result['name'])
                     artists.append(result['artists'][0]['name'])
                     images.append(result['album']['images'][0]['url'])
-                    ids.append(result['artists'][0]['id'])
+                    ids.append(result['id'])
                     previews.append(result['preview_url'])
+            except:
+                continue
     print(song_names)
     return jsonify(song_names=song_names, artists=artists, images=images, ids=ids, previews=previews, username=sp.me()['display_name'])
 
