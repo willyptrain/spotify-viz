@@ -12,7 +12,8 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-
+import SyncIcon from '@material-ui/icons/Sync';
+import PlaylistButtons from './PlaylistButtons';
 
 class Alert extends React.Component {
 
@@ -312,6 +313,7 @@ class FavTracks extends React.Component {
         <div style={{marginLeft: '60px', backgroundColor: 'white', overflow: 'scroll'}}>
 
             <h2 style={{fontWeight: '300', marginTop: '20px', marginBottom: '0px'}}>Favorite Tracks</h2>
+            <PlaylistButtons/>
             <List>
                 {this.state.clicked &&
                     this.state.artists.map((artist, index) =>

@@ -21,6 +21,7 @@ import Sidebar from './components/sidebar/Sidebar';
 import Redirect from './components/common/Redirect.jsx'
 import UserFavorites from './components/favorites/UserFavorites';
 
+
 class App extends Component{
 
   constructor(props) {
@@ -107,7 +108,7 @@ class App extends Component{
                  <Dash userInfo={userInfo}/>
                </Route>
                <Route exact path="/favorites">
-               <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
+               <Sidebar userInfo={userInfo}/>
                <UserFavorites userInfo={userInfo}/>
                </Route>
             </Switch>
