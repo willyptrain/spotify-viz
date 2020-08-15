@@ -5,6 +5,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import cookie from 'js-cookie';
 import axios from 'axios';
 import ClearAllIcon from '@material-ui/icons/ClearAll';
+import './playlistbuttons.css';
 
 class PlaylistButtons extends React.Component{
     constructor(props) {
@@ -116,13 +117,15 @@ class PlaylistButtons extends React.Component{
     }
     render(){
         return(
-            <div align="right">
+            <div>
+            <div id='black-buttons' align="right" style={{marginRight: '20px'}}>
             {!this.state.hasPlaylist && 
-            <Button onClick={() => this.createFavoritesPlaylist()} variant="contained" style={{color: "white", backgroundColor: "#151515"}}> <SyncIcon color="white"/>Sync to Spotify Playlist</Button>}
+            <Button onClick={() => this.createFavoritesPlaylist()} variant="contained" className="black-buttons"style={{color: "#DFE0E3", backgroundColor: "#313331"}} > <SyncIcon color="white"/>Sync to Spotify Playlist</Button>}
 
-            {this.state.hasPlaylist &&  <Button  onClick={()=> window.open(this.state.playlistUrl, "_blank")} variant="contained" style={{color: "white", backgroundColor: "#151515"}}>View Playlist</Button>}
-            {this.state.hasPlaylist && <Button onClick={() => this.deleteFavoritesPlaylist()} variant="contained" style={{color: "white", backgroundColor: "red"}}> <DeleteIcon color="white"/>Delete Spotify Playlist</Button>}
-            <Button variant="contained" onClick={() => this.clearFavsHelper()} style={{color: "white", backgroundColor: "#151515"}}> Clear Favorites</Button>
+            {this.state.hasPlaylist &&   <Button style={{color: "#DFE0E3", backgroundColor: "#313331"}} onClick={()=> window.open(this.state.playlistUrl, "_blank")} variant="contained">View Playlist</Button>}
+            {this.state.hasPlaylist && <Button onClick={() => this.deleteFavoritesPlaylist()} variant="contained" style={{color: "#DFE0E3", backgroundColor: "red"}}> <DeleteIcon color="white"/>Delete Spotify Playlist</Button>}</div>
+            <Button style={{color: "#DFE0E3", backgroundColor: "#313331"}} variant="contained" onClick={() => this.clearFavsHelper()} className="black-buttons"> Clear Favorites</Button>
+            
             </div>
         )
     }

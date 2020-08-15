@@ -1,0 +1,9 @@
+#black-buttons{
+    color: "white" !important;
+    background: "rgba(21,21,21,1)" !important;
+}
+
+.MuiButton-contained{
+    color: "white" !important;
+    background-color: "rgba(21,21,21,1)" !important;
+}

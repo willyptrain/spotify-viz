@@ -312,7 +312,7 @@ class FavTracks extends React.Component {
 
         <div style={{marginLeft: '60px', backgroundColor: 'white', overflow: 'scroll'}}>
 
-            <h2 style={{fontWeight: '300', marginTop: '20px', marginBottom: '0px'}}>Favorite Tracks</h2>
+            <h2 style={{fontSize: '35px', fontWeight: '80', marginTop: '20px', marginBottom: '0px'}}>Favorite Tracks</h2>
             <PlaylistButtons/>
             <List>
                 {this.state.clicked &&
