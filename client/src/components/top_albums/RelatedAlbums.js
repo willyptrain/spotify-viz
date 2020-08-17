@@ -24,6 +24,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
+import StarIcon from '@material-ui/icons/Star';
+import StarBorderIcon from '@material-ui/icons/StarBorder';
 
 
 class Alert extends React.Component {
@@ -49,8 +51,9 @@ class RelatedAlbums extends React.Component {
         console.log(this.props);
         this.nextProps = this.props;
         this.mounted = false;
+        this.added = {};
         this.state = {value: 'short_term', clicked: false,
-                            data: null, artist:this.props.artist};
+                            data: null, artist:this.props.artist, favorited: {}};
         console.log("WEEEEE2222E");
 
 
@@ -71,10 +74,11 @@ class RelatedAlbums extends React.Component {
     async componentDidMount() {
         let token = cookie.get('access_token');
         this.mounted = true;
-        console.log(this.nextProps.artist.artist)
+        console.log(this.nextProps.artist);
         axios.get(`/api/album_track_info/${this.nextProps.artist.id}/${token}`)
         .then(res => {
             fetch = res.data;
+            console.log(res.data);
             if(this.mounted) {
                 this.setState(oldState => ({
                     'clicked':true,
@@ -82,6 +86,7 @@ class RelatedAlbums extends React.Component {
                     'album_info':fetch.tracks_in_album,
                     'popularities':fetch.popularities,
                     'track_names':fetch.track_names,
+                    'track_ids': fetch.ids,
                     'previews':fetch.audio,
                     'current':null,
                     'username':fetch.username,
@@ -197,6 +202,76 @@ class RelatedAlbums extends React.Component {
                     })
     }
 
+    favoriteTrack = (track, index) => {
+        let token = cookie.get('access_token');
+
+        axios.get(`/api/save_to_db/${track}/${token}`)
+                .then(res => {
+                    this.added[track] = false;
+                    let favs = this.state['favorited'];
+                    favs[track] = true;
+                    var disabled_keys = this.state['disabled'];
+                    disabled_keys[index] = true;
+                    this.setState(oldState => ({
+                        'clicked':true,
+                        'album_name':oldState.album_name,
+                        'album_info':oldState.album_info,
+                        'popularities':oldState.popularities,
+                        'track_names':oldState.track_names,
+                        'previews':oldState.previews,
+                        'play': oldState.play,
+                        'username':oldState.username,
+                        'disabled':oldState.disabled,
+                        'notif': false,
+                        'favorited': favs,
+                }));
+
+                console.log(this.state.favorited);
+
+
+
+                })
+                .catch(err => {
+                    console.log(err);
+                    console.log("error :((");
+                })
+
+        }   
+
+        unfavoriteTrack = (track, index) => {
+            let token = cookie.get('access_token');
+    
+            axios.get(`/api/delete_from_db/${track}/favorites/${token}`)
+                    .then(res => {
+                        this.added[track] = false;
+                        this.state.favorited[track] = false;
+                        var disabled_keys = this.state['disabled'];
+                        disabled_keys[index] = true;
+                        this.setState(oldState => ({
+                            'clicked':true,
+                            'album_name':oldState.album_name,
+                            'album_info':oldState.album_info,
+                            'popularities':oldState.popularities,
+                            'track_names':oldState.track_names,
+                            'previews':oldState.previews,
+                            'play': oldState.play,
+                            'username':oldState.username,
+                            'disabled':oldState.disabled,
+                            'notif': false,
+                            'in_favorites': this.in_favorites,
+                            'favorited': this.favorited
+                    }));
+    
+    
+    
+                    })
+                    .catch(err => {
+    
+                        console.log("error :(");
+                    })
+    
+            }
+
 
         handleClose = (event, reason) => {
                  this.setState(oldState => ({
@@ -231,29 +306,47 @@ class RelatedAlbums extends React.Component {
         <CardHeader style={{fontFamily: 'Montserrat !important'}} title={this.state.album_name} subheader="Tracks in Album" />
         <CardContent>
         <List>
-            {this.state.clicked &&
-                this.state.previews.map((name, index) =>
-                    <div>
-                    <ListItem>
-                        <ListItemText
-                            primary={this.state.track_names[index]}
+        {this.state.clicked &&
+                    this.state.track_names.map((name, index) =>
+                        <ListItem>
+                            <ListItemText
+                                primary={name}
+                            secondary={this.state.artist.artists['0']['name']}
+                             />
 
-                         />
-                            {this.state['previews'][index] &&
+                            {this.state.favorited[this.state['track_ids'][index]] &&
+                             <Button onClick={() => this.unfavoriteTrack(this.state['track_ids'][index], index)} > 
+                    
+                             <StarIcon/>
+                             
+                             
+                             </Button>
+                            }
+                            {!this.state.favorited[this.state['track_ids'][index]] &&
+                             <Button onClick={() => this.favoriteTrack(this.state['track_ids'][index], index)} > 
+                    
+                             <StarBorderIcon/>
+                             
+                             
+                             </Button>
+                            }
+
+                             {this.state['previews'][index] &&
                              <div>
                              <Button onClick={() => this.playTrack(this.state['previews'][index], this.state['play'])}>
-                                    {(!(this.state['play'] && (this.state['current'] == this.state['previews'][index]))) ? "Play" : "Stop"}</Button>
+                             {(!(this.state['play'] && (this.state['current'] == this.state['previews'][index]))) ? "Play" : "Stop"}
+                             </Button>
                              </div>
                              }
                              {
                              this.state['username']  && !this.state['disabled'][index] &&
-                                <Button onClick={() => this.saveTrack(this.state['album_info'][index], index)}>+</Button>
-                              }
-                    </ListItem>
-                    <Divider />
-                    </div>
-                )
-            }
+                             <Button onClick={() => this.saveTrack(this.state['track_ids'][index], index)}>+</Button>
+                               }
+
+                        </ListItem>
+
+                    )
+                }
             </List>
         </CardContent>
             </Card>

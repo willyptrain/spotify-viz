@@ -207,11 +207,13 @@ def album_track_info(album, token):
     track_names  = []
     track_ratings = []
     previews = []
+    ids = []
     for track in album_info["tracks"]["items"]:
         track_info = sp.track(track['id'])
         track_names.append(track_info['name'])
         track_ratings.append(track_info['popularity'])
         previews.append(track_info["preview_url"])
+        ids.append(track['id'])
 
 
     return {
@@ -220,6 +222,7 @@ def album_track_info(album, token):
         'popularities':track_ratings,
         'previews':previews,
         'track_names':track_names,
+        'ids': ids,
         'audio': previews,
         'username': sp.me()['display_name']
     }
