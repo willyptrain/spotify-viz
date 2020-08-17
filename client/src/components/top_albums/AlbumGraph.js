@@ -16,9 +16,12 @@ import Modal from '@material-ui/core/Modal';
 import TopAlbums from './TopAlbums.js';
 import PropTypes from 'prop-types'
 import { Line } from 'react-chartjs-2';
-
-
-
+import { makeStyles } from '@material-ui/core/styles';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 
 class AlbumGraph extends React.Component {
@@ -30,13 +33,16 @@ class AlbumGraph extends React.Component {
             this.chartReference = React.createRef();
             this.mounted = false;
             this.state = {value: 'short_term', clicked: false,
-                            data: [], artist:this.props.artist, feature:'valence'};
+                            data: [], artist:this.props.artist, feature:'valence', classes: null};
 
 
 
 
 
     }
+      
+    
+    
 
      componentWillReceiveProps(nextProps) {
 
@@ -58,10 +64,64 @@ class AlbumGraph extends React.Component {
         .then(res => {
             if(this.mounted){
                 fetch = res.data;
+                console.log(fetch.labels);
                 this.chartReference = React.createRef();
                 if(fetch.scores[this.state.feature].length > 1) {
                     this.setState(oldState => ({
                         'clicked': true,
+                        'labels': fetch.labels,
+                        'album_info':fetch.album_info,
+                        'data': [{
+                            labels: fetch.names,
+                            'datasets': [{
+                                'data': fetch.scores[oldState.feature],
+                                'labels': oldState.feature,
+                                fill: true,
+                                backgroundColor: "rgba(75,192,192,0.2)",
+                                borderColor: "rgba(75,192,192,1)"
+                            }
+                            ]
+                        }]
+
+
+                    }));
+                }
+                else {
+                    this.setState(oldState => ({
+                        'clicked': true,
+                        'album_info':fetch.album_info,
+                        'data': null
+
+
+
+                    }));
+                }
+
+            }
+            console.log(this.state);
+                    return () => { this.mounted = false };
+
+
+
+        })
+        .catch(err => {
+            console.log('error :(')
+            console.log(err)
+        })
+    }
+
+    changeFeature = () => {
+        let token = cookie.get('access_token');
+        this.mounted = true;
+        axios.get(`/api/album/${this.nextProps.artist.uri}/${token}`)
+        .then(res => {
+            if(this.mounted){
+                fetch = res.data;
+                this.chartReference = React.createRef();
+                if(fetch.scores[this.state.feature].length > 1) {
+                    this.setState(oldState => ({
+                        'clicked': true,
+                        'labels': fetch.labels,
                         'album_info':fetch.album_info,
                         'data': [{
                             labels: fetch.names,
@@ -103,25 +163,58 @@ class AlbumGraph extends React.Component {
     }
 
 
-
     componentWillUnmount() {
         this.mounted = false;
 
     }
 
+      
+        handleChange = (event) => {
+          this.setState({
+              'feature' : event.target.value
+          })
+          this.changeFeature();
+        };
+    
+    
+    useStyles = makeStyles((theme) => ({
+        formControl: {
+          margin: theme.spacing(1),
+          minWidth: 120,
+        },
+        selectEmpty: {
+          marginTop: theme.spacing(2),
+        },
+      }));
 
-            render() {
+            render(){
+
+                
            if(this.state.data) {
             return(
 
-        <div style={{backgroundColor: 'white'}}>
+        <div style={{backgroundColor: 'white', marginBottom: '200px'}}>
+            <FormControl>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={this.state.feature}
+          onChange={this.handleChange}
+        >
+          <MenuItem value={'valence'}>Positivity</MenuItem>
+          <MenuItem value={'danceability'}>Danceability</MenuItem>
+          <MenuItem value={'energy'}>Energy</MenuItem>
+          <MenuItem value={'instrumentalness'}>Instrumentalness</MenuItem>
+          <MenuItem value={'liveness'}>Liveness</MenuItem>
+        </Select>
+      </FormControl>
         <Card>
             {this.state.clicked && (this.state.data[0]['datasets'][0]['data'].length > 1) &&
                 <Line ref={this.chartReference}
                                 data={this.state.data[0]} options={{
             title:{
               display:true,
-              text:`Positivity Score by Track`,
+              text:`${this.state.labels[this.state.feature]} Score by Track`,
               fontSize:20,
               fontFamily: 'Montserrat'
             },
@@ -155,7 +248,7 @@ class AlbumGraph extends React.Component {
             return (<Card><CardContent><p>Cannot construct graph for songs in {info.name}</p></CardContent></Card>);
             }
 
-}
+        }
 
 export default AlbumGraph;
 

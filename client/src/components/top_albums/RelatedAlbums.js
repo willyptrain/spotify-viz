@@ -48,13 +48,11 @@ class RelatedAlbums extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log(this.props);
         this.nextProps = this.props;
         this.mounted = false;
         this.added = {};
         this.state = {value: 'short_term', clicked: false,
                             data: null, artist:this.props.artist, favorited: {}};
-        console.log("WEEEEE2222E");
 
 
     }
@@ -74,11 +72,10 @@ class RelatedAlbums extends React.Component {
     async componentDidMount() {
         let token = cookie.get('access_token');
         this.mounted = true;
-        console.log(this.nextProps.artist);
         axios.get(`/api/album_track_info/${this.nextProps.artist.id}/${token}`)
         .then(res => {
             fetch = res.data;
-            console.log(res.data);
+            
             if(this.mounted) {
                 this.setState(oldState => ({
                     'clicked':true,
@@ -171,13 +168,11 @@ class RelatedAlbums extends React.Component {
 
 
     saveTrack = (track,index) => {
-        console.log(track);
         let token = cookie.get('access_token');
         axios.get(`/api/track/save/${track['id']}/${this.state['username']}/${token}`)
                     .then(res => {
 
                         var disabled_keys = this.state['disabled'];
-                        console.log(disabled_keys)
                         disabled_keys[index] = true
                         this.setState(oldState => ({
                             'clicked':true,

@@ -47,7 +47,7 @@ class RelatedTracks extends React.Component {
 
     constructor(props) {
         super(props);
-        console.log("mee");
+        
             this.added = {};
             this.chartReference = React.createRef();
             this.nextProps = this.props;
@@ -84,6 +84,7 @@ class RelatedTracks extends React.Component {
                 'disabled':new Array(fetch.audio.length).fill(false),
                 'notif': false,
                 'in_favorites': fetch.in_favorites,
+                
             });
 
         })

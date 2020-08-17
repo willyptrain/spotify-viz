@@ -284,7 +284,7 @@ def search_tracks(keyword, token):
 def album_info(album, token):
     sp = spotipy.Spotify(auth=token)
     feature_list = ['danceability', 'energy', 'instrumentalness', 'liveness', 'valence']
-    labels = ['Danceability', 'Energy', 'Instrumentalness', 'Liveness', 'Positivity']
+    labels = {'danceability': 'Danceability', 'energy': 'Energy', 'instrumentalness':'Instrumentalness', 'liveness': 'Liveness', 'valence': 'Positivity'}
     scores = {'danceability': [], 'energy':[], 'instrumentalness':[], 'liveness':[], 'valence':[]}
     names = []
     dataset = {'danceability': [], 'energy':[], 'instrumentalness':[], 'liveness':[], 'valence':[]}
