@@ -61,7 +61,7 @@ def create_app():
     def track():
         return app.send_static_file('index.html')
 
-    @app.route('/recommendations', methods=["GET"])
+    @app.route('/recommended', methods=["GET"])
     def recommendations():
         return app.send_static_file('index.html')
 
