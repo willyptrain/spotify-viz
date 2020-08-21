@@ -6,14 +6,14 @@ from oauthlib.oauth2.rfc6749.errors import TokenExpiredError
 import spotipy
 import json
 import webbrowser
-from . import lists, user, node2vec_model
+# from . import lists, user, node2vec_model
 from .settings import spotify_id, spotify_secret
 import math
 # from settings import spotify_secret, spotify_id
 # import node2vec_model
-from .node2vec_model import Node2VecModel
-from .lists import items
-from .user import User
+# from .node2vec_model import Node2VecModel
+# from .lists import items
+# from .user import User
 from spotipy.exceptions import SpotifyException
 import spotipy.util as util
 import numpy as np
@@ -206,6 +206,7 @@ def user_info(token):
     short_term_genres = u[short_genre_values]
     short_genre_values = sorted(count,reverse=True, key=lambda x: int(x))
 
+    recs = sp.search(q="genre:"+list(long_term_genres)[0], limit=50, type=["track"])
 
         
     return jsonify([{
@@ -219,6 +220,7 @@ def user_info(token):
         'short_genre_scores': list(map(int,short_genre_values)),
         'long_genre_scores':list(map(int,long_genre_values)),
         'long_term_genres' : list(long_term_genres),
+        'recommendations': recs
     }])
 
 
