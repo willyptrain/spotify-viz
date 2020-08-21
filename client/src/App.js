@@ -21,6 +21,8 @@ import Sidebar from './components/sidebar/Sidebar';
 import Redirect from './components/common/Redirect.jsx'
 import UserFavorites from './components/favorites/UserFavorites';
 
+import TrackPage from './components/track/TrackPage.js'
+import RecommendedPage from './components/recommendations/RecommendedPage.js';
 
 class App extends Component{
 
@@ -95,6 +97,12 @@ class App extends Component{
                 <SearchTracks style={{height:'100%'}} id={props.match.params} />
                 </div>
                } />
+               <Route exact path="/track/:uri" render={(props) =>
+                <div style={{height:'100%'}}>
+                <Sidebar playback={true} id={props.match.params} searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
+                <TrackPage style={{height:'100%'}} id={props.match.params} />
+                </div>
+               } />
                <Route exact path="/top_artists">
                <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <TopArtists/>
@@ -111,6 +119,12 @@ class App extends Component{
                <Sidebar userInfo={userInfo}/>
                <UserFavorites userInfo={userInfo}/>
                </Route>
+               
+               <Route exact path="/recommended">
+                 <Sidebar searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
+                 <RecommendedPage/>
+               </Route>
+
             </Switch>
           </div>
         </Router>

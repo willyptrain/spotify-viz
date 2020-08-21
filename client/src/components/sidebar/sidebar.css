@@ -21,7 +21,38 @@
   margin-right: 3%;
   right: 0;
   position: absolute;
-  z-index:3;
+  z-index:4;
   overflow: scroll;
    background: white;
+
 }
+.loop-icon {
+    display: none !important;
+}
+.player-btn  {
+    fill: #69f0ae !important;
+    color: #69f0ae !important;
+    background: #69f0ae !important;
+
+}
+.text-audio {
+    position: relative;
+    top: 1.5vh;
+}
+
+
+.playback {
+    margin-left: 90px;
+   position: absolute;
+   z-index: 4;
+   width: 450px;
+   height: 10vh;
+   top: 2vh;
+
+}
+.playback-player {
+   position: 'relative';
+   top: '1.5vh';
+   left: '12px';
+   height: '8vh'
+ }

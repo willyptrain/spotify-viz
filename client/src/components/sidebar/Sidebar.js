@@ -38,6 +38,12 @@ import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 import StarIcon from '@material-ui/icons/Star';
 
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { AudioPlayer } from 'mui-audio-player';
+import createTheme from '@material-ui/core/styles/createMuiTheme';
+import green from '@material-ui/core/colors/green';
+import TrendingUpIcon from '@material-ui/icons/TrendingUp';
+import { BrowserView,MobileView,isBrowser,isMobile} from "react-device-detect";
 
 
 
@@ -154,6 +160,7 @@ const useStylesSearch = makeStyles((theme) => ({
 }));
 
 
+
 export default function MiniDrawer(userInfo) {
   const classes = useStyles();
   const classesSearch = useStylesSearch();
@@ -163,6 +170,37 @@ export default function MiniDrawer(userInfo) {
   const [searchValue, setSearchValue] = React.useState(searchVal);
   const [hideDropdown, setHideDropdown] = React.useState(true);
   const [dropdown, setDropdown] = React.useState([]);
+
+  const [preview, setPreview] = React.useState(false);
+
+
+    const load_preview = (data) => {
+
+          let id = data.uri;
+          let token = cookie.get('access_token');
+          axios.get(`/api/trackPage/${id}/${token}/`)
+            .then(res => {
+                console.log(res.data);
+                setPreview(res.data.track['preview_url']);
+                console.log(res.data.track['preview_url']);
+            })
+            .catch(err => {
+                console.log('yo')
+                console.log(err)
+            })
+
+
+    }
+
+
+
+
+  if(userInfo.id && userInfo.playback) {
+      load_preview(userInfo.id);
+
+  }
+
+
 
 
   const icons = [{
@@ -186,6 +224,11 @@ export default function MiniDrawer(userInfo) {
     text: "My Favorites",
     image: <StarIcon style={{color: '#DFE0E3'}} />,
     link: "/favorites",
+  },
+  {
+      text: "Recommended",
+      image: <TrendingUpIcon style={{color: '#DFE0E3'}}/>,
+      link: "/recommended"
   }
     ]
 
@@ -275,11 +318,15 @@ export default function MiniDrawer(userInfo) {
     }
   }
 
-
-
   const onChange = React.useCallback(e => setDropdown(e.value), []);
 
-
+    const muiTheme = createTheme({
+      palette: {
+        type: 'light',
+        primary: green,
+        secondary: green,
+      },
+    });
 
   return (
 
@@ -347,10 +394,25 @@ export default function MiniDrawer(userInfo) {
 
 
 
+    {userInfo.playback && preview &&
+    <div className="playback">
+        <ThemeProvider theme={muiTheme}>
 
+            <AudioPlayer
+          src={preview}
+          autoPlay={false} classNames={{
+            loopIcon: 'loop-icon',
+            text: 'text-audio'
+          }}
+        />
+        </ThemeProvider>
+
+    </div>
+    }
 
 
      <div class="search-bar">
+
         <Paper autocomplete="off" component="form" onSubmit={searchTracks} className={classesSearch.root}>
             <InputBase
                 className={classesSearch.input}
@@ -368,24 +430,27 @@ export default function MiniDrawer(userInfo) {
         <div className="autocomplete" onChange={onChange}>
 
             {'tracks' in dropdown && dropdown['tracks'].length > 0 &&
-                dropdown['tracks'].map((track, index) =>
 
-                    <Paper className="dropdown-container">
+               <Paper className="dropdown-container">
                         <List>
-                        <ListItem>
+                {dropdown['tracks'].map((track, index) =>
+
+
+                        <ListItem divider={true} component="a" href={`/track/${track['id']}`}>
                             <ListItemAvatar>
                               <Avatar
                                 alt="Album Image"
                                 src={track['album']['images'][0]['url']}
                               />
                             </ListItemAvatar>
-                            <ListItemText primary={track['name']} secondary={track['artists'][0].name} />
+                          <ListItemText primary={track['name']} secondary={track['artists'][0].name} />
+                        <Divider />
+                         </ListItem>
+                          )}
 
-                        </ListItem>
-                    </List>
+</List>
                     </Paper>
 
-                )
 
 
             }

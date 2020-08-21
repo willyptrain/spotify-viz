@@ -75,7 +75,7 @@ class SearchTracks extends React.Component{
                     </TableHead>
 
                     {this.state['tracks'] && this.state['tracks'].map((track,index) =>
-                        <TableRow key={track['name']}>
+            <TableRow key={track['name']} component="a" href={`/track/${track['id']}`}>
               <TableCell className="table-results" component="th" scope="row">
                 <div className="avatar-head">
                     <Avatar className="table-avatar" src={track['album']['images'].length > 0 ? track['album']['images'][0]['url'] : ""} />&emsp; <h6 className="track-name">{track.name}</h6>

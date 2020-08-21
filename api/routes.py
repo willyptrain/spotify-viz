@@ -145,6 +145,29 @@ def artist_info(id, token):
         }
     })
 
+
+@bp_api.route('/recommended_by_genre/<genre>/<token>/')
+def recommended_by_genre(genre, token):
+    sp = spotipy.Spotify(auth=token)
+    print(genre)
+    query = "genre:" + genre
+    type = ["track"]
+    limit = 50
+    search = sp.search(q=query, limit=limit, type=type)
+    # recs = sp.recommendations(seed_genres=[genres][0:1], limit=20)
+    # print(json.dumps(search,indent=4))
+    artist_info = []
+    for k in search['tracks']['items']:
+        artist = k['artists'][0]['id']
+        artist_info.append(sp.artist(artist))
+    return {
+        'search': search,
+        'artist_info': artist_info
+    }
+
+
+
+
 @bp_api.route('/user_info/<token>/')
 def user_info(token):
     sp = spotipy.Spotify(auth=token)
@@ -262,8 +285,9 @@ def save_track(tracks, username,token):
 def search_tracks(keyword, token):
     sp = spotipy.Spotify(auth=token)
     query = keyword.replace(" ", "%20")
-    limit = 10
-    type="track"
+    limit = 50
+    query = "track:"+keyword
+    type= ["track"]
     search = sp.search(q=query, limit=limit, type=type)
     artist_info = []
     for k in search['tracks']['items']:
@@ -316,6 +340,22 @@ def album_info(album, token):
         'dataset':dataset,
         'audio':previews
 
+    }
+
+
+@bp_api.route('/trackPage/<track_id>/<token>')
+def track_page(track_id, token):
+    sp = spotipy.Spotify(auth=token)
+    track = sp.track(track_id)
+    artists = []
+    for t in track['artists']:
+        artists.append(sp.artist(t['id']))
+    return {
+        'track': track,
+        'recommendations': sp.recommendations(seed_tracks=[track_id]),
+        'album_tracks':sp.album_tracks(track['album']['id']),
+        'album':sp.album(track['album']['id']),
+        'artists':artists
     }
 
 
