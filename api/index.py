@@ -52,6 +52,18 @@ def create_app():
     @app.route('/logout', methods=["GET"])
     def logout():
         return app.send_static_file('index.html')
+    
+    @app.route('/favorites', methods=["GET"])
+    def favorites():
+        return app.send_static_file('index.html')
+    
+    @app.route('/track/<id>', methods=["GET"])
+    def track():
+        return app.send_static_file('index.html')
+
+    @app.route('/recommendations', methods=["GET"])
+    def recommendations():
+        return app.send_static_file('index.html')
 
 
     @app.route('/favicon.ico', methods=["GET"])
