@@ -169,13 +169,13 @@ class RecommendedPage extends React.Component {
         .then(res => {
             console.log(res.data);
             this.setState({ ...res.data[0]});
+            this.getRecommendedTracks(res.data[0]['long_term_genres'].slice(0,5))
 
         })
         .catch(err => {
             console.log('yo')
             console.log(err)
-        })
-
+        });
 
 
 
@@ -193,7 +193,7 @@ class RecommendedPage extends React.Component {
     getRecommendedTracks(genre) {
         let token = cookie.get('access_token');
         let genre_list = this.state['long_term_genres'].slice(0,5);
-        console.log(this.state)
+        console.log(this.state);
 //        let copy_genres = this.state['genres']
 //        let filtered_list = genre_list.filter(function(item,index) {
 //            return copy_genres[index] == true;
