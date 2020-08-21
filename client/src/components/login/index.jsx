@@ -6,7 +6,7 @@ import { getLoginRedirect, registerSpotify } from '../../util/auth';
 import './login.css';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
-import logoImage from "./t_logo.png";
+import logoImage from "./final.png";
 import { Header } from 'semantic-ui-react';
 import { Box, Grommet, Text } from 'grommet';
 import { Analytics } from 'grommet-icons';
@@ -75,10 +75,10 @@ class Login extends Component {
               params={{ 
                 particles: { 
                   number: { 
-                    value: 200,
+                    value: 100,
                     density: { 
                       enable: true, 
-                      value_area: 1500,
+                      value_area: 800,
                     } 
                   }, 
                 }, 
@@ -99,7 +99,7 @@ class Login extends Component {
               <Grommet theme={customTheme} >
             <Box style={{borderRadius: '1%', opacity: '0.9'}} animation="fadeIn" border={{size: "medium",color: "#DFE0E3"}} responsive="true" elevation="xlarge" background={{color: '#1A1919'}} basis="medium" round="none" pad="medium"  gap="medium" alignContent="center" justify="center" alignSelf="center" align="center">
                 <img src={logoImage} style={{height: '100px'}} />
-                <h4 style={{position: 'relative', top: '-45px'}} size="100%" color="#DFE0E3">Explore your Spotify listening history and <br></br> gain insights about your habits by logging in below.</h4>
+                <h4 style={{position: 'relative', top: '-18px'}} size="100%" color="#DFE0E3">Explore your Spotify listening history and <br></br> gain insights about your habits by logging in below.</h4>
 
                 <div id='login-button'>
                     <Button className="login-btn-item" style={{background: '#6fd862'}} primary label="Login with Spotify" onClick={this.redirectToSpotify}>Login with Spotify</Button>

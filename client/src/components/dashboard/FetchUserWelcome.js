@@ -36,7 +36,7 @@ export default function FetchUserWelcome(data) {
                         {user_info.username.slice(0,1).toUpperCase() + user_info.username.slice(1)}
                       </Typography>
 
-                      <Typography component="p" class="list-title">
+                      <Typography style={{position: 'relative', bottom: '10px'}} component="p" class="list-title">
                         Followers: {user_info['followers']['total']}
                       </Typography>
                     </CardContent>

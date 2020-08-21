@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Component, setState } from 'react';
 import cookie from 'js-cookie';
 import axios from 'axios';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import { useParams } from "react-router-dom";
 import Grid from '@material-ui/core/Grid';
 import {BrowserView, MobileView} from 'react-device-detect';
@@ -8,7 +9,7 @@ import Carousel from 'react-material-ui-carousel'
 import 'react-multi-carousel/lib/styles.css';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
+import Slider from '@material-ui/core/Slider';
 import Card from '@material-ui/core/Card';
 import Typography from '@material-ui/core/Typography';
 import { Doughnut, Radar } from 'react-chartjs-2';
@@ -159,7 +160,7 @@ class RecommendedPage extends React.Component {
     constructor(props) {
         super(props);
         console.log(props);
-        this.state = {genres: [true,true,true,true,true]};
+        this.state = {}
         this.getRecommendedTracks = this.getRecommendedTracks.bind(this)
     }
 
@@ -168,8 +169,37 @@ class RecommendedPage extends React.Component {
         axios.get(`/api/user_info/${token}/`)
         .then(res => {
             console.log(res.data);
-            this.setState({ ...res.data[0]});
-
+            this.setState({ ...res.data[0], genres: [
+                  {
+                    value: 0,
+                    label: res.data[0].long_term_genres[0],
+                    name: 0
+                  },
+                  {
+                    value: 25,
+                    label: res.data[0].long_term_genres[1],
+                    name: 1
+                  },
+                  {
+                    value: 50,
+                    label: res.data[0].long_term_genres[2],
+                    name: 2
+                  },
+                  {
+                    value: 75,
+                    label: res.data[0].long_term_genres[3],
+                    name: 3
+                  },
+                  {
+                    value: 100,
+                    label: res.data[0].long_term_genres[4],
+                    name: 4
+                  }],
+                  selectedGenre: res.data[0].long_term_genres[0]
+               });
+            this.mappings = {0: res.data[0].long_term_genres[0], 25: res.data[0].long_term_genres[1], 50: res.data[0].long_term_genres[2],
+                            75: res.data[0].long_term_genres[3], 100: res.data[0].long_term_genres[4]}
+            this.getRecommendedTracks(res.data[0].long_term_genres[0]);
         })
         .catch(err => {
             console.log('yo')
@@ -181,24 +211,25 @@ class RecommendedPage extends React.Component {
 
     }
 
-    handleChange = (event) => {
-        console.log(event.target.name);
-        var new_genres = this.state['genres'];
-        new_genres[event.target.name] = event.target.checked;
-        this.setState({ ...this.state, genres: new_genres });
+    handleChange = (event, new_val) => {
+
+
+        this.getRecommendedTracks(this.mappings[new_val]);
+//        var new_genres = this.state['genres'];
+//        new_genres[event.target.name] = event.target.checked;
+//        this.setState({ ...this.state, genres: new_genres });
 
     }
 
 
     getRecommendedTracks(genre) {
         let token = cookie.get('access_token');
-        let genre_list = this.state['long_term_genres'].slice(0,5);
-        console.log(this.state)
+
 //        let copy_genres = this.state['genres']
 //        let filtered_list = genre_list.filter(function(item,index) {
 //            return copy_genres[index] == true;
 //        })
-        axios.get(`/api/recommended_by_genre/${this.state['long_term_genres'][genre.target.name]}/${token}/`)
+        axios.get(`/api/recommended_by_genre/${genre}/${token}/`)
         .then(res => {
             console.log(res.data);
             this.setState(oldState => ({
@@ -215,8 +246,10 @@ class RecommendedPage extends React.Component {
                 username: oldState.username,
                 recommended: res.data.search.tracks.items,
                 artist_info: res.data.artist_info,
-                genres: oldState.genres
-            }))
+                genres: oldState.genres,
+                  selectedGenre: genre
+            }));
+
 
         })
         .catch(err => {
@@ -229,43 +262,40 @@ class RecommendedPage extends React.Component {
 
 
     render() {
+
+        const styles = {
+            root: {
+                backgroundColor: 'green !important',
+            },
+            colorPrimary: {
+                backgroundColor: 'green !important',
+                color: 'green !important',
+            }
+
+        };
+
+        console.log(this.state);
         return (
             <div style={{marginTop: `2vh`, marginLeft: '84px', width: '92%'}}>
                 {'long_term_genres' in this.state &&
-                <div>
-                    <FormControl onChange={this.getRecommendedTracks} component="fieldset">
-                        <FormLabel component="legend">Recommendations by Genre:</FormLabel>
-                        <FormGroup>
-                          <FormControlLabel
-                            control={<Checkbox checked={this.state['genres'][0]} onChange={this.handleChange} name={0} />}
-                            label={this.state['long_term_genres'][0]}
-                          />
-                          <FormControlLabel
-                            control={<Checkbox checked={this.state['genres'][1]} onChange={this.handleChange} name={1} />}
-                            label={this.state['long_term_genres'][1]}
-                          />
-                          <FormControlLabel
-                            control={<Checkbox checked={this.state['genres'][2]} onChange={this.handleChange} name={2} />}
-                            label={this.state['long_term_genres'][2]}
-                          />
-                          <FormControlLabel
-                            control={<Checkbox checked={this.state['genres'][3]} onChange={this.handleChange} name={3} />}
-                            label={this.state['long_term_genres'][3]}
-                          />
-                          <FormControlLabel
-                            control={<Checkbox checked={this.state['genres'][4]} onChange={this.handleChange} name={4} />}
-                            label={this.state['long_term_genres'][4]}
-                          />
-                        </FormGroup>
-                      </FormControl>
-
+                <div style={{width: '60%', position: 'relative', left: '15%'}}>
+                    <Slider classes={styles}
+                    defaultValue={0}
+                    getAriaValueText={""}
+                    aria-labelledby="discrete-slider-always"
+                    step={25}
+                    color="primary"
+                    marks={this.state['genres']}
+                    valueLabelDisplay="off"
+                    onChange={this.handleChange}
+                  />
 
                 </div>}
 
 
-                {'username' in this.state &&
+                {'recommended' in this.state &&
                     <Card width="100%" height="100%" style={{backgroundColor: "white", overflow: 'scroll'}} className="userinfo-card">
-                        <RecommendedTracksPanel key={this.state['genres']} {...this.state} />
+                        <RecommendedTracksPanel key={this.state['selectedGenre']} {...this.state} />
                     </Card>
                 }
 
@@ -297,9 +327,34 @@ export default RecommendedPage;
 
 
 
-
-
-
+//
+//
+//
+//<FormControl onChange={this.getRecommendedTracks} component="fieldset">
+//                        <FormLabel component="legend">Recommendations by Genre:</FormLabel>
+//                        <FormGroup>
+//                          <FormControlLabel
+//                            control={<Checkbox checked={this.state['genres'][0]} onChange={this.handleChange} name={0} />}
+//                            label={this.state['long_term_genres'][0]}
+//                          />
+//                          <FormControlLabel
+//                            control={<Checkbox checked={this.state['genres'][1]} onChange={this.handleChange} name={1} />}
+//                            label={this.state['long_term_genres'][1]}
+//                          />
+//                          <FormControlLabel
+//                            control={<Checkbox checked={this.state['genres'][2]} onChange={this.handleChange} name={2} />}
+//                            label={this.state['long_term_genres'][2]}
+//                          />
+//                          <FormControlLabel
+//                            control={<Checkbox checked={this.state['genres'][3]} onChange={this.handleChange} name={3} />}
+//                            label={this.state['long_term_genres'][3]}
+//                          />
+//                          <FormControlLabel
+//                            control={<Checkbox checked={this.state['genres'][4]} onChange={this.handleChange} name={4} />}
+//                            label={this.state['long_term_genres'][4]}
+//                          />
+//                        </FormGroup>
+//                      </FormControl>
 
 
 
