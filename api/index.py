@@ -59,7 +59,7 @@ def create_app():
         return app.send_static_file('index.html')
     
     @app.route('/track/:uri', methods=["GET"])
-    def track(uri):
+    def track():
         return app.send_static_file('index.html')
     
     @app.route('/recommended', methods=["GET"])
