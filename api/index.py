@@ -3,6 +3,7 @@ from .settings import spotify_secret, spotify_id
 from flask import Flask
 import os
 from flask_cors import CORS
+from flask import render_template
 
 def create_app():
     app = Flask(__name__.split('.')[0], static_folder='../client/build', static_url_path="")
@@ -56,11 +57,11 @@ def create_app():
     @app.route('/favorites', methods=["GET"])
     def favorites():
         return app.send_static_file('index.html')
-    '''
+    
     @app.route('/track/<id>', methods=["GET"])
     def track(id):
-        return app.send_static_file('index.html')
-    '''
+        return render_template('index.html')
+    
     @app.route('/recommended', methods=["GET"])
     def recommendations():
         return app.send_static_file('index.html')
