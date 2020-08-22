@@ -60,7 +60,7 @@ def create_app():
     
     @app.route('/track/<track_id>', methods=["GET"])
     def track(track_id):
-        return render_template('index.html', track_id=track_id)
+        return app.send_static_file('index.html')
     
     @app.route('/recommended', methods=["GET"])
     def recommendations():
