@@ -56,13 +56,17 @@ def create_app():
     @app.route('/favorites', methods=["GET"])
     def favorites():
         return app.send_static_file('index.html')
-    
+    '''
     @app.route('/track/<id>', methods=["GET"])
     def track(id):
         return app.send_static_file('index.html')
-
+    '''
     @app.route('/recommended', methods=["GET"])
     def recommendations():
+        return app.send_static_file('index.html')
+    
+    @app.route('/<path:page>')
+    def fallback():
         return app.send_static_file('index.html')
 
 
