@@ -58,7 +58,7 @@ def create_app():
     def favorites():
         return app.send_static_file('index.html')
     
-    @app.route('/track/<uri>', methods=["GET"])
+    @app.route('/track/:uri', methods=["GET"])
     def track(uri):
         return app.send_static_file('index.html')
     
