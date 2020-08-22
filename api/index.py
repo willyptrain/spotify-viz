@@ -66,7 +66,7 @@ def create_app():
         return app.send_static_file('index.html')
     
     @app.route('/<path:page>')
-    def fallback():
+    def fallback(page):
         return app.send_static_file('index.html')
 
 
