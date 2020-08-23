@@ -221,13 +221,14 @@ class TrackPage extends React.Component {
     constructor(props) {
         super(props);
         console.log(props);
-        this.state = {'track_id': props.id.uri}
+        this.state = {'track_id': props.id}
 //        <ArtistPage handleChange={this.handleChange} {...this.state} />
 
     }
 
     async componentDidMount() {
         let token = cookie.get('access_token');
+        console.log(this.state['track_id'])
         axios.get(`/api/trackPage/${this.state['track_id']}/${token}/`)
         .then(res => {
             console.log(res.data);
