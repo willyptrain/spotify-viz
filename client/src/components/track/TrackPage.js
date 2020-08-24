@@ -228,6 +228,7 @@ class TrackPage extends React.Component {
 
     async componentDidMount() {
         let token = cookie.get('access_token');
+        console.log(this.state['track_id'])
         axios.get(`/api/trackPage/${this.state['track_id']}/${token}/`)
         .then(res => {
             console.log(res.data);
