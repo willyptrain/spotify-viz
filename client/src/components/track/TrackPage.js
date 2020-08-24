@@ -221,7 +221,7 @@ class TrackPage extends React.Component {
     constructor(props) {
         super(props);
         console.log(props);
-        this.state = {'track_id': props.id.uri}
+        this.state = {'track_id': props.id}
 //        <ArtistPage handleChange={this.handleChange} {...this.state} />
 
     }
