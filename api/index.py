@@ -62,8 +62,8 @@ def create_app():
     def recommendations():
         return app.send_static_file('index.html')
     
-    @app.route('/track/<path:page>')
-    def fallback(page):
+    @app.route('/track/<path:uri>')
+    def fallback(uri):
         return app.send_static_file('index.html')
 
 
