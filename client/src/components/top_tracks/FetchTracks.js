@@ -116,7 +116,7 @@ class FetchTracks extends React.Component {
 
                                 <CardMedia className="track-img" image={track.image}></CardMedia>
                                 <CardContent className="toptracks-info">
-                                <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {track.name}</Typography>
+                                <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {track.track_name}</Typography>
                                 </CardContent>
 
 
