@@ -115,8 +115,9 @@ class FetchTracks extends React.Component {
                                         onClick={() => this.props.handleChange(track)} className="track-card">
 
                                 <CardMedia className="track-img" image={track.image}></CardMedia>
-
-
+                                <CardContent className="toptracks-info">
+                                <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {track.name}</Typography>
+                                </CardContent>
 
 
 

@@ -353,7 +353,7 @@ class RelatedTracks extends React.Component {
                 {this.state.clicked &&
                     this.state.artists.map((artist, index) =>
                         <ListItem>
-                            <a style={{position: 'relative', width: '100%', display: 'inline-flex'}} href={`/track/${this.state.track_ids[index]}`}>
+                            <a style={{position: 'relative', width: '100%', display: 'inline-flex'}} href={`/track/${this.state.track_ids[index]}/view`}>
                                 <ListItemAvatar>
                                     <Avatar alt="Image" src={this.state.images[index]} />
                                 </ListItemAvatar>

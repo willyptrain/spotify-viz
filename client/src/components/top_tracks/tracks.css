@@ -11,6 +11,12 @@
     font-size: 1em !important;
     color: white;
 }
+.toptracks-info {
+    line-height: 10%;
+    overflow: hidden;
+    height: 10%;
+    background: #272c34 !important;
+}
 .grid-container {
     height: auto !important;
     width: 100%;

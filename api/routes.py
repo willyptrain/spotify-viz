@@ -425,7 +425,7 @@ def related_tracks(track, token):
     ids = []
     in_favorites = []
     playlist_id = get_favorites_playlist_id(user_id)
-    print("playlist_id")
+    
     for result in recommendations["tracks"]:
         track = sp.track(result["id"])
         ids.append(result["id"])

@@ -97,7 +97,7 @@ class App extends Component{
                 <SearchTracks style={{height:'100%'}} id={props.match.params} />
                 </div>
                } />
-               <Route exact path="/track/:uri" render={(props) =>
+               <Route exact path="/track/:uri/view" render={(props) =>
                 <div style={{height:'100%'}}>
                 <Sidebar playback={true} id={props.match.params} searchFunc={this.search} searchTerm={this.state['searchTerm']} userInfo={userInfo}/>
                 <TrackPage style={{height:'100%'}} id={props.match.params.uri} />

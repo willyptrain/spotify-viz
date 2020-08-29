@@ -4,6 +4,7 @@ from flask import Flask
 import os
 from flask_cors import CORS
 from flask import render_template
+from flask import Flask, request, send_from_directory
 
 def create_app():
     app = Flask(__name__.split('.')[0], static_folder='../client/build', static_url_path="")
@@ -62,8 +63,9 @@ def create_app():
     def recommendations():
         return app.send_static_file('index.html')
     
-    @app.route('/track/<path:uri>')
+    @app.route('/track/<uri>/view')
     def fallback(uri):
+        print("yo", uri)
         return app.send_static_file('index.html')
 
 
