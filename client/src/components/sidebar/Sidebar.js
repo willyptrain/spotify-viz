@@ -436,7 +436,7 @@ export default function MiniDrawer(userInfo) {
                 {dropdown['tracks'].map((track, index) =>
 
 
-                        <ListItem divider={true} component="a" href={`/track/${track['id']}`}>
+                        <ListItem divider={true} component="a" href={`/track/${track['id']} + /view`}>
                             <ListItemAvatar>
                               <Avatar
                                 alt="Album Image"
