@@ -56,5 +56,5 @@
     ]
   },
   "proxy": "https://spot-viz-api.herokuapp.com",
-  "homepage": "https://www.spotipie.com"
+  "homepage": "http://www.spotipie.com"
 }
