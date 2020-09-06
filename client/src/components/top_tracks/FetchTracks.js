@@ -21,13 +21,62 @@ import PlayCircleFilledIcon from '@material-ui/icons/PlayCircleFilled';
 import Fab from '@material-ui/core/Fab';
 
 
+export function FetchTracks(data) {
+    console.log(data.data)
+    const [tracks, setTracks] = useState([]);
+    const isCardFunction = (data.handleChange != null);
+        const spacer = data.clicked ? 3 : 2;
+    const k = 50;
 
 
 
+    let token = cookie.get('access_token');
+    useEffect(() => {
+        axios.get(`/api/user/${data.data}/${token}/${k}`)
+            .then(res => {
+                setTracks(res.data.top_tracks);
+                console.log(res.data.top_tracks);
+            })
+            .catch(err => {
+                console.log('error :(')
+                console.log(err)
+            })
+    }, [data.data])
+
+
+    return(
+
+<div>
+    <Grid container className="grid-container"
+  alignItems="center"
+  justify="center" spacing={0}>
+
+{
+                        tracks.map((track,index) =>
+                            <Grid item xs={6} sm={spacer}>
+                            {isCardFunction &&
+                                <Card onClick={() => data.handleChange(track)} className="track-card">
+
+                                <CardMedia className="track-img" image={track.image}></CardMedia>
+                                <CardContent className="track-info">
+                                <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {track.track_name}</Typography>
+                                </CardContent>
 
 
 
+                            </Card>
+                            }
 
+                         </Grid>
+                        )}
+
+     </Grid>
+      </div>
+    );
+}
+
+
+/*
 
 class FetchTracks extends React.Component {
 
@@ -140,8 +189,10 @@ class FetchTracks extends React.Component {
             }
 
 }
-export default FetchTracks;
+*/
+//export default FetchTracks;
 //
 //           <CardContent className="track-info">
 //                                        <Typography className="music-title" gutterBottom variant="h6" component="h6">{index+1}. {track.track_name} by {track.artist}</Typography>
 //                                    </CardContent>
+

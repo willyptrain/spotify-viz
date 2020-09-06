@@ -11,11 +11,19 @@
     font-size: 1em !important;
     color: white;
 }
-.toptracks-info {
+.track-info {
     line-height: 10%;
     overflow: hidden;
     height: 10%;
     background: #272c34 !important;
+}
+
+.track-card {
+    height: 28vh;
+    margin-bottom: 2vh;
+    width: 95% !important;
+    max-width: 35vh;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2) !important;
 }
 .grid-container {
     height: auto !important;
@@ -50,6 +58,34 @@
     cursor: pointer;
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2) !important;
 
+}
+.track-img {
+    height: 100%;
+    width: 100%;
+    -webkit-transition: height 0.2s linear;
+    -moz-transition: height 0.2s linear;
+    -ms-transition: height 0.2s linear;
+    -o-transition: height 0.2s linear;
+    transition: height 0.2s linear;
+}
+
+.track-img:hover {
+    height: 90%;
+}
+.track-tab {
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    outline: none !important;
+    color: rgba(0,0,0,0.75) !important;
+    font-weight: 600 !important;
+    font-size: 0.9em !important;
+}
+.track-tab:active {
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    outline: none !important;
 }
 .track-info {
     line-height: 10%;

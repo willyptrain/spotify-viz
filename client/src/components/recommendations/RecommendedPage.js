@@ -118,7 +118,7 @@ export function RecommendedTracksPanel(data) {
                     </TableHead>
 
                     {'recommended' in data && data.recommended && data['recommended'].map((track,index) =>
-            <TableRow key={track['name']} component="a" href={`/track/${track['id']}`}>
+            <TableRow key={track['name']} component="a" href={`/track/${track['id']} + /view`}>
               <TableCell className="table-results" component="th" scope="row">
                 <div className="avatar-head">
                     <Avatar className="table-avatar" src={track['album']['images'].length > 0 ? track['album']['images'][0]['url'] : ""} />&emsp; <h6 className="track-name">{track.name}</h6>

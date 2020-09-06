@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Component, setState } from 'react';
 import cookie from 'js-cookie';
-import FetchTracks from './FetchTracks.js';
+import {FetchTracks} from './FetchTracks.js';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import './tracks.css'
@@ -48,13 +48,11 @@ class TopTracks extends React.Component{
     handleSubmit = (event, new_value) => {
         this.setState(oldState => ({
                 value: new_value,
-                clicked: oldState.clicked,
+                clicked: false,
                 artist: oldState.artist
             }));
 
     }
-
-
 
      async componentDidMount() {
       }
@@ -65,7 +63,7 @@ class TopTracks extends React.Component{
 
             <div style={{marginLeft: '30px'}} class="browser-container">
             <BrowserView>
-                <form>
+                <form onSubmit={this.handleSubmit}>
                     <label>
                     <Tabs
                         value={this.state["value"]}
@@ -81,9 +79,9 @@ class TopTracks extends React.Component{
                 </label>
                 </form>
 
-                {this.state['clicked'] && this.state['value'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
+                {this.state['clicked'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
               values={[
-                { value: 50, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} {...this.state} handleChange={this.handleChange} data={this.state['value']} /> },
+                { value: 50, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} {...this.state} handleChange={this.handleChange} data={this.state.value} /> },
                 { value: 25, className:"related-tracks", show: (this.state.clicked && (this.state.artist)), data: <RelatedTracks {...this.state} header={true} artist={this.state.artist} /> },
                 { value: 25, className:"track-graph", show: (this.state.clicked && (this.state.artist)), data: <TrackGraph {...this.state} artist={this.state.artist} /> }
               ]}
@@ -95,9 +93,9 @@ class TopTracks extends React.Component{
               }
             </Distribution>
             }
-            {!this.state['clicked'] && this.state['value'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
+            {!this.state['clicked'] && <Distribution style={{maxHeight:'100vh'}} className="dist-box-tracks"
               values={[
-                { value: 100, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} handleChange={this.handleChange} {...this.state} data={this.state['value']}  /> }
+                { value: 100, className:"top-tracks", show: true, data: <FetchTracks clicked={this.state['clicked']} handleChange={this.handleChange} {...this.state} data={this.state.value}  /> }
               ]}
             >
               {value =>
