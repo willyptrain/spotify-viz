@@ -56,5 +56,5 @@
     ]
   },
   "proxy": "https://spot-viz-api.herokuapp.com",
-  "homepage": "http://www.spotipie.com"
+  "homepage": "http://localhost:3000"
 }

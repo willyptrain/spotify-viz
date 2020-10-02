@@ -231,14 +231,17 @@ class FavTracks extends React.Component {
         }
 
         handleDelete = (trackId, trackName, artistName, imageId, previewId) => {
+            console.log(imageId, this.state.images);
             const tracks = this.state.track_ids.filter(track => track !== trackId);
             const names =  this.state.track_names.filter(track => track !== trackName);
             const artists =  this.state.artists.filter(name => name !== artistName);
             const images = this.state.images.filter(image => image !== imageId);
             const previews = this.state.previews.filter(preview => preview !== previewId);
-
+            console.log(images);
             this.setState({ track_ids: tracks,
                             track_names: names,
+                            images: images,
+                            previews: previews,
                             artists: artists });
         };
 
@@ -256,14 +259,8 @@ class FavTracks extends React.Component {
                         
                         this.setState(oldState => ({
                         'clicked':oldState.clicked,
-                        'artists':oldState.artists,
-                        'track_names':oldState.track_names,
-                        'images':oldState.images,
-                        'previews':oldState.previews,
                         'play':oldState.play,
                         'current':oldState.url,
-                        'track_ids':oldState.track_ids,
-                        'username':oldState.username,
                         'disabled':disabled_keys,
                         'in_favorites': this.in_favorites,
                         'notif': false
